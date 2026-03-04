@@ -3328,6 +3328,9 @@
                     baseFare: [250, 500],
                     lgbtqSafety: 'United States: Very Safe. Same-sex marriage is legal nationwide. Anti-discrimination laws vary by state but are generally strong in urban areas.', safetyScore: 68, lgbtqDistrict: 'Short North',
                     hotels: [
+                        { name: 'Tom\'s Hotel', type: 'Hotel', tags: ['LGBTQ Hotel'] },
+                        { name: 'ArtHotel Connection', type: 'Hotel', tags: ['LGBTQ Hotel'] },
+                        { name: 'Tom\'s Hotel', type: 'Hotel', tags: ['LGBTQ Hotel'] },
                         { name: 'Le Meridien The Joseph', type: 'Luxury', tags: ['LGBTQ Friendly'] },
                         { name: 'Graduate Columbus', type: 'Moderate', tags: ['LGBTQ Friendly'] },
                         { name: 'Moxy Columbus', type: 'Moderate', tags: ['LGBTQ Friendly'] },
@@ -7920,7 +7923,7 @@
             { name: "Flockfest Fort Lauderdale", city: "fort lauderdale", start: "2026-07-09", end: "2026-07-12", link: "https://www.google.com/search?q=Flockfest%20Fort%20Lauderdale%20event%20Fort%20Lauderdale" },
             { name: "Folsom Europe", city: "berlin", start: "2026-09-10", end: "2026-09-13", link: "https://www.travelinpride.com/folsom-europe/" },
             { name: "Winter Pride Fest Puerto Rico", city: "san juan", start: "2026-12-10", end: "2026-12-14", link: "https://www.google.com/search?q=Winter%20Pride%20Fest%20Puerto%20Rico%20event%20San%20Juan" },
-            { name: "Fort Lauderdale Tropical Bear Week", city: "fort lauderdale", start: "2026-04-07", end: "2026-04-12", link: "https://www.google.com/search?q=Fort%20Lauderdale%20Tropical%20Bear%20Week%20event%20Fort%20Lauderdale" },
+            { name: "Fort Lauderdale Tropical Bear Week", city: "fort lauderdale", start: "2026-04-07", end: "2026-04-12", link: "https://www.travelinpride.com/lauderdale-tropical-bear-week/" },
             { name: "Southern Decadence", city: "new orleans", start: "2026-09-03", end: "2026-09-07", link: "https://www.travelinpride.com/southern-decadence/" },
             { name: "Broadway Bares New York", city: "new york city", start: "2026-06-21", end: "2026-06-21", link: "https://www.google.com/search?q=Broadway%20Bares%20New%20York%20event%20New%20York%20City" },
             { name: "TNW HIGH Pride Festival Sao Paulo", city: "sao paulo", start: "2026-06-05", end: "2026-06-07", link: "https://www.google.com/search?q=TNW%20HIGH%20Pride%20Festival%20Sao%20Paulo%20event%20Sao%20Paulo" },
@@ -8239,6 +8242,7 @@
                         "San Francisco Gay Pride": ["Embassy Hotel", "Warfield Hotel", "Symphony Inn"],
                         "Sao Paulo Gay Pride": ["Ibis Styles SP Centro", "Sooz Hotel Collection", "Hotel Cadoro São Paulo"],
                         "Southern Decadence": ["New Orleans Courtyard Hotel by the French Quarter", "Hotel St Pierre French Quarter", "The Royal Sonesta New Orleans"],
+                        "Fort Lauderdale Tropical Bear Week": ["The Hotel Deauville", "Victoria Park Hotel", "The Big Coconut Guesthouse – Gay Men’s Resort"],
                         "Bears Week Sitges": ["Hotel El Xalet", "Platjador", "Hotel Subur"],
                         "Bears Week Sitges - May Edition": ["Hotel El Xalet", "Hotel Sitges", "Calipolis"],
                         "LeiBear Weekend Honolulu": ["Waikiki Heritage Hotel", "Hotel Renew", "Romer House"],
@@ -8266,7 +8270,7 @@
                     const bufferTime = 14 * 24 * 60 * 60 * 1000; // 14 Days Buffer
 
                     // 1. Search in SPECIAL_EVENTS_DATA (Primary Source)
-                    let matchingEvent = SPECIAL_EVENTS_DATA.find(e => {
+                    let matchedEvents = SPECIAL_EVENTS_DATA.filter(e => {
                         // Check city match - only match events for THIS specific city (targetKey)
                         const normalize = s => s ? s.toLowerCase().trim() : '';
                         const cityMatch = normalize(e.city) === normalize(targetKey);
@@ -8283,8 +8287,8 @@
                     });
 
                     // 2. Fallback to internal DATABASE.details events
-                    if (!matchingEvent && data.events) {
-                        matchingEvent = data.events.find(e => {
+                    if (matchedEvents.length === 0 && data.events) {
+                        matchedEvents = data.events.filter(e => {
                             const eStart = new Date(e.start);
                             const eEnd = new Date(e.end);
                             const startBuffer = new Date(eStart.getTime() - bufferTime);
@@ -8296,7 +8300,9 @@
                     // Randomize Standard Hotels
                     let randomHotels = getRandomSubset(data.hotels, 4);
 
-                    // Inject Featured Event Hotel
+                    // Inject Featured Event Hotel (Use first matched event for hotel)
+                    let matchingEvent = matchedEvents.length > 0 ? matchedEvents[0] : null;
+
                     if (matchingEvent && matchingEvent.hotels && matchingEvent.hotels.length > 0) {
                         const randomEventHotelName = matchingEvent.hotels[Math.floor(Math.random() * matchingEvent.hotels.length)];
 
@@ -8323,52 +8329,57 @@
                     const fareEstimate = calculateFareEstimate(data.baseFare);
                     const delay = index * 200;
 
+                    if (matchedEvents.length > 0) {
+                        eventContent = `<div class="flex overflow-x-auto gap-4 snap-x snap-mandatory pb-4 hide-scrollbar">`;
+                        
+                        matchedEvents.forEach(evt => {
+                            const hasTravelInPrideLink = evt.link && evt.link.includes('travelinpride.com');
+                            const isCruise = evt.type === 'Cruise';
+                            // Cruise: show cruise website as "Official" + Google as second. TravelInPride: Official + Google. Others: only Google.
+                            const showOfficialBtn = hasTravelInPrideLink || isCruise;
+                            const officialLink = evt.link || getEventsLink(data.name, dateStart);
+                            const link1 = officialLink;
+                            const link2 = `https://www.google.com/search?q=${encodeURIComponent(evt.name + " 2026")}`;
 
-                    if (matchingEvent) {
-                        const hasTravelInPrideLink = matchingEvent.link && matchingEvent.link.includes('travelinpride.com');
-                        const isCruise = matchingEvent.type === 'Cruise';
-                        // Cruise: show cruise website as "Official" + Google as second. TravelInPride: Official + Google. Others: only Google.
-                        const showOfficialBtn = hasTravelInPrideLink || isCruise;
-                        const officialLink = matchingEvent.link || getEventsLink(data.name, dateStart);
-                        const link1 = officialLink;
-                        const link2 = `https://www.google.com/search?q=${encodeURIComponent(matchingEvent.name + " 2026")}`;
+                            const bannerTitle = isCruise ? "Gay Cruise Detected!" : "Pride Event Detected!";
+                            const bannerIcon = isCruise ? "directions_boat" : "celebration";
+                            const bgClass = isCruise ? "from-blue-600 to-cyan-500" : "from-pride-purple to-pride-blue";
 
-                        const bannerTitle = isCruise ? "Gay Cruise Detected!" : "Pride Event Detected!";
-                        const bannerIcon = isCruise ? "directions_boat" : "celebration";
-                        const bgClass = isCruise ? "from-blue-600 to-cyan-500" : "from-pride-purple to-pride-blue";
-
-                        eventContent = `
-                                    <div class="mt-4 bg-gradient-to-r ${bgClass} rounded-xl shadow-lg p-5 text-white relative overflow-hidden group">
-                                        <div class="absolute top-0 right-0 p-4 opacity-10">
-                                            <span class="material-symbols-outlined text-6xl">${bannerIcon}</span>
-                                        </div>
-                                        <button onclick="window.psBookmarkPlace('${matchingEvent.name.replace(/'/g, "\\'")}', '${isCruise ? 'Cruise' : 'Event'}', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this event" class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 transition-colors text-white z-10 opacity-0 group-hover:opacity-100 cursor-pointer">
-                                            <span class="material-symbols-outlined text-[18px] pointer-events-none">bookmark_border</span>
-                                        </button>
-                                        <div class="flex items-center gap-3 mb-3">
-                                            <span class="material-symbols-outlined text-pride-yellow fill-1">stars</span>
-                                            <h4 class="font-bold text-lg">${bannerTitle}</h4>
-                                        </div>
-                                        <a href="${link1}" target="_blank" class="font-bold text-white text-xl mb-1 hover:underline cursor-pointer flex items-center gap-1 group">
-                                            ${matchingEvent.name}
-                                            <span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
-                                        </a>
-                                        <p class="text-xs text-white/80 mb-4 flex items-center gap-1">
-                                            <span class="material-symbols-outlined text-sm">calendar_today</span>
-                                            ${matchingEvent.start} &ndash; ${matchingEvent.end}
-                                        </p>
-                                        <div class="flex gap-2">
-                                            ${showOfficialBtn ? `
-                                            <a href="${link1}" target="_blank" class="flex-1 py-2 bg-white text-black dark:text-white dark:bg-slate-800/20 hover:bg-white dark:bg-slate-800/30 rounded-lg text-center text-xs font-bold backdrop-blur-sm transition-colors flex items-center justify-center gap-2">
-                                                <span class="material-symbols-outlined text-sm">language</span>
-                                                Official
-                                            </a>` : ''}
-                                            <a href="${link2}" target="_blank" class="flex-1 py-2 border border-white/30 hover:bg-white dark:bg-slate-800/10 rounded-lg text-center text-xs font-bold transition-colors flex items-center justify-center gap-2">
-                                                <span class="material-symbols-outlined text-sm">search</span>
-                                                Google
+                            eventContent += `
+                                        <div class="mt-4 bg-gradient-to-r ${bgClass} rounded-xl shadow-lg p-5 text-white relative overflow-hidden group min-w-[85%] sm:min-w-[300px] snap-center shrink-0 flex flex-col justify-between">
+                                            <div class="absolute top-0 right-0 p-4 opacity-10">
+                                                <span class="material-symbols-outlined text-6xl">${bannerIcon}</span>
+                                            </div>
+                                            <button onclick="window.psBookmarkPlace('${evt.name.replace(/'/g, "\'")}', '${isCruise ? 'Cruise' : 'Event'}', '${data.name.replace(/'/g, "\'")}', '${origin.replace(/'/g, "\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this event" class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 transition-colors text-white z-10 opacity-0 group-hover:opacity-100 cursor-pointer">
+                                                <span class="material-symbols-outlined text-[18px] pointer-events-none">bookmark_border</span>
+                                            </button>
+                                            <div class="flex items-center gap-3 mb-3">
+                                                <span class="material-symbols-outlined text-pride-yellow fill-1">stars</span>
+                                                <h4 class="font-bold text-lg">${bannerTitle}</h4>
+                                            </div>
+                                            <a href="${link1}" target="_blank" class="font-bold text-white text-xl mb-1 hover:underline cursor-pointer flex items-center gap-1 group">
+                                                ${evt.name}
+                                                <span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
                                             </a>
-                                        </div>
-                                    </div>`;
+                                            <p class="text-xs text-white/80 mb-4 flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm">calendar_today</span>
+                                                ${evt.start} &ndash; ${evt.end}
+                                            </p>
+                                            <div class="flex gap-2 mt-auto">
+                                                ${showOfficialBtn ? `
+                                                <a href="${link1}" target="_blank" class="flex-1 py-2 bg-white text-black dark:text-white dark:bg-slate-800/20 hover:bg-white dark:bg-slate-800/30 rounded-lg text-center text-xs font-bold backdrop-blur-sm transition-colors flex items-center justify-center gap-2">
+                                                    <span class="material-symbols-outlined text-sm">language</span>
+                                                    Official
+                                                </a>` : ''}
+                                                <a href="${link2}" target="_blank" class="flex-1 py-2 border border-white/30 hover:bg-white dark:bg-slate-800/10 rounded-lg text-center text-xs font-bold transition-colors flex items-center justify-center gap-2">
+                                                    <span class="material-symbols-outlined text-sm">search</span>
+                                                    Google
+                                                </a>
+                                            </div>
+                                        </div>`;
+                        });
+                        eventContent += `</div>
+                    `;
                     }
 
                     // Calculate safety score properties
@@ -8488,7 +8499,7 @@
                                         <div class="absolute inset-0 flex flex-col items-center justify-center">
                                             <span class="text-2xl font-black ${safetyColor}">${safetyScore}</span>
                                             <span class="text-[8px] font-bold text-slate-400 dark:text-slate-300 -mt-1 underline">Equaldex</span>
-                                            <span class="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-300 leading-tight mt-1">Safety</span>
+                                            <span class="text-[8px] uppercase font-bold text-slate-400 dark:text-slate-300 text-center leading-tight mt-1">Equality Index</span>
                                         </div>
                                     </a>
                                     <div class="flex-1">
@@ -8496,6 +8507,7 @@
                                         <p class="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-300 leading-relaxed">${data.lgbtqSafety}</p>
                                     </div>
                                 </div>
+                                <p class="text-xs text-slate-400 dark:text-slate-500 italic mb-6">The Equality Index measures the current status of LGBT rights, laws, and freedoms as well as public attitudes towards LGBT people.</p>
                                 <div class="space-y-3">
                                     <div class="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700">
                                         <div class="w-10 h-10 rounded-full bg-pride-yellow/20 flex items-center justify-center text-pride-yellow shadow-inner">
@@ -8663,7 +8675,10 @@
             const o = origin ? origin.toLowerCase().replace(/[^a-z0-9]+/g, '-') : '';
             let dest = destinationIata === 'ANY' ? 'everywhere' : destinationIata;
             const dStr = dest ? dest.toLowerCase().replace(/[^a-z0-9]+/g, '-') : '';
-            return `https://www.skyscanner.com/transport/flights/${o}/${dStr}/${s}/${e}/`;
+            return https://www.skyscanner.com/transport/flights/////;
+        }/{destination}/{yymmdd}/{yymmdd}
+            const dest = destinationIata === 'ANY' ? 'everywhere' : destinationIata;
+            return `https://www.skyscanner.com/transport/flights/${encodeURIComponent(origin)}/${encodeURIComponent(dest)}/${s}/${e}`;
         }
 
         function getNightlifeIcon(type) {
