@@ -1263,7 +1263,23 @@
             window.psReSearch = function (dest, dep, ds, de) {
                 psTripPanel(false);
                 const get = id => document.getElementById(id);
-                const searchDest = dest ? dest.split(',')[0].trim() : '';
+                let searchDest = dest ? dest.split(',')[0].trim() : '';
+
+                if (dest && typeof window.DATABASE !== 'undefined') {
+                    const normalized = searchDest.toLowerCase();
+                    if (window.DATABASE.mappings && window.DATABASE.mappings.cities && window.DATABASE.mappings.cities[normalized]) {
+                        const codes = window.DATABASE.mappings.cities[normalized];
+                        if (codes && codes.length > 0) {
+                            searchDest = codes[0].toUpperCase();
+                        }
+                    } else if (window.DATABASE.details) {
+                        const match = Object.values(window.DATABASE.details).find(d => d.name === dest || d.name.toLowerCase().startsWith(normalized));
+                        if (match && match.iata) {
+                            searchDest = match.iata;
+                        }
+                    }
+                }
+
                 if (get('destination')) get('destination').value = searchDest;
                 if (get('departure') && dep) get('departure').value = dep;
                 if (get('dateStart') && ds) get('dateStart').value = ds;
@@ -1368,7 +1384,7 @@
                 }
             }
         };
-        const DATABASE = {
+        window.DATABASE = {
             mappings: {
                 regions: {
                     'east coast': ['nyc', 'washington dc', 'atlanta', 'miami', 'orlando', 'fort lauderdale', 'boston', 'philadelphia', 'san juan', 'key west', 'provincetown', 'tampa', 'fire island', 'newark', 'charlotte'],
@@ -1444,9 +1460,9 @@
                     'america': ['nyc', 'washington dc', 'atlanta', 'miami', 'orlando', 'fort lauderdale', 'boston', 'philadelphia', 'chicago', 'new orleans', 'minneapolis', 'houston', 'columbus', 'las vegas', 'palm springs', 'san francisco', 'los angeles', 'denver', 'aspen', 'honolulu', 'seattle', 'portland', 'provincetown', 'key west', 'dallas', 'san diego', 'tampa', 'san antonio', 'fire island', 'nashville', 'newark', 'detroit', 'charlotte']
                 },
                 cities: {
-                    'new york': ['nyc', 'lga', 'ewr'],
-                    'nyc': ['nyc', 'lga', 'ewr'],
-                    'new york city': ['nyc', 'lga', 'ewr'],
+                    'new york': ['jfk', 'lga', 'ewr'],
+                    'nyc': ['jfk', 'lga', 'ewr'],
+                    'new york city': ['jfk', 'lga', 'ewr'],
                     'lga': ['lga'],
                     'jfk': ['jfk'],
                     'ewr': ['ewr'],
@@ -1491,9 +1507,9 @@
                     'berlin': ['berlin'],
                     'ber': ['berlin'],
 
-                    'tokyo': ['tokyo'],
-                    'nrt': ['tokyo'],
-                    'hnd': ['tokyo'],
+                    'tokyo': ['nrt', 'hnd'],
+                    'nrt': ['nrt'],
+                    'hnd': ['hnd'],
                     'bangkok': ['bangkok'],
                     'bkk': ['bangkok'],
                     'taipei': ['taipei'],
