@@ -8854,8 +8854,16 @@
                 });
             }
 
-            // 3. Balanced Selection (Target 60 total: ~7 Events, ~7 Cities, ~6 Districts)
-            const selectedEvents = getRandomSubset(eventPool, 20);
+            // 3. Balanced Selection (Target 60 total: ~20 Events, ~20 Cities, ~20 Districts)
+            // Ensure 3-5 cruises show up in the view more tab
+            const cruisePool = eventPool.filter(e => e.type === 'Cruise');
+            const otherEventPool = eventPool.filter(e => e.type !== 'Cruise');
+
+            const numCruises = Math.floor(Math.random() * 3) + 3; // 3 to 5
+            const selectedCruises = getRandomSubset(cruisePool, Math.min(numCruises, cruisePool.length));
+            const selectedOtherEvents = getRandomSubset(otherEventPool, 20 - selectedCruises.length);
+            const selectedEvents = [...selectedCruises, ...selectedOtherEvents];
+
             const selectedCities = getRandomSubset(cityPool, 20);
             const selectedDistricts = getRandomSubset(districtPool, 20);
 
