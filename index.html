@@ -3328,9 +3328,6 @@
                     baseFare: [250, 500],
                     lgbtqSafety: 'United States: Very Safe. Same-sex marriage is legal nationwide. Anti-discrimination laws vary by state but are generally strong in urban areas.', safetyScore: 68, lgbtqDistrict: 'Short North',
                     hotels: [
-                        { name: 'Tom\'s Hotel', type: 'Hotel', tags: ['LGBTQ Hotel'] },
-                        { name: 'ArtHotel Connection', type: 'Hotel', tags: ['LGBTQ Hotel'] },
-                        { name: 'Tom\'s Hotel', type: 'Hotel', tags: ['LGBTQ Hotel'] },
                         { name: 'Le Meridien The Joseph', type: 'Luxury', tags: ['LGBTQ Friendly'] },
                         { name: 'Graduate Columbus', type: 'Moderate', tags: ['LGBTQ Friendly'] },
                         { name: 'Moxy Columbus', type: 'Moderate', tags: ['LGBTQ Friendly'] },
@@ -8137,12 +8134,7 @@
             { name: "Aquafet: Western Caribbean Halloween Cruise", city: "houston", start: "2026-10-25", end: "2026-11-01", link: "https://aquafestcruises.com/", type: "Cruise", company: "Aquafet" },
             { name: "Aquafet: Circle Japan Cruise", city: "osaka", start: "2027-04-03", end: "2027-04-12", link: "https://aquafestcruises.com/", type: "Cruise", company: "Aquafet" },
             { name: "Aquafest: Circle Mediterranean Cruise", city: "rome", start: "2027-07-17", end: "2027-07-27", link: "https://aquafestcruises.com/", type: "Cruise", company: "Aquafest" },
-            { name: "Adventure Bears: Alaska Denali Explorer 2027", city: "vancouver", start: "2027-05-15", end: "2027-05-25", link: "https://www.adventurebears.com/", type: "Cruise", company: "Adventure Bears" },
-            { name: "R Family Vacation: Paris & Normandy Cruise!", city: "paris", start: "2026-04-12", end: "2026-04-19", link: "https://www.kelligreggtravel.com/", type: "Cruise", company: "R Family" },
-            { name: "R Family Vacation: London to London Cruise", city: "london", start: "2026-05-01", end: "2026-05-11", link: "https://www.kelligreggtravel.com/", type: "Cruise", company: "R Family" },
-            { name: "R Family Cool Summer Adventure", city: "seattle", start: "2026-07-31", end: "2026-08-07", link: "https://www.kelligreggtravel.com/", type: "Cruise", company: "R Family" },
-            { name: "R Family Vacation: OUT in Japan! 2026 Cruise", city: "tokyo", start: "2026-09-17", end: "2026-10-02", link: "https://www.kelligreggtravel.com/", type: "Cruise", company: "R Family" },
-            { name: "R Family Vacation: Antarctica! 2027 Cruise", city: "buenos aires", start: "2027-02-05", end: "2027-02-14", link: "https://www.kelligreggtravel.com/", type: "Cruise", company: "R Family" }];
+            { name: "Adventure Bears: Alaska Denali Explorer 2027", city: "vancouver", start: "2027-05-15", end: "2027-05-25", link: "https://www.adventurebears.com/", type: "Cruise", company: "Adventure Bears" },];
 
         const form = document.querySelector('#searchForm');
         const container = document.querySelector('#resultsContainer');
@@ -8275,7 +8267,7 @@
                     const bufferTime = 14 * 24 * 60 * 60 * 1000; // 14 Days Buffer
 
                     // 1. Search in SPECIAL_EVENTS_DATA (Primary Source)
-                    let matchedEvents = SPECIAL_EVENTS_DATA.filter(e => {
+                    let matchingEvent = SPECIAL_EVENTS_DATA.find(e => {
                         // Check city match - only match events for THIS specific city (targetKey)
                         const normalize = s => s ? s.toLowerCase().trim() : '';
                         const cityMatch = normalize(e.city) === normalize(targetKey);
@@ -8292,8 +8284,8 @@
                     });
 
                     // 2. Fallback to internal DATABASE.details events
-                    if (matchedEvents.length === 0 && data.events) {
-                        matchedEvents = data.events.filter(e => {
+                    if (!matchingEvent && data.events) {
+                        matchingEvent = data.events.find(e => {
                             const eStart = new Date(e.start);
                             const eEnd = new Date(e.end);
                             const startBuffer = new Date(eStart.getTime() - bufferTime);
@@ -8305,9 +8297,7 @@
                     // Randomize Standard Hotels
                     let randomHotels = getRandomSubset(data.hotels, 4);
 
-                    // Inject Featured Event Hotel (Use first matched event for hotel)
-                    let matchingEvent = matchedEvents.length > 0 ? matchedEvents[0] : null;
-
+                    // Inject Featured Event Hotel
                     if (matchingEvent && matchingEvent.hotels && matchingEvent.hotels.length > 0) {
                         const randomEventHotelName = matchingEvent.hotels[Math.floor(Math.random() * matchingEvent.hotels.length)];
 
@@ -8334,57 +8324,52 @@
                     const fareEstimate = calculateFareEstimate(data.baseFare);
                     const delay = index * 200;
 
-                    if (matchedEvents.length > 0) {
-                        eventContent = `<div class="flex overflow-x-auto gap-4 snap-x snap-mandatory pb-4 hide-scrollbar">`;
 
-                        matchedEvents.forEach(evt => {
-                            const hasTravelInPrideLink = evt.link && evt.link.includes('travelinpride.com');
-                            const isCruise = evt.type === 'Cruise';
-                            // Cruise: show cruise website as "Official" + Google as second. TravelInPride: Official + Google. Others: only Google.
-                            const showOfficialBtn = hasTravelInPrideLink || isCruise;
-                            const officialLink = evt.link || getEventsLink(data.name, dateStart);
-                            const link1 = officialLink;
-                            const link2 = `https://www.google.com/search?q=${encodeURIComponent(evt.name + " 2026")}`;
+                    if (matchingEvent) {
+                        const hasTravelInPrideLink = matchingEvent.link && matchingEvent.link.includes('travelinpride.com');
+                        const isCruise = matchingEvent.type === 'Cruise';
+                        // Cruise: show cruise website as "Official" + Google as second. TravelInPride: Official + Google. Others: only Google.
+                        const showOfficialBtn = hasTravelInPrideLink || isCruise;
+                        const officialLink = matchingEvent.link || getEventsLink(data.name, dateStart);
+                        const link1 = officialLink;
+                        const link2 = `https://www.google.com/search?q=${encodeURIComponent(matchingEvent.name + " 2026")}`;
 
-                            const bannerTitle = isCruise ? "LGBTQ Cruise Alert" : "Pride Event Detected!";
-                            const bannerIcon = isCruise ? "directions_boat" : "celebration";
-                            const bgClass = isCruise ? "from-blue-600 to-cyan-500" : "from-pride-purple to-pride-blue";
+                        const bannerTitle = isCruise ? "Gay Cruise Detected!" : "Pride Event Detected!";
+                        const bannerIcon = isCruise ? "directions_boat" : "celebration";
+                        const bgClass = isCruise ? "from-blue-600 to-cyan-500" : "from-pride-purple to-pride-blue";
 
-                            eventContent += `
-                                        <div class="mt-4 bg-gradient-to-r ${bgClass} rounded-xl shadow-lg p-5 text-white relative overflow-hidden group min-w-[85%] sm:min-w-[300px] snap-center shrink-0 flex flex-col justify-between">
-                                            <div class="absolute top-0 right-0 p-4 opacity-10">
-                                                <span class="material-symbols-outlined text-6xl">${bannerIcon}</span>
-                                            </div>
-                                            <button onclick="window.psBookmarkPlace('${evt.name.replace(/'/g, "\\'")}', '${isCruise ? 'Cruise' : 'Event'}', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this event" class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 transition-colors text-white z-10 opacity-0 group-hover:opacity-100 cursor-pointer">
-                                                <span class="material-symbols-outlined text-[18px] pointer-events-none">bookmark_border</span>
-                                            </button>
-                                            <div class="flex items-center gap-3 mb-3">
-                                                <span class="material-symbols-outlined text-pride-yellow fill-1">stars</span>
-                                                <h4 class="font-bold text-lg">${bannerTitle}</h4>
-                                            </div>
-                                            <a href="${link1}" target="_blank" class="font-bold text-white text-xl mb-1 hover:underline cursor-pointer flex items-center gap-1 group">
-                                                ${evt.name}
-                                                <span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+                        eventContent = `
+                                    <div class="mt-4 bg-gradient-to-r ${bgClass} rounded-xl shadow-lg p-5 text-white relative overflow-hidden group">
+                                        <div class="absolute top-0 right-0 p-4 opacity-10">
+                                            <span class="material-symbols-outlined text-6xl">${bannerIcon}</span>
+                                        </div>
+                                        <button onclick="window.psBookmarkPlace('${matchingEvent.name.replace(/'/g, "\\'")}', '${isCruise ? 'Cruise' : 'Event'}', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this event" class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 transition-colors text-white z-10 opacity-0 group-hover:opacity-100 cursor-pointer">
+                                            <span class="material-symbols-outlined text-[18px] pointer-events-none">bookmark_border</span>
+                                        </button>
+                                        <div class="flex items-center gap-3 mb-3">
+                                            <span class="material-symbols-outlined text-pride-yellow fill-1">stars</span>
+                                            <h4 class="font-bold text-lg">${bannerTitle}</h4>
+                                        </div>
+                                        <a href="${link1}" target="_blank" class="font-bold text-white text-xl mb-1 hover:underline cursor-pointer flex items-center gap-1 group">
+                                            ${matchingEvent.name}
+                                            <span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+                                        </a>
+                                        <p class="text-xs text-white/80 mb-4 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-sm">calendar_today</span>
+                                            ${matchingEvent.start} &ndash; ${matchingEvent.end}
+                                        </p>
+                                        <div class="flex gap-2">
+                                            ${showOfficialBtn ? `
+                                            <a href="${link1}" target="_blank" class="flex-1 py-2 bg-white text-black dark:text-white dark:bg-slate-800/20 hover:bg-white dark:bg-slate-800/30 rounded-lg text-center text-xs font-bold backdrop-blur-sm transition-colors flex items-center justify-center gap-2">
+                                                <span class="material-symbols-outlined text-sm">language</span>
+                                                Official
+                                            </a>` : ''}
+                                            <a href="${link2}" target="_blank" class="flex-1 py-2 border border-white/30 hover:bg-white dark:bg-slate-800/10 rounded-lg text-center text-xs font-bold transition-colors flex items-center justify-center gap-2">
+                                                <span class="material-symbols-outlined text-sm">search</span>
+                                                Google
                                             </a>
-                                            <p class="text-xs text-white/80 mb-4 flex items-center gap-1">
-                                                <span class="material-symbols-outlined text-sm">calendar_today</span>
-                                                ${evt.start} &ndash; ${evt.end}
-                                            </p>
-                                            <div class="flex gap-2 mt-auto">
-                                                ${showOfficialBtn ? `
-                                                <a href="${link1}" target="_blank" class="flex-1 py-2 bg-white text-black dark:text-white dark:bg-slate-800/20 hover:bg-white dark:bg-slate-800/30 rounded-lg text-center text-xs font-bold backdrop-blur-sm transition-colors flex items-center justify-center gap-2">
-                                                    <span class="material-symbols-outlined text-sm">language</span>
-                                                    Official
-                                                </a>` : ''}
-                                                <a href="${link2}" target="_blank" class="flex-1 py-2 border border-white/30 hover:bg-white dark:bg-slate-800/10 rounded-lg text-center text-xs font-bold transition-colors flex items-center justify-center gap-2">
-                                                    <span class="material-symbols-outlined text-sm">search</span>
-                                                    Google
-                                                </a>
-                                            </div>
-                                        </div>`;
-                        });
-                        eventContent += `</div>
-                    `;
+                                        </div>
+                                    </div>`;
                     }
 
                     // Calculate safety score properties
@@ -8480,23 +8465,11 @@
                                         `).join('')}
                                     </div>
                                     <a href="${getExpediaLink(data.name, dateStart, dateEnd)}" target="_blank"
-                                       class="w-full py-3 bg-pride-purple text-white rounded-full font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-pride-purple/20 active:scale-95 transition-all mb-3">
+                                       class="w-full py-3 bg-pride-purple text-white rounded-full font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-pride-purple/20 active:scale-95 transition-all">
                                         <span class="material-symbols-outlined text-sm">open_in_new</span> Book All on Expedia
                                     </a>
-                                    
-                                    <div class="border-t border-slate-100 dark:border-slate-700 pt-4 mt-2">
-                                        <p class="text-[10px] text-center text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mb-2">LGBTQ+ Apartments & Homes</p>
-                                        <a href="https://www.misterbnb.com/search?query=${encodeURIComponent(data.name)}&checkin=${dateStart}&checkout=${dateEnd}" target="_blank"
-                                           class="w-full py-3 bg-rose-500 text-white rounded-full font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-rose-500/20 active:scale-95 transition-all">
-                                            <span class="material-symbols-outlined text-sm">home</span> Search on misterb&b
-                                        </a>
-                                        <p class="text-[9px] text-center text-slate-400 dark:text-slate-500 italic mt-2 leading-tight">
-                                            ⚠️ Check the stay type so you don't end up reserving the 2nd bedroom in a shared apartment with the owner!
-                                        </p>
-                                    </div>
                                 </div>
                             </div>
-
 
                              <!-- 5. Safety & Neighborhoods -->
                             <section class="bg-white dark:bg-slate-800 p-6 rounded-xl border-l-4 border-pride-green shadow-md relative overflow-hidden">
@@ -8516,7 +8489,7 @@
                                         <div class="absolute inset-0 flex flex-col items-center justify-center">
                                             <span class="text-2xl font-black ${safetyColor}">${safetyScore}</span>
                                             <span class="text-[8px] font-bold text-slate-400 dark:text-slate-300 -mt-1 underline">Equaldex</span>
-                                            <span class="text-[8px] uppercase font-bold text-slate-400 dark:text-slate-300 text-center leading-tight mt-1">Equality Index</span>
+                                            <span class="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-300 leading-tight mt-1">Safety</span>
                                         </div>
                                     </a>
                                     <div class="flex-1">
@@ -8524,7 +8497,6 @@
                                         <p class="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-300 leading-relaxed">${data.lgbtqSafety}</p>
                                     </div>
                                 </div>
-                                <p class="text-xs text-slate-400 dark:text-slate-500 italic mb-6">The Equality Index measures the current status of LGBT rights, laws, and freedoms as well as public attitudes towards LGBT people.</p>
                                 <div class="space-y-3">
                                     <div class="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700">
                                         <div class="w-10 h-10 rounded-full bg-pride-yellow/20 flex items-center justify-center text-pride-yellow shadow-inner">
@@ -8692,146 +8664,143 @@
             const o = origin ? origin.toLowerCase().replace(/[^a-z0-9]+/g, '-') : '';
             let dest = destinationIata === 'ANY' ? 'everywhere' : destinationIata;
             const dStr = dest ? dest.toLowerCase().replace(/[^a-z0-9]+/g, '-') : '';
-            return https://www.skyscanner.com/transport/flights/////;
-        } /{destination}/{ yymmdd }/{yymmdd}
-        const dest = destinationIata === 'ANY' ? 'everywhere' : destinationIata;
-        return `https://www.skyscanner.com/transport/flights/${encodeURIComponent(origin)}/${encodeURIComponent(dest)}/${s}/${e}`;
-    }
-
-        function getNightlifeIcon(type) {
-        const t = type.toLowerCase();
-        if (t.includes('sauna') || t.includes('bath')) return '<span class="material-symbols-outlined">hot_tub</span>';
-        if (t.includes('club') || t.includes('disco')) return '<span class="material-symbols-outlined">celebration</span>';
-        if (t.includes('bar')) return '<span class="material-symbols-outlined">local_bar</span>';
-        return '<span class="material-symbols-outlined">music_note</span>';
-    }
-
-    function getExpediaLink(destination, start, end) {
-        return `https://www.expedia.com/Hotel-Search?destination=${encodeURIComponent(destination)}&startDate=${start}&endDate=${end}`;
-    }
-
-    function getViatorLink(destination, start, end) {
-        return `https://www.viator.com/searchResults/all?text=${encodeURIComponent(destination)}&startDate=${start}&endDate=${end}`;
-    }
-
-    function getEmailLink(origin, data, start, end) {
-        const subject = `Trip Idea: ${data.name} for Pride Travel`;
-        const body = `Hey,\n\nI found a great trip idea using Pride Travel Scout!\n\nDestination: ${data.name}\nDates: ${start} to ${end}\nFrom: ${origin}\n\nWeather: ${data.weather}\nLGBTQ Safety: ${data.lgbtqSafety}\n\nCheck out flights:\nGoogle Flights: ${getGoogleFlightsLink(origin, data.name, start, end)}\n\nSent from Pride Travel Scout`;
-        return `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    }
-
-    function getWeatherIcon(weatherString) {
-        const w = weatherString.toLowerCase();
-        if (w.includes('rain')) return '<span class="material-symbols-outlined text-pride-blue">rainy</span>';
-        if (w.includes('cloud')) return '<span class="material-symbols-outlined text-slate-400 dark:text-slate-300">cloudy</span>';
-        if (w.includes('snow')) return '<span class="material-symbols-outlined text-slate-200">snowing</span>';
-        return '<span class="material-symbols-outlined text-pride-orange">sunny</span>';
-    }
-
-    function getEventsLink(destination, dateString) {
-        const month = getMonthName(dateString);
-        const q = `LGBTQ Events in ${destination} in ${month}`;
-        return `https://www.google.com/search?q=${encodeURIComponent(q)}`;
-    }
-
-    function getMonthName(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleString('default', { month: 'long', timeZone: 'UTC' });
-    }
-
-    function formatDateShort(dateString) {
-        if (!dateString) return '';
-        const date = new Date(dateString + 'T00:00:00');
-        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    }
-
-    window.showAllHotspots = function () {
-        populateAllHotspots();
-        toggleView('allHotspotsView');
-    };
-
-    function populateAllHotspots() {
-        const grid = document.getElementById('allHotspotsGrid');
-        if (!grid) return;
-
-        const eventPool = [];
-        const cityPool = [];
-        const districtPool = [];
-
-        // 1. Collect Events
-        if (typeof SPECIAL_EVENTS_DATA !== 'undefined') {
-            SPECIAL_EVENTS_DATA.forEach(e => {
-                eventPool.push({
-                    type: e.type || 'Event',
-                    name: e.name,
-                    location: e.city,
-                    date: e.start,
-                    endDate: e.end,
-                    searchQuery: e.city
-                });
-            });
+            return `https://www.skyscanner.com/transport/flights/${o}/${dStr}/${s}/${e}/`;
         }
 
-        // 2. Collect Destinations & Districts
-        if (typeof DATABASE !== 'undefined' && DATABASE.details) {
-            Object.keys(DATABASE.details).forEach(key => {
-                const data = DATABASE.details[key];
-                // Add to City Pool
-                const cityEqScore = data.safetyScore || null;
-                cityPool.push({
-                    type: 'Destination',
-                    name: data.name,
-                    location: data.iata || '',
-                    searchQuery: key,
-                    eqScore: cityEqScore
-                });
+        function getNightlifeIcon(type) {
+            const t = type.toLowerCase();
+            if (t.includes('sauna') || t.includes('bath')) return '<span class="material-symbols-outlined">hot_tub</span>';
+            if (t.includes('club') || t.includes('disco')) return '<span class="material-symbols-outlined">celebration</span>';
+            if (t.includes('bar')) return '<span class="material-symbols-outlined">local_bar</span>';
+            return '<span class="material-symbols-outlined">music_note</span>';
+        }
 
-                // Add to District Pool if available
-                if (data.lgbtqDistrict) {
-                    districtPool.push({
-                        type: 'District',
-                        name: data.lgbtqDistrict,
-                        location: data.name.split(',')[0],
+        function getExpediaLink(destination, start, end) {
+            return `https://www.expedia.com/Hotel-Search?destination=${encodeURIComponent(destination)}&startDate=${start}&endDate=${end}`;
+        }
+
+        function getViatorLink(destination, start, end) {
+            return `https://www.viator.com/searchResults/all?text=${encodeURIComponent(destination)}&startDate=${start}&endDate=${end}`;
+        }
+
+        function getEmailLink(origin, data, start, end) {
+            const subject = `Trip Idea: ${data.name} for Pride Travel`;
+            const body = `Hey,\n\nI found a great trip idea using Pride Travel Scout!\n\nDestination: ${data.name}\nDates: ${start} to ${end}\nFrom: ${origin}\n\nWeather: ${data.weather}\nLGBTQ Safety: ${data.lgbtqSafety}\n\nCheck out flights:\nGoogle Flights: ${getGoogleFlightsLink(origin, data.name, start, end)}\n\nSent from Pride Travel Scout`;
+            return `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        }
+
+        function getWeatherIcon(weatherString) {
+            const w = weatherString.toLowerCase();
+            if (w.includes('rain')) return '<span class="material-symbols-outlined text-pride-blue">rainy</span>';
+            if (w.includes('cloud')) return '<span class="material-symbols-outlined text-slate-400 dark:text-slate-300">cloudy</span>';
+            if (w.includes('snow')) return '<span class="material-symbols-outlined text-slate-200">snowing</span>';
+            return '<span class="material-symbols-outlined text-pride-orange">sunny</span>';
+        }
+
+        function getEventsLink(destination, dateString) {
+            const month = getMonthName(dateString);
+            const q = `LGBTQ Events in ${destination} in ${month}`;
+            return `https://www.google.com/search?q=${encodeURIComponent(q)}`;
+        }
+
+        function getMonthName(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleString('default', { month: 'long', timeZone: 'UTC' });
+        }
+
+        function formatDateShort(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString + 'T00:00:00');
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        window.showAllHotspots = function () {
+            populateAllHotspots();
+            toggleView('allHotspotsView');
+        };
+
+        function populateAllHotspots() {
+            const grid = document.getElementById('allHotspotsGrid');
+            if (!grid) return;
+
+            const eventPool = [];
+            const cityPool = [];
+            const districtPool = [];
+
+            // 1. Collect Events
+            if (typeof SPECIAL_EVENTS_DATA !== 'undefined') {
+                SPECIAL_EVENTS_DATA.forEach(e => {
+                    eventPool.push({
+                        type: e.type || 'Event',
+                        name: e.name,
+                        location: e.city,
+                        date: e.start,
+                        endDate: e.end,
+                        searchQuery: e.city
+                    });
+                });
+            }
+
+            // 2. Collect Destinations & Districts
+            if (typeof DATABASE !== 'undefined' && DATABASE.details) {
+                Object.keys(DATABASE.details).forEach(key => {
+                    const data = DATABASE.details[key];
+                    // Add to City Pool
+                    const cityEqScore = data.safetyScore || null;
+                    cityPool.push({
+                        type: 'Destination',
+                        name: data.name,
+                        location: data.iata || '',
                         searchQuery: key,
                         eqScore: cityEqScore
                     });
-                }
-            });
-        }
 
-        // 3. Balanced Selection (Target 60 total: ~7 Events, ~7 Cities, ~6 Districts)
-        const selectedEvents = getRandomSubset(eventPool, 20);
-        const selectedCities = getRandomSubset(cityPool, 20);
-        const selectedDistricts = getRandomSubset(districtPool, 20);
-
-        let selected = [...selectedEvents, ...selectedCities, ...selectedDistricts];
-
-        // 4. Backfill if total < 20
-        if (selected.length < 60) {
-            const remainingTarget = 60 - selected.length;
-            const usedNames = new Set(selected.map(s => s.name + s.type));
-            const allRemaining = [...eventPool, ...cityPool, ...districtPool]
-                .filter(item => !usedNames.has(item.name + item.type));
-
-            const extra = getRandomSubset(allRemaining, remainingTarget);
-            selected = [...selected, ...extra];
-        }
-
-        // Shuffle final list
-        selected = getRandomSubset(selected, selected.length);
-
-        grid.innerHTML = selected.map(h => {
-            let icon = 'location_on';
-            let badgeClass = 'bg-primary text-white';
-            if (h.type === 'Event' || h.type === 'Cruise') {
-                icon = h.type === 'Cruise' ? 'directions_boat' : 'event_upcoming';
-                badgeClass = h.type === 'Cruise' ? 'bg-blue-500 text-white' : 'bg-yellow-400 text-slate-900 dark:text-white';
-            } else if (h.type === 'District') {
-                icon = 'explore';
-                badgeClass = 'bg-orange-500 text-white';
+                    // Add to District Pool if available
+                    if (data.lgbtqDistrict) {
+                        districtPool.push({
+                            type: 'District',
+                            name: data.lgbtqDistrict,
+                            location: data.name.split(',')[0],
+                            searchQuery: key,
+                            eqScore: cityEqScore
+                        });
+                    }
+                });
             }
 
-            return `
+            // 3. Balanced Selection (Target 60 total: ~7 Events, ~7 Cities, ~6 Districts)
+            const selectedEvents = getRandomSubset(eventPool, 20);
+            const selectedCities = getRandomSubset(cityPool, 20);
+            const selectedDistricts = getRandomSubset(districtPool, 20);
+
+            let selected = [...selectedEvents, ...selectedCities, ...selectedDistricts];
+
+            // 4. Backfill if total < 20
+            if (selected.length < 60) {
+                const remainingTarget = 60 - selected.length;
+                const usedNames = new Set(selected.map(s => s.name + s.type));
+                const allRemaining = [...eventPool, ...cityPool, ...districtPool]
+                    .filter(item => !usedNames.has(item.name + item.type));
+
+                const extra = getRandomSubset(allRemaining, remainingTarget);
+                selected = [...selected, ...extra];
+            }
+
+            // Shuffle final list
+            selected = getRandomSubset(selected, selected.length);
+
+            grid.innerHTML = selected.map(h => {
+                let icon = 'location_on';
+                let badgeClass = 'bg-primary text-white';
+                if (h.type === 'Event' || h.type === 'Cruise') {
+                    icon = h.type === 'Cruise' ? 'directions_boat' : 'event_upcoming';
+                    badgeClass = h.type === 'Cruise' ? 'bg-blue-500 text-white' : 'bg-yellow-400 text-slate-900 dark:text-white';
+                } else if (h.type === 'District') {
+                    icon = 'explore';
+                    badgeClass = 'bg-orange-500 text-white';
+                }
+
+                return `
                     <div onclick="quickSearch('${h.searchQuery}', '${h.date || ''}', '${h.endDate || ''}')" class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-lg border-l-4 border-primary flex gap-4 cursor-pointer hover:scale-[1.02] transition-transform group relative">
                         <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
                             <span class="material-symbols-outlined">${icon}</span>
@@ -8851,51 +8820,51 @@
                         </button>
                     </div>
                 `;
-        }).join('');
-    }
+            }).join('');
+        }
 
-    // --- INITIALIZATION ---
-    window.addEventListener('DOMContentLoaded', () => {
-        populateTrendingEvents();
-        populateSafeHotspots();
-    });
+        // --- INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', () => {
+            populateTrendingEvents();
+            populateSafeHotspots();
+        });
 
 
-    const SAFE_HOTSPOTS_DATA = [
-        { city: 'London', country: 'UK', safetyScore: 68, image: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80' },
-        { city: 'Orlando', country: 'USA', safetyScore: 68, image: 'https://images.unsplash.com/photo-1534351590666-13e3e96b5017?auto=format&fit=crop&w=800&q=80' },
-        { city: 'Tokyo', country: 'Japan', safetyScore: 53, image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=800&q=80' },
-        { city: 'Rio de Janeiro', country: 'Brazil', safetyScore: 75, image: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=800&q=80' },
-        { city: 'Miami', country: 'USA', safetyScore: 68, image: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=800&q=80' },
-        { city: 'Amsterdam', country: 'Netherlands', safetyScore: 76, image: 'https://images.unsplash.com/photo-1517736996303-4eec4a66bb17?auto=format&fit=crop&w=800&q=80' },
-        { city: 'Paris', country: 'France', safetyScore: 74, image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80' },
-        { city: 'Mexico City', country: 'Mexico', safetyScore: 70, image: 'https://images.unsplash.com/photo-1585464231875-d9ef1f5ad396?auto=format&fit=crop&w=800&q=80' },
-        { city: 'Buenos Aires', country: 'Argentina', safetyScore: 74, image: 'https://images.unsplash.com/photo-1589909202802-8f4aadce1849?auto=format&fit=crop&w=800&q=80' },
-        { city: 'Berlin', country: 'Germany', safetyScore: 80, image: 'https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=800&q=80' },
-        { city: 'Barcelona', country: 'Spain', safetyScore: 83, image: 'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?auto=format&fit=crop&w=800&q=80' },
-        { city: 'San Francisco', country: 'USA', safetyScore: 68, image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=800&q=80' }
-    ];
+        const SAFE_HOTSPOTS_DATA = [
+            { city: 'London', country: 'UK', safetyScore: 68, image: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80' },
+            { city: 'Orlando', country: 'USA', safetyScore: 68, image: 'https://images.unsplash.com/photo-1534351590666-13e3e96b5017?auto=format&fit=crop&w=800&q=80' },
+            { city: 'Tokyo', country: 'Japan', safetyScore: 53, image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=800&q=80' },
+            { city: 'Rio de Janeiro', country: 'Brazil', safetyScore: 75, image: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=800&q=80' },
+            { city: 'Miami', country: 'USA', safetyScore: 68, image: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=800&q=80' },
+            { city: 'Amsterdam', country: 'Netherlands', safetyScore: 76, image: 'https://images.unsplash.com/photo-1517736996303-4eec4a66bb17?auto=format&fit=crop&w=800&q=80' },
+            { city: 'Paris', country: 'France', safetyScore: 74, image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80' },
+            { city: 'Mexico City', country: 'Mexico', safetyScore: 70, image: 'https://images.unsplash.com/photo-1585464231875-d9ef1f5ad396?auto=format&fit=crop&w=800&q=80' },
+            { city: 'Buenos Aires', country: 'Argentina', safetyScore: 74, image: 'https://images.unsplash.com/photo-1589909202802-8f4aadce1849?auto=format&fit=crop&w=800&q=80' },
+            { city: 'Berlin', country: 'Germany', safetyScore: 80, image: 'https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=800&q=80' },
+            { city: 'Barcelona', country: 'Spain', safetyScore: 83, image: 'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?auto=format&fit=crop&w=800&q=80' },
+            { city: 'San Francisco', country: 'USA', safetyScore: 68, image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=800&q=80' }
+        ];
 
-    function populateSafeHotspots() {
-        const container = document.getElementById('hotspotsContainer');
-        if (!container) return;
+        function populateSafeHotspots() {
+            const container = document.getElementById('hotspotsContainer');
+            if (!container) return;
 
-        const randomHotspots = getRandomSubset(SAFE_HOTSPOTS_DATA, 3);
+            const randomHotspots = getRandomSubset(SAFE_HOTSPOTS_DATA, 3);
 
-        container.innerHTML = randomHotspots.map(h => {
-            const cityEvents = SPECIAL_EVENTS_DATA.filter(e => e.city.toLowerCase() === h.city.toLowerCase() && e.type !== 'Cruise');
-            let eventTagHtml = '';
-            let searchParams = `\'${h.city}\'`;
+            container.innerHTML = randomHotspots.map(h => {
+                const cityEvents = SPECIAL_EVENTS_DATA.filter(e => e.city.toLowerCase() === h.city.toLowerCase() && e.type !== 'Cruise');
+                let eventTagHtml = '';
+                let searchParams = `\'${h.city}\'`;
 
-            if (cityEvents.length > 0) {
-                const randomEvent = cityEvents[Math.floor(Math.random() * cityEvents.length)];
-                eventTagHtml = `<span class="bg-pride-orange text-white text-[10px] font-black px-2 py-1 rounded-lg uppercase mb-2 inline-block shadow-lg truncate max-w-[200px]">Event: ${randomEvent.name}</span>`;
-                searchParams = `'${h.city}', '${randomEvent.start}', '${randomEvent.end}'`;
-            } else {
-                eventTagHtml = `<span class="bg-pride-blue text-white text-[10px] font-black px-2 py-1 rounded-lg uppercase mb-2 inline-block shadow-lg max-w-[200px]">Trending Destination</span>`;
-            }
+                if (cityEvents.length > 0) {
+                    const randomEvent = cityEvents[Math.floor(Math.random() * cityEvents.length)];
+                    eventTagHtml = `<span class="bg-pride-orange text-white text-[10px] font-black px-2 py-1 rounded-lg uppercase mb-2 inline-block shadow-lg truncate max-w-[200px]">Event: ${randomEvent.name}</span>`;
+                    searchParams = `'${h.city}', '${randomEvent.start}', '${randomEvent.end}'`;
+                } else {
+                    eventTagHtml = `<span class="bg-pride-blue text-white text-[10px] font-black px-2 py-1 rounded-lg uppercase mb-2 inline-block shadow-lg max-w-[200px]">Trending Destination</span>`;
+                }
 
-            return `
+                return `
                     <div onclick="quickSearch(${searchParams})"
                         class="min-w-[280px] snap-center rounded-3xl overflow-hidden relative group shadow-2xl cursor-pointer active:scale-95 transition-transform rainbow-border">
                         <img class="w-full h-72 object-cover transition-transform duration-700 group-hover:scale-110"
@@ -8911,26 +8880,26 @@
                         </div>
                     </div>
                 `;
-        }).join('');
-    }
-
-    function populateTrendingEvents() {
-        const grid = document.getElementById('eventsGrid');
-        if (!grid) return;
-
-        const allCruises = SPECIAL_EVENTS_DATA.filter(e => e.type === 'Cruise');
-        const otherEvents = SPECIAL_EVENTS_DATA.filter(e => e.type !== 'Cruise');
-
-        let randomEvents = [];
-        if (allCruises.length > 0) {
-            const randomCruise = allCruises[Math.floor(Math.random() * allCruises.length)];
-            randomEvents.push(randomCruise);
-            randomEvents = randomEvents.concat(getRandomSubset(otherEvents, 3));
-            randomEvents.sort(() => Math.random() - 0.5);
-        } else {
-            randomEvents = getRandomSubset(SPECIAL_EVENTS_DATA, 4);
+            }).join('');
         }
-        grid.innerHTML = randomEvents.map(e => `
+
+        function populateTrendingEvents() {
+            const grid = document.getElementById('eventsGrid');
+            if (!grid) return;
+
+            const allCruises = SPECIAL_EVENTS_DATA.filter(e => e.type === 'Cruise');
+            const otherEvents = SPECIAL_EVENTS_DATA.filter(e => e.type !== 'Cruise');
+
+            let randomEvents = [];
+            if (allCruises.length > 0) {
+                const randomCruise = allCruises[Math.floor(Math.random() * allCruises.length)];
+                randomEvents.push(randomCruise);
+                randomEvents = randomEvents.concat(getRandomSubset(otherEvents, 3));
+                randomEvents.sort(() => Math.random() - 0.5);
+            } else {
+                randomEvents = getRandomSubset(SPECIAL_EVENTS_DATA, 4);
+            }
+            grid.innerHTML = randomEvents.map(e => `
                                 <div onclick="quickSearch('${e.city}', '${e.start}', '${e.end}')" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg border-l-4 border-primary flex gap-4 cursor-pointer hover:scale-[1.02] transition-transform relative group">
                                     <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
                                         <span class="material-symbols-outlined">${e.type === 'Cruise' ? 'directions_boat' : 'event_upcoming'}</span>
@@ -8944,8 +8913,8 @@
                                     </button>
                                 </div>
                             `).join('');
-    }
-    }) ();
+        }
+    })();
 </script>
 <script>
     if (typeof navigator.serviceWorker !== 'undefined') {
