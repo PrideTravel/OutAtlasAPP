@@ -2290,10 +2290,11 @@
                             `).join('');
             }
         })();
-    </script>
+<script src="app.js"></script>
+
     <script>
         if (typeof navigator.serviceWorker !== 'undefined') {
-            navigator.serviceWorker.register('sw.js') // or your specific URL
+            navigator.serviceWorker.register('sw.js')
                 .then(function (registration) {
                     console.log('Service Worker registered successfully:', registration);
                 })
@@ -2301,8 +2302,6 @@
                     console.log('Service Worker registration failed:', error);
                 });
         }
-
     </script>
 </body>
-
 </html>
