@@ -1633,20 +1633,43 @@
                 },
                 cities: {
 
-                    'lisbon': ['lisbon', 'lis'],
-                    'lis': ['lis', 'lisbon'],
-                    'frankfurt': ['frankfurt', 'fra', 'fran'],
-                    'fra': ['fra', 'frankfurt'],
-                    'fran': ['fran', 'frankfurt'],
-                    'phoenix': ['phoenix', 'phx'],
-                    'phx': ['phx', 'phoenix'],
-                    'tucson': ['tucson', 'tus'],
-                    'tus': ['tus', 'tucson'],
-                    'telluride': ['telluride', 'tex'],
-                    'tex': ['tex', 'telluride'],
-                    'cabo': ['cabo san lucas', 'cabo', 'sjd'],
-                    'cabo san lucas': ['cabo san lucas', 'cabo'],
-                    'sjd': ['sjd', 'cabo'],
+                    'lisbon': ['lisbon'],
+                    'lis': ['lisbon'],
+                    'lisboa': ['lisbon'],
+                    'lisbon portugal': ['lisbon'],
+                    'portugal': ['lisbon'],
+                    'lisbonne': ['lisbon'],
+                    'frankfurt': ['frankfurt'],
+                    'fra': ['frankfurt'],
+                    'fran': ['frankfurt'],
+                    'frankfurt germany': ['frankfurt'],
+                    'frankfurt am main': ['frankfurt'],
+                    'ffm': ['frankfurt'],
+
+                    'phoenix': ['phoenix'],
+                    'phx': ['phoenix'],
+                    'az phoenix': ['phoenix'],
+                    'phoenix az': ['phoenix'],
+                    'phoenix arizona': ['phoenix'],
+                    'sky harbor': ['phoenix'],
+                    'tucson': ['tucson'],
+                    'tus': ['tucson'],
+                    'tucson az': ['tucson'],
+                    'tucson arizona': ['tucson'],
+                    'tus airport': ['tucson'],
+                    'telluride': ['telluride'],
+                    'tex': ['telluride'],
+                    'telluride co': ['telluride'],
+                    'telluride colorado': ['telluride'],
+                    'mountain village': ['telluride'],
+                    'cabo': ['cabo san lucas'],
+                    'cabo san lucas': ['cabo san lucas'],
+                    'sjd': ['cabo san lucas'],
+                    'los cabos': ['cabo san lucas'],
+                    'baja': ['cabo san lucas'],
+                    'baja california': ['cabo san lucas'],
+                    'cabo mexico': ['cabo san lucas'],
+                    'san jose del cabo': ['cabo san lucas'],
                     'new york': ['new york', 'jfk', 'lga', 'ewr'],
                     'nyc': ['nyc', 'jfk', 'lga', 'ewr'],
                     'new york city': ['new york city', 'jfk', 'lga', 'ewr'],
@@ -1694,17 +1717,25 @@
                     'berlin': ['berlin'],
                     'ber': ['ber', 'berlin'],
 
-                    'tokyo': ['tokyo', 'nrt', 'hnd'],
-                    'nrt': ['nrt'],
-                    'hnd': ['hnd'],
+                    'tokyo': ['tokyo'],
+                    'nrt': ['tokyo'],
+                    'hnd': ['tokyo'],
+                    'narita': ['tokyo'],
+                    'haneda': ['tokyo'],
+                    'tokyo japan': ['tokyo'],
+                    'japan tokyo': ['tokyo'],
                     'bangkok': ['bangkok'],
                     'bkk': ['bkk', 'bangkok'],
                     'taipei': ['taipei'],
                     'taipei': ['taipei'],
                     'tpe': ['tpe', 'taipei'],
-                    'osaka': ['osaka', 'kix', 'itm'],
-                    'kix': ['kix', 'osaka'],
-                    'itm': ['itm', 'osaka'],
+                    'osaka': ['osaka'],
+                    'kix': ['osaka'],
+                    'itm': ['osaka'],
+                    'osaka japan': ['osaka'],
+                    'japan osaka': ['osaka'],
+                    'kansai': ['osaka'],
+                    'kansai airport': ['osaka'],
 
                     'cape town': ['cape town'],
                     'cpt': ['cpt', 'cape town'],
@@ -9430,7 +9461,7 @@
                     'Market & Shopping Spree',
                     'Drag Queen Hosted Pub Crawl'
                 ]
-
+                },
                 'cabo san lucas': {
                     monthlyWeather: {
                         0: { high: '77F / 25C', low: '62F / 17C', summary: 'Warm & Sunny' },
@@ -10117,10 +10148,10 @@
                 targets.forEach((targetKey, index) => {
                     let data = DATABASE.details[targetKey];
 
-                    // Safety check if mapping exists but details missing (shouldn't happen with correct data)
+                    // Safety check if mapping exists but details missing - skip this alias target
                     if (!data) {
-                        alert("Destination details currently unavailable.");
-                        return;
+                        console.warn('No details found for target key:', targetKey);
+                        return; // skip this target, continue with others
                     }
 
                     // Specific Hotels for Events
