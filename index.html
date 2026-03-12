@@ -437,7 +437,7 @@
             document.documentElement.classList.remove('dark')
         }
     </script>
-    <!-- window._DESTINATIONS_DATA removed so traveldestinations.json is fetched directly -->
+    <!-- window._DESTINATIONS_DATA removed so destinations.json is fetched directly -->
 
     <!-- destinations-data script removed -->
 </head>
@@ -1492,13 +1492,13 @@
                     }
                 }
             };
-            let DESTINATION_LINKS = {}; // Loaded from traveldestinations.json
+            let DESTINATION_LINKS = {}; // Loaded from destinations.json
             window.DATABASE = { mappings: { regions: {}, countries: {}, cities: {} }, details: {} };
             let SPECIAL_EVENTS_DATA = [];
             let SAFE_HOTSPOTS_DATA = [];
 
             // === DESTINATIONS DATA LOADER ===
-            // Load all destination data from traveldestinations.json
+            // Load all destination data from destinations.json
             let _destinationsLoaded = false;
 
             async function loadDestinationsData() {
@@ -1510,8 +1510,8 @@
                     data = window._DESTINATIONS_DATA;
                 } else {
                     try {
-                        console.log('[Pride Travel Scout] Fetching traveldestinations.json...');
-                        const response = await fetch('traveldestinations.json');
+                        console.log('[Pride Travel Scout] Fetching destinations.json...');
+                        const response = await fetch('destinations.json');
                         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                         data = await response.json();
                     } catch (error) {
@@ -1523,7 +1523,7 @@
                                 <div class="bg-red-50 dark:bg-red-900/20 p-6 rounded-2xl border-2 border-red-200 dark:border-red-800 text-center">
                                     <span class="material-symbols-outlined text-red-500 text-4xl mb-2">error</span>
                                     <p class="text-red-800 dark:text-red-200 font-bold">Data failed to load.</p>
-                                    <p class="text-red-600 dark:text-red-300 text-sm">Failed to fetch traveldestinations.json and no local backup found.</p>
+                                    <p class="text-red-600 dark:text-red-300 text-sm">Failed to fetch destinations.json and no local backup found.</p>
                                 </div>`;
                         }
                         return Promise.reject(error);
@@ -1662,7 +1662,7 @@
                         }
 
                         // Specific Hotels for Events
-                        const EVENT_HOTELS = window._EVENT_HOTELS || {}; // Loaded from traveldestinations.json
+                        const EVENT_HOTELS = window._EVENT_HOTELS || {}; // Loaded from destinations.json
 
                         // --- EVENT DETECTION LOGIC ---
                         let eventContent = '';
