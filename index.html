@@ -1711,20 +1711,19 @@
 
                         let randomHotels = [];
 
-                        // Add World Rainbow Hotel if available
+                        // Add all World Rainbow Hotels
                         if (rainbowHotels.length > 0) {
-                          randomHotels.push(rainbowHotels[Math.floor(Math.random() * rainbowHotels.length)]);
+                          randomHotels.push(...rainbowHotels);
                         }
 
-                        // Add IGLTA Hotel if available
+                        // Add all IGLTA Hotels
                         if (iglataHotels.length > 0) {
-                          randomHotels.push(iglataHotels[Math.floor(Math.random() * iglataHotels.length)]);
+                          randomHotels.push(...iglataHotels);
                         }
 
-                        // Fill remaining slots with random hotels
-                        const remainingSlots = 4 - randomHotels.length;
-                        if (remainingSlots > 0) {
-                          randomHotels.push(...getRandomSubset(otherHotels, remainingSlots));
+                        // Add all remaining hotels
+                        if (otherHotels.length > 0) {
+                          randomHotels.push(...otherHotels);
                         }
 
                         // Inject Featured Event Hotel (prepend if exists)
@@ -1741,14 +1740,12 @@
 
                             // Prepend to top of list
                             randomHotels.unshift(specialHotel);
-                            randomHotels = randomHotels.slice(0, 4); // Keep list size managed
                         } else if (firstMatchingEvent && EVENT_HOTELS[firstMatchingEvent.name]) {
                             // Legacy fallback if map matches old hardcoded name
                             const eventHotelNames = EVENT_HOTELS[firstMatchingEvent.name];
                             const randomEventHotelName = eventHotelNames[Math.floor(Math.random() * eventHotelNames.length)];
                             const specialHotel = { name: randomEventHotelName, type: 'Event Special', tags: ['Featured'] };
                             randomHotels.unshift(specialHotel);
-                            randomHotels = randomHotels.slice(0, 4);
                         }
 
                         // Split nightlife into distinct categories (merge dedicated saunas/stores arrays)
@@ -1763,14 +1760,14 @@
                         const isSauna = n => { const t = (n.type || '').toLowerCase(); const tags = (n.tags || []).map(g => g.toLowerCase()); return t.includes('sauna') || t.includes('bath') || tags.some(g => g.includes('sauna') || g.includes('bathhouse')); };
                         const isRestaurant = n => { const t = (n.type || '').toLowerCase(); return t.includes('restaurant') || t.includes('diner') || t.includes('cafe') || t.includes('bakery') || t.includes('bistro'); };
 
-                        const randomStores    = getRandomSubset(availableNightlife.filter(n => isStore(n)), 2);
-                        const randomSaunas    = getRandomSubset(availableNightlife.filter(n => !isStore(n) && isSauna(n)), 2);
+                        const randomStores    = availableNightlife.filter(n => isStore(n));
+                        const randomSaunas    = availableNightlife.filter(n => !isStore(n) && isSauna(n));
                         const nightlifeRestaurants = availableNightlife.filter(n => !isStore(n) && !isSauna(n) && isRestaurant(n));
-                        const randomNightlife = getRandomSubset(availableNightlife.filter(n => !isStore(n) && !isSauna(n) && !isRestaurant(n)), 4);
+                        const randomNightlife = availableNightlife.filter(n => !isStore(n) && !isSauna(n) && !isRestaurant(n));
 
                         // Restaurants: dedicated array + any restaurant-type items found in nightlife array
-                        const randomRestaurants = getRandomSubset([...availableRestaurants, ...nightlifeRestaurants], 2);
-                        const randomTours = (data.tours || []).slice(0, 5);
+                        const randomRestaurants = [...availableRestaurants, ...nightlifeRestaurants];
+                        const randomTours = (data.tours || []);
                         const fareEstimate = calculateFareEstimate(data.baseFare);
                         const delay = index * 200;
 
