@@ -6178,74 +6178,110 @@
     ],
     "hotels": [
       {
-        "name": "Bucuti & Tara",
-        "type": "Luxury",
+        "name": "Aruba Marriott Resort & Stellaris Casino",
         "tags": [
+          "IGLTA Accredited"
+        ],
+        "pricing": "Luxury"
+      },
+      {
+        "name": "Bucuti & Tara Beach Resort",
+        "tags": [
+          "LGBTQ Friendly",
           "Adults Only"
-        ]
+        ],
+        "pricing": "Luxury"
       },
       {
-        "name": "Renaissance Wind Creek",
-        "type": "Luxury",
+        "name": "The Ritz-Carlton, Aruba",
         "tags": [
-          "Private Island"
-        ]
+          "IGLTA Accredited"
+        ],
+        "pricing": "Luxury"
       },
       {
-        "name": "The Ritz-Carlton",
-        "type": "Luxury",
+        "name": "Renaissance Wind Creek Aruba Resort",
         "tags": [
           "LGBTQ Friendly"
-        ]
+        ],
+        "pricing": "Luxury"
       },
       {
-        "name": "Boardwalk Boutique Hotel",
-        "type": "IGLTA Accredited Moderate",
+        "name": "Amsterdam Manor Beach Resort",
         "tags": [
-          "Casitas"
-        ]
+          "IGLTA Accredited"
+        ],
+        "pricing": "Mid-Priced"
       },
       {
-        "name": "Manchebo Beach Resort",
-        "type": "Moderate",
+        "name": "Manchebo Beach Resort & Spa",
         "tags": [
-          "Wellness"
-        ]
+          "IGLTA Accredited"
+        ],
+        "pricing": "Luxury"
       },
       {
-        "name": "Amsterdam Manor",
-        "type": "Moderate",
+        "name": "Boardwalk Boutique Hotel Aruba",
         "tags": [
-          "Dutch Style"
-        ]
+          "LGBTQ Friendly"
+        ],
+        "pricing": "Mid-Priced"
       },
       {
-        "name": "Hyatt Regency",
-        "type": "Luxury",
+        "name": "Hilton Aruba Caribbean Resort & Casino",
         "tags": [
-          "Resort"
-        ]
+          "LGBTQ Friendly"
+        ],
+        "pricing": "Luxury"
+      },
+      {
+        "name": "Hyatt Regency Aruba Resort Spa & Casino",
+        "tags": [
+          "LGBTQ Friendly"
+        ],
+        "pricing": "Luxury"
+      },
+      {
+        "name": "Courtyard by Marriott Aruba Resort",
+        "tags": [
+          "LGBTQ Friendly"
+        ],
+        "pricing": "Mid-Priced"
       },
       {
         "name": "Eagle Aruba Resort",
-        "type": "Moderate",
         "tags": [
-          "Eagle Beach"
-        ]
+          "LGBTQ Friendly"
+        ],
+        "pricing": "Moderate"
       },
       {
-        "name": "Divi Aruba",
-        "type": "Moderate",
+        "name": "Aruba Boutique Apartments",
         "tags": [
-          "All Inclusive"
-        ]
+          "LGBTQ Friendly"
+        ],
+        "pricing": "Moderate"
       },
       {
-        "name": "Talk of the Town",
-        "type": "Budget",
+        "name": "Radisson Blu Aruba",
         "tags": [
-          "Central"
-        ]
+          "LGBTQ Friendly"
+        ],
+        "pricing": "Mid-Priced"
+      },
+      {
+        "name": "Bubali Bliss Studios & Villas",
+        "tags": [
+          "LGBTQ Friendly"
+        ],
+        "pricing": "Budget"
+      },
+      {
+        "name": "Arubiana Inn",
+        "tags": [
+          "LGBTQ Friendly"
+        ],
+        "pricing": "Budget"
       }
     ],
     "iata": "AUA",
@@ -6254,180 +6290,297 @@
     "lgbtqSafety": "Aruba: \"One Happy Island\". Very Safe. Legal unions.",
     "monthlyWeather": {
       "0": {
-        "high": "84°F",
-        "low": "74°F",
-        "summary": "Hot & Breezy"
+        "high": "85°F",
+        "low": "77°F",
+        "summary": "Breezy and dry; most comfortable month.",
+        "gear": "Light cotton, shorts, SPF 50."
       },
       "1": {
-        "high": "85°F",
-        "low": "74°F",
-        "summary": "Hot & Breezy"
+        "high": "86°F",
+        "low": "77°F",
+        "summary": "Sunny and consistent trade winds.",
+        "gear": "T-shirts, swimsuits, sunglasses."
       },
       "2": {
-        "high": "86°F",
-        "low": "75°F",
-        "summary": "Hot"
+        "high": "87°F",
+        "low": "77°F",
+        "summary": "Warm; start of the driest period.",
+        "gear": "Linen shirts, sundresses, hats."
       },
       "3": {
         "high": "88°F",
-        "low": "77°F",
-        "summary": "Hot & Sunny"
+        "low": "78°F",
+        "summary": "Very sunny; excellent visibility for snorkeling.",
+        "gear": "Rash guards, high-SPF sunscreen."
       },
       "4": {
         "high": "89°F",
-        "low": "78°F",
-        "summary": "Hot & Sunny"
+        "low": "80°F",
+        "summary": "Humid but cooled by constant winds.",
+        "gear": "Breathable fabrics, flip flops."
       },
       "5": {
-        "high": "90°F",
-        "low": "79°F",
-        "summary": "Hot"
+        "high": "89°F",
+        "low": "80°F",
+        "summary": "Hot; trade winds are vital.",
+        "gear": "Tank tops, shorts, light layers."
       },
       "6": {
-        "high": "90°F",
-        "low": "79°F",
-        "summary": "Hot & Sunny"
+        "high": "89°F",
+        "low": "80°F",
+        "summary": "High heat; very low chance of rain.",
+        "gear": "Hydration gear, cooling towels."
       },
       "7": {
-        "high": "91°F",
-        "low": "79°F",
-        "summary": "Hot & Sunny"
+        "high": "90°F",
+        "low": "80°F",
+        "summary": "Peak summer heat; intense UV.",
+        "gear": "Sun-protective clothing, SPF."
       },
       "8": {
-        "high": "91°F",
-        "low": "79°F",
-        "summary": "Hot & Sunny"
+        "high": "90°F",
+        "low": "80°F",
+        "summary": "Hottest month; warm nights.",
+        "gear": "Lightest evening wear, sandals."
       },
       "9": {
-        "high": "90°F",
+        "high": "89°F",
         "low": "79°F",
-        "summary": "Hot & Sunny"
+        "summary": "Rain showers possible; slightly overcast.",
+        "gear": "Travel umbrella, light rain jacket."
       },
       "10": {
         "high": "88°F",
-        "low": "77°F",
-        "summary": "Hot & Sunny"
+        "low": "78°F",
+        "summary": "Wettest month; short tropical showers.",
+        "gear": "Waterproof bag, quick-dry clothes."
       },
       "11": {
-        "high": "85°F",
-        "low": "75°F",
-        "summary": "Hot & Breezy"
+        "high": "86°F",
+        "low": "77°F",
+        "summary": "Rain tapers off; lush vegetation.",
+        "gear": "Light sweater for indoor AC."
       }
     },
     "name": "Aruba",
     "nightlife": [
       {
-        "name": "Jimmy's Place",
-        "type": "Bar",
+        "name": "@7 Club (District 7)",
+        "type": "Bar/Club",
         "tags": [
-          "Friendly"
+          "Dance",
+          "Drag",
+          "Main Hub"
         ]
       },
       {
-        "name": "District 7",
-        "type": "Bar",
+        "name": "Cage Night Club",
+        "type": "Bar/Club",
         "tags": [
-          "LGBTQ Owned"
+          "Drag Shows",
+          "Theater",
+          "High Energy"
         ]
       },
       {
-        "name": "Gusto",
-        "type": "Club",
+        "name": "Jimmy's Place (District 7)",
+        "type": "Bar/Club",
         "tags": [
-          "Palm Beach"
+          "Social",
+          "Local Favorite",
+          "Drinks"
         ]
       },
       {
-        "name": "Moomba Beach",
-        "type": "Bar",
+        "name": "Gin & Olive Garden Bar",
+        "type": "Bar/Club",
         "tags": [
-          "Beach Bar"
+          "Cocktails",
+          "Pre-party",
+          "Social"
         ]
       },
       {
-        "name": "Sopranos Piano Bar",
-        "type": "Bar",
+        "name": "Divi Bar & Lounge",
+        "type": "Bar/Club",
         "tags": [
-          "Music"
+          "Upscale",
+          "Cocktails",
+          "Views"
         ]
       },
       {
-        "name": "The Office",
-        "type": "Bar",
+        "name": "MooMba Beach Bar",
+        "type": "Bar/Club",
         "tags": [
-          "Late Night"
+          "Beach",
+          "Gay-friendly",
+          "Mixed"
         ]
       },
       {
-        "name": "Florin Lounge",
-        "type": "Bar",
+        "name": "The Chapel Restaurant & Bar",
+        "type": "Bar/Club",
         "tags": [
-          "Local"
-        ]
-      },
-      {
-        "name": "Sandbar",
-        "type": "Bar",
-        "tags": [
-          "Outdoor"
-        ]
-      },
-      {
-        "name": "South Beach",
-        "type": "Lounge",
-        "tags": [
-          "Outdoor"
-        ]
-      },
-      {
-        "name": "Bugaloe",
-        "type": "Bar",
-        "tags": [
-          "Pier"
+          "Social",
+          "Drinks",
+          "Boutique"
         ]
       }
     ],
     "safetyScore": 60,
     "tours": [
       {
-        "name": "Arikok National Park",
-        "style": "Relaxing"
+        "name": "LGBTQ Gaily Tour: Aruba Secrets & History",
+        "activity": "Moderate",
+        "duration": "3 Hours",
+        "pricing": "Moderate"
       },
       {
-        "name": "Renaissance Island Flamingos",
-        "style": "Cultural"
+        "name": "LGBTQ Private Queer Nightlife Crawl",
+        "activity": "Low",
+        "duration": "4 Hours",
+        "pricing": "Moderate"
       },
       {
-        "name": "Antilla Shipwreck Snorkel",
-        "style": "Cultural"
+        "name": "LGBTQ Personalized Pride Island Tour",
+        "activity": "Moderate",
+        "duration": "5 Hours",
+        "pricing": "Luxury"
       },
       {
-        "name": "Hidden Gems Night Tour",
-        "style": "Adventurous"
+        "name": "Art, Beach, & Culture Island Tour",
+        "activity": "Moderate",
+        "duration": "4 Hours",
+        "pricing": "Moderate"
       },
       {
-        "name": "Queer Art & Culture Walk",
-        "style": "Cultural"
+        "name": "Champagne Brunch & Aqua Safari",
+        "activity": "Low",
+        "duration": "4 Hours",
+        "pricing": "Moderate"
       },
       {
-        "name": "Drag Queen Hosted Pub Crawl",
-        "style": "Show"
+        "name": "Spur Experiences Finest Island Tour",
+        "activity": "Low",
+        "duration": "4 Hours",
+        "pricing": "Moderate"
       },
       {
-        "name": "City Highlights Bus Tour",
-        "style": "Cultural"
+        "name": "Exclusive Dinner Cruise",
+        "activity": "Low",
+        "duration": "3 Hours",
+        "pricing": "Luxury"
       },
       {
-        "name": "LGBTQ+ History Walking Tour",
-        "style": "History"
+        "name": "Downtown Historic & Cultural Walking Tour",
+        "activity": "Moderate",
+        "duration": "2.5 Hours",
+        "pricing": "Budget"
       },
       {
-        "name": "Historic Gay Neighborhood Tour",
-        "style": "History"
+        "name": "Arikok National Park Off-Road Jeep Safari",
+        "activity": "High",
+        "duration": "6 Hours",
+        "pricing": "Luxury"
       },
       {
-        "name": "Gay-Friendly Winery Tour",
-        "style": "Food & Drink"
+        "name": "Natural Pool & Indian Caves 4x4 Tour",
+        "activity": "High",
+        "duration": "4 Hours",
+        "pricing": "Moderate"
+      },
+      {
+        "name": "Sunset Catamaran Cruise with Open Bar",
+        "activity": "Low",
+        "duration": "2 Hours",
+        "pricing": "Budget"
+      },
+      {
+        "name": "San Nicolas Street Art & Mural Tour",
+        "activity": "Moderate",
+        "duration": "2 Hours",
+        "pricing": "Moderate"
+      },
+      {
+        "name": "Aruba Aloe Factory & Museum Tour",
+        "activity": "Low",
+        "duration": "1.5 Hours",
+        "pricing": "Budget"
+      },
+      {
+        "name": "Baby Beach Snorkeling & Sightseeing",
+        "activity": "Moderate",
+        "duration": "7 Hours",
+        "pricing": "Moderate"
+      },
+      {
+        "name": "Guided Trike Adventure Tour",
+        "activity": "High",
+        "duration": "3 Hours",
+        "pricing": "Moderate"
+      },
+      {
+        "name": "Glass Bottom Boat Expedition",
+        "activity": "Low",
+        "duration": "1.5 Hours",
+        "pricing": "Budget"
+      },
+      {
+        "name": "Sea Kayaking to Mangel Halto",
+        "activity": "High",
+        "duration": "3 Hours",
+        "pricing": "Moderate"
+      },
+      {
+        "name": "Wine Tasting at Alto Vista",
+        "activity": "Low",
+        "duration": "2 Hours",
+        "pricing": "Moderate"
+      }
+    ],
+    "restaurants": [
+      {
+        "name": "Que Pasa Restaurant & Winebar",
+        "type": "Restaurant (Fusion)"
+      },
+      {
+        "name": "L.G. Smith's Steak & Chop House",
+        "type": "Restaurant (Modern Steakhouse)"
+      },
+      {
+        "name": "Flying Fishbone",
+        "type": "Restaurant (Beachfront Dining)"
+      },
+      {
+        "name": "Passions on the Beach",
+        "type": "Restaurant (Romantic/Seafood)"
+      },
+      {
+        "name": "Harbor Cafe",
+        "type": "Cafe (Dutch Desserts & Beer)"
+      },
+      {
+        "name": "Jimmy's Kitchen",
+        "type": "Cafe / Casual Dining"
+      },
+      {
+        "name": "Papiamento Restaurant",
+        "type": "Restaurant (Fine Dining)"
+      }
+    ],
+    "stores": [
+      {
+        "name": "Pepe Margo Distillery",
+        "type": "Store (Tasting Room)"
+      },
+      {
+        "name": "San Nicolas Street Art Murals",
+        "type": "Store (Cultural Site / Art District)"
+      },
+      {
+        "name": "Studio Murano Fine Arts",
+        "type": "Store (Glassblowing Workshop)"
       }
     ]
   },
@@ -17757,80 +17910,123 @@
     "hotels": [
       {
         "name": "Avila Beach Hotel",
-        "type": "Luxury",
         "tags": [
+          "IGLTA Member",
           "LGBTQ Friendly"
-        ]
+        ],
+        "pricing": "Luxury"
       },
       {
-        "name": "Renaissance",
-        "type": "Luxury",
+        "name": "Marriott Beach Resort",
         "tags": [
+          "IGLTA Accredited",
           "LGBTQ Friendly"
-        ]
+        ],
+        "pricing": "Luxury"
       },
       {
-        "name": "Saint Tropez",
-        "type": "Moderate",
+        "name": "Renaissance Wind Creek",
         "tags": [
+          "IGLTA Member",
           "LGBTQ Friendly"
-        ]
+        ],
+        "pricing": "Luxury"
       },
       {
-        "name": "Papagayo",
-        "type": "Luxury",
+        "name": "Kura Botanica Hotel",
         "tags": [
-          "LGBTQ Friendly"
-        ]
+          "LGBTQ Friendly",
+          "Boutique"
+        ],
+        "pricing": "Luxury"
       },
       {
-        "name": "Baoase",
-        "type": "Luxury",
+        "name": "Lodge Kura Hulanda",
         "tags": [
-          "LGBTQ Friendly"
-        ]
+          "LGBTQ Friendly",
+          "IGLTA Member"
+        ],
+        "pricing": "Luxury"
       },
       {
-        "name": "Scuba Lodge",
-        "type": "Moderate",
+        "name": "LionsDive Beach Resort",
         "tags": [
+          "IGLTA Member",
           "LGBTQ Friendly"
-        ]
+        ],
+        "pricing": "Luxury"
       },
       {
-        "name": "Elements",
-        "type": "Moderate",
+        "name": "The Ritz Village Hotel",
         "tags": [
-          "LGBTQ Friendly"
-        ]
+          "LGBTQ Friendly",
+          "Adults Only"
+        ],
+        "pricing": "Moderate"
       },
       {
-        "name": "Dreams",
-        "type": "Luxury",
+        "name": "BijBlauw Boutique Hotel",
         "tags": [
-          "LGBTQ Friendly"
-        ]
+          "LGBTQ Friendly",
+          "European Owned"
+        ],
+        "pricing": "Moderate"
       },
       {
-        "name": "Mangrove",
-        "type": "Moderate",
+        "name": "Mondi Lodge",
         "tags": [
-          "LGBTQ Friendly"
-        ]
+          "LGBTQ Friendly",
+          "Eco-Friendly"
+        ],
+        "pricing": "Moderate"
       },
       {
-        "name": "The Pride Inn",
-        "type": "Moderate",
+        "name": "Papagayo Beach Hotel",
         "tags": [
-          "LGBTQ Friendly"
-        ]
+          "LGBTQ Friendly",
+          "High End"
+        ],
+        "pricing": "Luxury"
       },
       {
-        "name": "Baoase Luxury Resort",
-        "type": "Luxury",
+        "name": "Scuba Lodge & Ocean Front",
         "tags": [
-          "LGBTQ Owned/Operated"
-        ]
+          "LGBTQ Friendly",
+          "Boutique"
+        ],
+        "pricing": "Moderate"
+      },
+      {
+        "name": "Bario Hotel",
+        "tags": [
+          "LGBTQ Friendly",
+          "Urban Style"
+        ],
+        "pricing": "Moderate"
+      },
+      {
+        "name": "St. Tropez Ocean Club",
+        "tags": [
+          "LGBTQ Friendly",
+          "Trendy"
+        ],
+        "pricing": "Luxury"
+      },
+      {
+        "name": "Dreams Curacao Resort",
+        "tags": [
+          "IGLTA Member",
+          "LGBTQ Friendly"
+        ],
+        "pricing": "Luxury"
+      },
+      {
+        "name": "Advantage Apartments",
+        "tags": [
+          "LGBTQ Friendly",
+          "Independent"
+        ],
+        "pricing": "Budget"
       }
     ],
     "iata": "CUR",
@@ -17839,180 +18035,395 @@
     "lgbtqSafety": "Curacao: Safe. Part of the Kingdom of the Netherlands, same-sex activity is legal.",
     "monthlyWeather": {
       "0": {
-        "high": "86°F",
-        "low": "73°F",
-        "summary": "Sunny & Breezy"
+        "high": "85°F",
+        "low": "76°F",
+        "summary": "Breezy, clearest month; very low rain.",
+        "gear": "Cotton tees, shorts, light evening layer."
       },
       "1": {
-        "high": "87°F",
-        "low": "74°F",
-        "summary": "Sunny & Breezy"
+        "high": "85°F",
+        "low": "76°F",
+        "summary": "Warm, dry, and sunny; peak travel season.",
+        "gear": "Swimwear, high-SPF sunscreen, sun hat."
       },
       "2": {
-        "high": "88°F",
-        "low": "75°F",
-        "summary": "Sunny"
+        "high": "86°F",
+        "low": "76°F",
+        "summary": "Very dry; consistent tropical sunshine.",
+        "gear": "Breathable fabrics, sandals, sunglasses."
       },
       "3": {
-        "high": "89°F",
-        "low": "76°F",
-        "summary": "Hot & Sunny"
+        "high": "87°F",
+        "low": "77°F",
+        "summary": "Increasing heat; very high UV levels.",
+        "gear": "UV-protective shirts, water shoes."
       },
       "4": {
-        "high": "90°F",
-        "low": "77°F",
-        "summary": "Hot & Sunny"
+        "high": "88°F",
+        "low": "78°F",
+        "summary": "Hot and humid with cooling trade winds.",
+        "gear": "Linen clothing, hydration bottles."
       },
       "5": {
-        "high": "91°F",
-        "low": "78°F",
-        "summary": "Hot"
+        "high": "89°F",
+        "low": "79°F",
+        "summary": "Tropical heat; occasional passing breeze.",
+        "gear": "Moisture-wicking gear, flip-flops."
       },
       "6": {
-        "high": "91°F",
-        "low": "78°F",
-        "summary": "Hot & Sunny"
+        "high": "89°F",
+        "low": "79°F",
+        "summary": "Hot; ideal for all-day water activities.",
+        "gear": "Rash guards, snorkeling gear, sarongs."
       },
       "7": {
-        "high": "91°F",
+        "high": "90°F",
         "low": "79°F",
-        "summary": "Hot & Sunny"
+        "summary": "Peak summer heat; extremely sunny.",
+        "gear": "Strong insect repellent, light tanks."
       },
       "8": {
-        "high": "91°F",
-        "low": "78°F",
-        "summary": "Hot & Sunny"
+        "high": "90°F",
+        "low": "79°F",
+        "summary": "Hottest month; chance of brief showers.",
+        "gear": "Waterproof phone pouch, cooling towels."
       },
       "9": {
-        "high": "90°F",
-        "low": "77°F",
-        "summary": "Hot & Sunny"
+        "high": "89°F",
+        "low": "78°F",
+        "summary": "High humidity; brief nightly showers begin.",
+        "gear": "Travel umbrella, light rain poncho."
       },
       "10": {
-        "high": "89°F",
-        "low": "76°F",
-        "summary": "Warm & Sunny"
+        "high": "87°F",
+        "low": "77°F",
+        "summary": "Rainiest month; scattered afternoon clouds.",
+        "gear": "Quick-dry clothing, waterproof bag."
       },
       "11": {
-        "high": "87°F",
-        "low": "74°F",
-        "summary": "Sunny & Breezy"
+        "high": "85°F",
+        "low": "76°F",
+        "summary": "Mild rain; cooler evening temperatures.",
+        "gear": "Light sweater for AC, sturdy walk shoes."
       }
     },
     "name": "Curacao",
     "nightlife": [
       {
+        "name": "GAZE Bar & Lounge",
+        "type": "Bar/Club",
+        "tags": [
+          "100% Gay Bar",
+          "Drag",
+          "Karaoke"
+        ]
+      },
+      {
+        "name": "Wet & Wild Beach Club",
+        "type": "Bar/Club",
+        "tags": [
+          "Gay Friendly",
+          "Sunday Happy Hour"
+        ]
+      },
+      {
         "name": "Rainbow Lounge",
-        "type": "Bar",
+        "type": "Bar/Club",
         "tags": [
-          "Social"
-        ]
+          "LGBTQ Happy Hour",
+          "Pop-up"
+        ],
+        "status": "Seasonal"
       },
       {
-        "name": "Mambo Beach",
-        "type": "Club",
+        "name": "Cabana Beach Club",
+        "type": "Bar/Club",
         "tags": [
-          "Beach"
-        ]
-      },
-      {
-        "name": "Wet & Wild",
-        "type": "Bar",
-        "tags": [
+          "Gay Friendly",
           "Beach Party"
         ]
       },
       {
-        "name": "Saint Tropez",
-        "type": "Bar",
+        "name": "St. Tropez Ocean Club",
+        "type": "Bar/Club",
         "tags": [
-          "Pool"
+          "Trendy",
+          "Sunset Cocktails",
+          "Mixed"
         ]
       },
       {
-        "name": "Punda Vibes",
-        "type": "Bar",
+        "name": "Mambo Beach Club",
+        "type": "Bar/Club",
         "tags": [
-          "Street"
+          "Diverse",
+          "Late Night",
+          "Events"
         ]
       },
       {
-        "name": "Zanzibar",
-        "type": "Bar",
+        "name": "Papagayo Beach Club",
+        "type": "Bar/Club",
         "tags": [
-          "Live Music"
+          "High-end",
+          "Social",
+          "Mixed"
         ]
       },
       {
-        "name": "Cabana",
-        "type": "Club",
+        "name": "One Vibe Container Bar",
+        "type": "Bar/Club",
         "tags": [
-          "Dance"
-        ]
-      },
-      {
-        "name": "Omundo",
-        "type": "Bar",
-        "tags": [
-          "Late Night"
-        ]
-      },
-      {
-        "name": "Miles Jazz Cafe",
-        "type": "Bar",
-        "tags": [
-          "Jazz"
-        ]
-      },
-      {
-        "name": "Mojitos",
-        "type": "Bar",
-        "tags": [
-          "Salsa"
+          "Chill",
+          "Social",
+          "Artsy"
         ]
       }
     ],
     "safetyScore": 60,
     "tours": [
       {
-        "name": "Handelskade",
-        "style": "Cultural"
+        "name": "LGBTQ History Walking Tour (Nelly Rosa)",
+        "activity": "Moderate",
+        "duration": "2.5 Hours",
+        "pricing": "Moderate"
       },
       {
-        "name": "Klein Curacao",
-        "style": "Cultural"
+        "name": "HE Travel: Gay Scuba Diving Week",
+        "activity": "High",
+        "duration": "7 Days",
+        "pricing": "Luxury"
       },
       {
-        "name": "Sea Aquarium",
-        "style": "Cultural"
+        "name": "Curacao Pride Walking Tour",
+        "activity": "Moderate",
+        "duration": "2 Hours",
+        "pricing": "Moderate"
       },
       {
-        "name": "Local Pride Food Tasting",
-        "style": "Food & Drink"
+        "name": "UNESCO Willemstad Walking Tour",
+        "activity": "Moderate",
+        "duration": "2 Hours",
+        "pricing": "Budget"
       },
       {
-        "name": "City Highlights Bus Tour",
-        "style": "Cultural"
+        "name": "Klein Curacao Catamaran Cruise",
+        "activity": "Low",
+        "duration": "8 Hours",
+        "pricing": "Luxury"
       },
       {
-        "name": "Drag Queen Hosted Pub Crawl",
-        "style": "Show"
+        "name": "Blue Curacao Liqueur Distillery Tour",
+        "activity": "Low",
+        "duration": "1 Hour",
+        "pricing": "Budget"
       },
       {
-        "name": "Sunset Cruise Excursion",
-        "style": "Relaxing"
+        "name": "Hato Caves & Flamingo Sanctuary",
+        "activity": "Moderate",
+        "duration": "4 Hours",
+        "pricing": "Moderate"
       },
       {
-        "name": "Historic Gay Neighborhood Tour",
-        "style": "History"
+        "name": "Shete Boka National Park Jeep Tour",
+        "activity": "Moderate",
+        "duration": "5 Hours",
+        "pricing": "Moderate"
       },
       {
-        "name": "Hidden Gems Night Tour",
-        "style": "Adventurous"
+        "name": "Curacao Authentic Food Tasting Tour",
+        "activity": "Low",
+        "duration": "4.5 Hours",
+        "pricing": "Moderate"
       },
       {
-        "name": "Gay-Friendly Winery Tour",
-        "style": "Food & Drink"
+        "name": "Pietermaai Audio Coffee Walk",
+        "activity": "Moderate",
+        "duration": "1.5 Hours",
+        "pricing": "Budget"
+      },
+      {
+        "name": "3-Course Caribbean Fine Dining Night Tour",
+        "activity": "Low",
+        "duration": "3.5 Hours",
+        "pricing": "Luxury"
+      },
+      {
+        "name": "Tuk Tuk City Highlights Tour",
+        "activity": "Low",
+        "duration": "1 Hour",
+        "pricing": "Budget"
+      },
+      {
+        "name": "Scharloo Art & Mural Walk",
+        "activity": "Moderate",
+        "duration": "1.5 Hours",
+        "pricing": "Budget"
+      },
+      {
+        "name": "Beach Hopping UTV Adventure",
+        "activity": "High",
+        "duration": "6 Hours",
+        "pricing": "Luxury"
+      },
+      {
+        "name": "Sunset Sailing & Open Bar Cruise",
+        "activity": "Low",
+        "duration": "2.5 Hours",
+        "pricing": "Moderate"
+      },
+      {
+        "name": "Kura Hulanda Museum Cultural Tour",
+        "activity": "Low",
+        "duration": "1.5 Hours",
+        "pricing": "Budget"
+      },
+      {
+        "name": "Floating Breakfast & Photoshoot",
+        "activity": "Low",
+        "duration": "1.5 Hours",
+        "pricing": "Moderate"
+      },
+      {
+        "name": "Private Island Full-Day Custom Tour",
+        "activity": "Low-High",
+        "duration": "8 Hours",
+        "pricing": "Luxury"
+      }
+    ],
+    "saunas": [
+      {
+        "name": "Island House Curacao",
+        "type": "Sauna",
+        "tags": [
+          "Private",
+          "Clothing Optional",
+          "Sauna"
+        ]
+      }
+    ],
+    "restaurants": [
+      {
+        "name": "House of Stroop",
+        "type": "Cafe (Queer-Owned / Stroopwafels)"
+      },
+      {
+        "name": "It's Better with Chocolate",
+        "type": "Sweet Shop (Queer Co-Owned / Artisan Chocolate)"
+      },
+      {
+        "name": "Pancho's Tacos",
+        "type": "Restaurant (Queer-Owned / Mexican)"
+      },
+      {
+        "name": "Number Ten",
+        "type": "Cafe / Bakery (Famous Rainbow Cake)"
+      },
+      {
+        "name": "Bonchi Coffeehouse",
+        "type": "Cafe (Queer-Owned / Coffee Shop)"
+      },
+      {
+        "name": "Hofi Cas Cora",
+        "type": "Restaurant (Farm-to-Table / Inclusive)"
+      },
+      {
+        "name": "Kome Restaurant",
+        "type": "Restaurant (Fine Dining / LGBTQ+ Friendly)"
+      },
+      {
+        "name": "Bario Urban Street Food",
+        "type": "Food Court (Queer Co-Owned / Diverse Vendors)"
+      },
+      {
+        "name": "Koraal Rooftop",
+        "type": "Restaurant (Rooftop Bar / LGBTQ+ Friendly)"
+      },
+      {
+        "name": "One Vibe Container Bar",
+        "type": "Cafe / Bar (Artsy / Inclusive)"
+      },
+      {
+        "name": "Vittle Art (Kris)",
+        "type": "Cafe / Cooking Workshop (Queer-Owned)"
+      },
+      {
+        "name": "The Pink Taverna",
+        "type": "Restaurant (Historical Queer Hub)"
+      },
+      {
+        "name": "Blue View Sunset Terrace",
+        "type": "Restaurant (Scenic / LGBTQ+ Friendly)"
+      },
+      {
+        "name": "Karakter",
+        "type": "Restaurant (Beachside / Inclusive)"
+      },
+      {
+        "name": "La Setima Club",
+        "type": "Restaurant (Vegan / Queer-Inclusive)"
+      }
+    ],
+    "stores": [
+      {
+        "name": "Bagira Art Gallery",
+        "type": "Store (Queer-Owned / Art & Gifts)"
+      },
+      {
+        "name": "Gabriel Hair & Make-Up",
+        "type": "Service (Queer-Owned Salon / Styling)"
+      },
+      {
+        "name": "Penha Duty Free (Punda)",
+        "type": "Store (Fragrance / Cosmetics / IGLTA Ally)"
+      },
+      {
+        "name": "Chichi Shop Punda",
+        "type": "Store (Handcrafted Local Art / Souvenirs)"
+      },
+      {
+        "name": "The Yellow House",
+        "type": "Store (Beauty / Fragrance / LGBTQ+ Friendly)"
+      },
+      {
+        "name": "Kokolishi Store",
+        "type": "Store (Clothing / Local Boutique)"
+      },
+      {
+        "name": "Copperstone",
+        "type": "Store (Artisanal Crafts / Souvenirs)"
+      },
+      {
+        "name": "Effy Collection",
+        "type": "Store (Jewelry / LGBTQ+ Friendly)"
+      },
+      {
+        "name": "The Goods BV",
+        "type": "Store (Curated Local Gifts / Boutique)"
+      },
+      {
+        "name": "Old City Canning Co.",
+        "type": "Store (Queer-Owned / Candles & Fragrance)"
+      },
+      {
+        "name": "Renaissance Mall",
+        "type": "Store (High-End Retail / IGLTA Accredited)"
+      },
+      {
+        "name": "Mambo Beach Boulevard",
+        "type": "Store (Beachwear / Retail Hub)"
+      },
+      {
+        "name": "Shipwreck Souvenirs",
+        "type": "Store (Gifts / Local History)"
+      },
+      {
+        "name": "SilvanyRoss",
+        "type": "Store (Local Crafts / Art)"
+      },
+      {
+        "name": "Punda Market",
+        "type": "Store (Artisanal Goods / Open-Air)"
       }
     ]
   },
