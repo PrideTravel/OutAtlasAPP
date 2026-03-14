@@ -1702,12 +1702,22 @@
                             matchingEvents.push(...internalMatches);
                         }
 
+                        // Fisher-Yates shuffle — returns a new shuffled array
+                        const shuffle = arr => {
+                            const a = [...arr];
+                            for (let i = a.length - 1; i > 0; i--) {
+                                const j = Math.floor(Math.random() * (i + 1));
+                                [a[i], a[j]] = [a[j], a[i]];
+                            }
+                            return a;
+                        };
+
                         // Hotel selection: Always include 1 World Rainbow Member & 1 IGLTA Accredited (if available)
-                        const rainbowHotels = (data.hotels || []).filter(h => h.tags && h.tags.some(t => t.includes('World Rainbow')));
-                        const iglataHotels = (data.hotels || []).filter(h => h.tags && h.tags.some(t => t.includes('IGLTA')));
-                        const otherHotels = (data.hotels || []).filter(h =>
+                        const rainbowHotels = shuffle((data.hotels || []).filter(h => h.tags && h.tags.some(t => t.includes('World Rainbow'))));
+                        const iglataHotels = shuffle((data.hotels || []).filter(h => h.tags && h.tags.some(t => t.includes('IGLTA'))));
+                        const otherHotels = shuffle((data.hotels || []).filter(h =>
                           (!h.tags || (!h.tags.some(t => t.includes('World Rainbow')) && !h.tags.some(t => t.includes('IGLTA'))))
-                        );
+                        ));
 
                         let randomHotels = [];
 
@@ -1750,12 +1760,12 @@
                         }
 
                         // Split nightlife into distinct categories (merge dedicated saunas/stores arrays)
-                        const availableNightlife = [
+                        const availableNightlife = shuffle([
                             ...(Array.isArray(data.nightlife) ? data.nightlife : []),
                             ...(Array.isArray(data.saunas) ? data.saunas : []),
                             ...(Array.isArray(data.stores) ? data.stores : [])
-                        ];
-                        const availableRestaurants = data.restaurants ? [...data.restaurants] : [];
+                        ]);
+                        const availableRestaurants = data.restaurants ? shuffle([...data.restaurants]) : [];
 
                         const isStore = n => { const t = (n.type || '').toLowerCase(); const tags = (n.tags || []).map(g => g.toLowerCase()); return t.includes('store') || t.includes('shop') || tags.some(g => g.includes('store') || g.includes('shop')); };
                         const isSauna = n => { const t = (n.type || '').toLowerCase(); const tags = (n.tags || []).map(g => g.toLowerCase()); return t.includes('sauna') || t.includes('bath') || tags.some(g => g.includes('sauna') || g.includes('bathhouse')); };
@@ -1768,7 +1778,7 @@
 
                         // Restaurants: dedicated array + any restaurant-type items found in nightlife array
                         const randomRestaurants = [...availableRestaurants, ...nightlifeRestaurants].slice(0, 2);
-                        const randomTours = (data.tours || []).slice(0, 6);
+                        const randomTours = shuffle(data.tours || []).slice(0, 6);
                         const fareEstimate = calculateFareEstimate(data.baseFare);
                         const delay = index * 200;
 
