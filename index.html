@@ -2173,7 +2173,7 @@
                                 const activityLevels = ['low', 'moderate', 'high', 'easy', 'adventurous'];
                                 const styleLabel = activityLevels.includes(tourStyle.toLowerCase()) ? `Activity Level: ${tourStyle}` : tourStyle;
                                 const tourDesc = `Approx. 3 hours &bull; ${styleLabel}`;
-                                const priceBadgeClass = tourPrice === 'Budget' ? 'bg-pride-green/10 text-pride-green' : tourPrice === 'Luxury' ? 'bg-pride-purple/10 text-pride-purple' : tourPrice === 'Moderate' ? 'bg-pride-blue/10 text-pride-blue' : '';
+                                const priceBadgeClass = tourPrice === 'Budget' ? 'bg-pride-green/10 dark:bg-white text-pride-green' : tourPrice === 'Luxury' ? 'bg-pride-purple/10 dark:bg-white text-pride-purple' : tourPrice === 'Moderate' ? 'bg-pride-blue/10 dark:bg-white text-pride-blue' : 'dark:bg-white';
                                 const priceBadge = tourPrice ? `<span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${priceBadgeClass}">${tourPrice}</span>` : '';
                                 return `
                                     <div class="flex gap-4 items-center bg-white dark:bg-slate-800 p-3 rounded-xl shadow-sm group cursor-pointer border border-slate-100 dark:border-slate-700 hover:border-primary/20">
