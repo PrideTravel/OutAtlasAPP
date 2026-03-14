@@ -1909,7 +1909,7 @@
                                         ${randomHotels.map(h => {
                             const badge = getHotelBadge(h);
                             const tagInfo = getHotelTagsInfo(h);
-                            const isRainbowPill = h.tags && h.tags.some(t => t.includes('LGBTQ Owned') || t.includes('World Rainbow') || t.includes('IGLTA'));
+                            const isRainbowPill = h.tags && h.tags.some(t => t.includes('LGBTQ Owned') || t.includes('LGBTQ Hotel') || t.includes('Gay Hotel') || t.includes('World Rainbow') || t.includes('IGLTA') || t.includes('Rainbow Registered'));
                             return `
                                             <div class="flex items-start justify-between text-xs border-b border-slate-50 dark:border-slate-700 pb-2 last:border-0 gap-2">
                                                 <div class="flex-1 min-w-0">
@@ -2168,12 +2168,12 @@
                                 <div class="space-y-4">
                                     ${randomTours.map(t => {
                                 const tourName = typeof t === 'object' ? t.name : t;
-                                const tourStyle = typeof t === 'object' ? t.style : 'Featured Tour';
+                                const tourStyle = typeof t === 'object' ? (t.style || t.activity || 'Featured Tour') : 'Featured Tour';
                                 const tourPrice = typeof t === 'object' && t.price ? t.price : '';
                                 const activityLevels = ['low', 'moderate', 'high', 'easy', 'adventurous'];
                                 const styleLabel = activityLevels.includes(tourStyle.toLowerCase()) ? `Activity Level: ${tourStyle}` : tourStyle;
                                 const tourDesc = `Approx. 3 hours &bull; ${styleLabel}`;
-                                const priceBadgeClass = tourPrice === 'Budget' ? 'bg-pride-green/10 text-pride-green' : tourPrice === 'Luxury' ? 'bg-pride-purple/10 text-pride-purple' : tourPrice === 'Moderate' ? 'bg-pride-blue/10 text-pride-blue' : '';
+                                const priceBadgeClass = tourPrice === 'Budget' ? 'bg-pride-green/10 dark:bg-white text-pride-green' : tourPrice === 'Luxury' ? 'bg-pride-purple/10 dark:bg-white text-pride-purple' : tourPrice === 'Moderate' ? 'bg-pride-blue/10 dark:bg-white text-pride-blue' : 'dark:bg-white';
                                 const priceBadge = tourPrice ? `<span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${priceBadgeClass}">${tourPrice}</span>` : '';
                                 return `
                                     <div class="flex gap-4 items-center bg-white dark:bg-slate-800 p-3 rounded-xl shadow-sm group cursor-pointer border border-slate-100 dark:border-slate-700 hover:border-primary/20">
@@ -2244,32 +2244,44 @@
             }
 
             function getHotelTagsInfo(h) {
-                if (!h || !h.tags) return { specialty: null, priceTag: null, certifications: [] };
+                if (!h) return { specialty: null, priceTag: null, certifications: [] };
 
                 const tags = h.tags || [];
                 let specialty = null;
                 let priceTag = null;
                 let certifications = [];
+                const priceLevels = ['Budget', 'Mid-priced', 'Mid-Priced', 'Moderate', 'Luxury'];
 
                 for (const tag of tags) {
-                    // Separate specialty tags (LGBTQ Friendly, Luxury, etc.)
+                    // Specialty tags
                     if (tag === 'Luxury') {
                         specialty = 'Luxury';
                     } else if (tag === 'LGBTQ Friendly') {
                         specialty = specialty === 'Luxury' ? 'Luxury' : 'LGBTQ Friendly';
-                    } else if (tag === 'LGBTQ Owned & Operated' || tag === 'LGBTQ Owned') {
+                    } else if (tag === 'LGBTQ Owned & Operated' || tag === 'LGBTQ Owned' ||
+                               tag === 'LGBTQ Owned/Operated' || tag === 'LGBTQ Owned & Operated' ||
+                               tag === 'LGBTQ Hotel' || tag === 'Gay Hotel') {
                         specialty = 'LGBTQ Owned';
                     }
 
-                    // Capture price tag
-                    if (['Budget', 'Mid-priced', 'Moderate', 'Luxury'].includes(tag)) {
+                    // Price tag (some destinations store price in tags)
+                    if (priceLevels.includes(tag)) {
                         priceTag = tag;
                     }
 
                     // Certification tags
-                    if (tag === 'World Rainbow Hotels Member' || tag === 'IGLTA Accredited' || tag === 'World Rainbow Hotel') {
+                    if (tag === 'World Rainbow Hotels Member' || tag === 'IGLTA Accredited' ||
+                        tag === 'World Rainbow Hotel' || tag === 'IGLTA Member' ||
+                        tag === 'Rainbow Registered (CGLCC)' || tag === 'World Rainbow Hotels') {
                         certifications.push(tag);
                     }
+                }
+
+                // Also check h.pricing / h.type / h.price for price (different destinations use different fields)
+                if (!priceTag) {
+                    if (h.pricing && priceLevels.includes(h.pricing)) priceTag = h.pricing;
+                    else if (h.price && priceLevels.includes(h.price)) priceTag = h.price;
+                    else if (h.type && priceLevels.includes(h.type)) priceTag = h.type;
                 }
 
                 return { specialty, priceTag, certifications };
