@@ -2485,8 +2485,12 @@
                         const color = isCruise ? 'pride-blue' : 'pride-purple';
                         const badge = isCruise ? `<span class="text-[9px] font-black uppercase px-1.5 py-0.5 bg-pride-blue/10 text-pride-blue rounded">Cruise</span>` : '';
                         const dateStr = ev.start && ev.end ? `${ev.start} &ndash; ${ev.end}` : ev.start || '';
+                        const safeKey = targetKey.replace(/'/g, "\\'");
+                        const safeStart = (ev.start || '').replace(/'/g, "\\'");
+                        const safeEnd = (ev.end || '').replace(/'/g, "\\'");
                         return `
-                        <div class="flex items-start gap-3 p-4 border-b border-slate-100 dark:border-slate-700 last:border-0">
+                        <div onclick="quickSearch('${safeKey}', '${safeStart}', '${safeEnd}')"
+                             class="flex items-start gap-3 p-4 border-b border-slate-100 dark:border-slate-700 last:border-0 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors group">
                             <div class="w-9 h-9 rounded-xl bg-${color}/10 flex items-center justify-center text-${color} shrink-0 mt-0.5">
                                 <span class="material-symbols-outlined text-sm">${icon}</span>
                             </div>
@@ -2496,8 +2500,9 @@
                                     ${badge}
                                 </div>
                                 ${dateStr ? `<p class="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1"><span class="material-symbols-outlined text-[11px]">calendar_today</span>${dateStr}</p>` : ''}
+                                <p class="text-[10px] text-primary font-bold mt-1 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5"><span class="material-symbols-outlined text-[11px]">flight_takeoff</span> Search with these dates</p>
                             </div>
-                            <div class="flex flex-col gap-1 shrink-0">
+                            <div class="flex flex-col gap-1 shrink-0" onclick="event.stopPropagation()">
                                 ${hasOfficial ? `<a href="${ev.link}" target="_blank" class="px-2.5 py-1 bg-pride-purple text-white rounded-full text-[10px] font-black flex items-center gap-1 hover:opacity-90 transition-opacity whitespace-nowrap"><span class="material-symbols-outlined text-[11px]">language</span>Official</a>` : ''}
                                 <a href="${googleLink}" target="_blank" class="px-2.5 py-1 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-full text-[10px] font-black flex items-center gap-1 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors whitespace-nowrap"><span class="material-symbols-outlined text-[11px]">search</span>Google</a>
                             </div>
