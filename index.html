@@ -1801,7 +1801,16 @@
 
                         // Restaurants: dedicated array + any restaurant-type items found in nightlife array
                         const randomRestaurants = [...availableRestaurants, ...nightlifeRestaurants].slice(0, 2);
-                        const randomTours = shuffle(data.tours || []).slice(0, 6);
+
+                        // Tours: Always include 2 LGBTQ-tagged tours + up to 4 others
+                        const allTours = data.tours || [];
+                        const lgbtqTours = allTours.filter(t => t.tags && Array.isArray(t.tags) && t.tags.includes('LGBTQ'));
+                        const otherTours = allTours.filter(t => !(t.tags && Array.isArray(t.tags) && t.tags.includes('LGBTQ')));
+                        const randomTours = [
+                          ...shuffle(lgbtqTours).slice(0, 2),
+                          ...shuffle(otherTours).slice(0, 4)
+                        ];
+
                         const randomParks = shuffle(data.amusementParks || []).slice(0, 2);
                         const fareEstimate = calculateFareEstimate(data.baseFare);
                         const delay = index * 200;
