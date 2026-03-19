@@ -1041,18 +1041,42 @@
                 const inputEl = document.getElementById(inputId);
                 if (!inputEl) return;
                 const val = inputEl.value.trim();
+                if (!val) return;
+
+                const initials = getUserInitials(currentUser);
+                const userDisplayName = currentUser.displayName || currentUser.email || 'User';
+                const newBookingEntry = { user: userDisplayName, initials: initials, info: val, addedAt: Date.now() };
+
+                const fieldName = `bookingInfo_${type}`;
+
+                // First, remove any existing entry from this user
+                const tSnap = await db.collection('users').doc(currentUser.uid).collection('trips').doc(docId).get();
+                const tripData = tSnap.data() || {};
+                let bookingArray = tripData[fieldName] || [];
+
+                // If it's a string (old format), convert to array
+                if (typeof bookingArray === 'string') {
+                    bookingArray = [{ user: 'Unknown', initials: '?', info: bookingArray, addedAt: Date.now() }];
+                }
+
+                // Remove old entry from current user if exists
+                bookingArray = bookingArray.filter(b => b.initials !== initials);
+
+                // Add new entry
+                bookingArray.push(newBookingEntry);
 
                 const updateObj = {};
-                updateObj[`bookingInfo_${type}`] = val;
+                updateObj[fieldName] = bookingArray;
 
-                const tSnap = await db.collection('users').doc(currentUser.uid).collection('trips').doc(docId).get();
-                if (tSnap.exists && tSnap.data().shareId) {
-                    try { await db.collection('shared_trips').doc(tSnap.data().shareId).set(updateObj, { merge: true }); }
+                const sharedTSnap = await db.collection('users').doc(currentUser.uid).collection('trips').doc(docId).get();
+                if (sharedTSnap.exists && sharedTSnap.data().shareId) {
+                    try { await db.collection('shared_trips').doc(sharedTSnap.data().shareId).set(updateObj, { merge: true }); }
                     catch (e) { console.error(e); }
                 }
 
                 await db.collection('users').doc(currentUser.uid).collection('trips').doc(docId).set(updateObj, { merge: true });
 
+                inputEl.value = '';
                 const oldBtnHTML = inputEl.nextElementSibling.innerHTML;
                 inputEl.nextElementSibling.innerHTML = '&#10003;';
                 inputEl.nextElementSibling.style.background = '#10b981';
@@ -1061,7 +1085,29 @@
                     inputEl.nextElementSibling.innerHTML = oldBtnHTML;
                     inputEl.nextElementSibling.style.background = '#eee';
                     inputEl.nextElementSibling.style.color = '#333';
+                    psLoadTrips();
                 }, 1000);
+            };
+
+            window.psDeleteBookingInfo = async function (docId, type, bookingObjStr) {
+                if (!currentUser) return;
+                try {
+                    const bookingObj = JSON.parse(decodeURIComponent(bookingObjStr));
+                    const fieldName = `bookingInfo_${type}`;
+                    const updateObj = {};
+                    updateObj[fieldName] = firebase.firestore.FieldValue.arrayRemove(bookingObj);
+
+                    const tSnap = await db.collection('users').doc(currentUser.uid).collection('trips').doc(docId).get();
+                    if (tSnap.exists && tSnap.data().shareId) {
+                        try { await db.collection('shared_trips').doc(tSnap.data().shareId).update(updateObj); }
+                        catch (e) { console.error(e); }
+                    }
+
+                    await db.collection('users').doc(currentUser.uid).collection('trips').doc(docId).update(updateObj);
+                    psLoadTrips();
+                } catch (e) {
+                    console.error("Error deleting booking info", e);
+                }
             };
 
             window.psDeleteNote = async function (docId, noteObjStr) {
@@ -1083,6 +1129,25 @@
                 }
             };
 
+            window.psDeleteBookmark = async function (docId, bookmarkObjStr) {
+                if (!currentUser) return;
+                try {
+                    const bookmarkObj = JSON.parse(decodeURIComponent(bookmarkObjStr));
+                    const updateObj = { bookmarks: firebase.firestore.FieldValue.arrayRemove(bookmarkObj) };
+
+                    const tSnap = await db.collection('users').doc(currentUser.uid).collection('trips').doc(docId).get();
+                    if (tSnap.exists && tSnap.data().shareId) {
+                        try { await db.collection('shared_trips').doc(tSnap.data().shareId).update(updateObj); }
+                        catch (e) { console.error(e); }
+                    }
+
+                    await db.collection('users').doc(currentUser.uid).collection('trips').doc(docId).update(updateObj);
+                    psLoadTrips();
+                } catch (e) {
+                    console.error("Error deleting bookmark", e);
+                }
+            };
+
             window.psEmailTrip = async function (e, origin, dest, start, end, weather, lgbtqSafety) {
                 e.preventDefault();
                 const subject = `Trip Idea: ${dest} for Pride Travel`;
@@ -1099,6 +1164,22 @@
                         const doc = await db.collection('users').doc(currentUser.uid).collection('trips').doc(docId).get();
                         if (doc.exists) {
                             const t = doc.data();
+                            let bookingText = '';
+                            if (t.bookingInfo_flight || t.bookingInfo_hotel || t.bookingInfo_tour) {
+                                bookingText = "Booking Details:\n";
+                                ['flight', 'hotel', 'tour'].forEach(type => {
+                                    const fieldName = `bookingInfo_${type}`;
+                                    let bookings = t[fieldName] || [];
+                                    if (typeof bookings === 'string') {
+                                        bookings = [{ user: 'User', initials: '?', info: bookings }];
+                                    }
+                                    if (bookings.length > 0) {
+                                        bookingText += type.charAt(0).toUpperCase() + type.slice(1) + ": ";
+                                        bookingText += bookings.map(b => `[${b.initials}] ${b.user}: ${b.info}`).join(", ") + "\n";
+                                    }
+                                });
+                                bookingText += "\n";
+                            }
                             if (t.bookmarks && t.bookmarks.length > 0) {
                                 bookmarksText = "Bookmarked Places:\n" + t.bookmarks.map(b => `- ${b.name} (${b.type})`).join('\n') + "\n\n";
                             }
@@ -1109,6 +1190,7 @@
                                 notesText += "Notes:\n" + t.note + "\n\n";
                             }
                         }
+                        body += bookingText;
                     } catch (err) { console.error("Error fetching trip for email", err); }
                 }
 
@@ -1135,9 +1217,20 @@
                             const t = doc.data();
                             if (t.bookingInfo_flight || t.bookingInfo_hotel || t.bookingInfo_tour) {
                                 lines.push('Booking Details:');
-                                if (t.bookingInfo_flight) lines.push('  Flight: ' + t.bookingInfo_flight);
-                                if (t.bookingInfo_hotel) lines.push('  Hotel: ' + t.bookingInfo_hotel);
-                                if (t.bookingInfo_tour) lines.push('  Tour: ' + t.bookingInfo_tour);
+                                ['flight', 'hotel', 'tour'].forEach(type => {
+                                    const fieldName = `bookingInfo_${type}`;
+                                    let bookings = t[fieldName] || [];
+                                    // Handle backward compatibility - convert string to array
+                                    if (typeof bookings === 'string') {
+                                        bookings = [{ user: 'User', initials: '?', info: bookings }];
+                                    }
+                                    if (bookings.length > 0) {
+                                        lines.push('  ' + type.charAt(0).toUpperCase() + type.slice(1) + ':');
+                                        bookings.forEach(b => {
+                                            lines.push('    - [' + (b.initials || '?') + '] ' + (b.user || 'User') + ': ' + (b.info || ''));
+                                        });
+                                    }
+                                });
                                 lines.push('');
                             }
                             if (t.bookmarks && t.bookmarks.length > 0) {
@@ -1173,6 +1266,7 @@
                 let body = `Trip Idea from Pride Travel Scout!\n\nDestination: ${dest}\nDates: ${start} to ${end}\nFrom: ${origin}\n\nWeather: ${weather}\nLGBTQ Safety: ${lgbtqSafety}\n\nGoogle Flights: ${gFlights}\n\n`;
 
                 const key = [dest, origin, start, end].join('|');
+                let bookingText = '';
                 let bookmarksText = '';
                 let notesText = '';
 
@@ -1182,6 +1276,20 @@
                         const doc = await db.collection('users').doc(currentUser.uid).collection('trips').doc(docId).get();
                         if (doc.exists) {
                             const t = doc.data();
+                            if (t.bookingInfo_flight || t.bookingInfo_hotel || t.bookingInfo_tour) {
+                                bookingText = "Bookings: ";
+                                ['flight', 'hotel', 'tour'].forEach(type => {
+                                    const fieldName = `bookingInfo_${type}`;
+                                    let bookings = t[fieldName] || [];
+                                    if (typeof bookings === 'string') {
+                                        bookings = [{ info: bookings }];
+                                    }
+                                    if (bookings.length > 0) {
+                                        bookingText += type + ": " + bookings.map(b => b.info).join(", ") + " | ";
+                                    }
+                                });
+                                bookingText += "\n\n";
+                            }
                             if (t.bookmarks && t.bookmarks.length > 0) {
                                 bookmarksText = "Bookmarks:\n" + t.bookmarks.map(b => `- ${b.name}`).join('\n') + "\n\n";
                             }
@@ -1195,7 +1303,7 @@
                     } catch (err) { console.error("Error fetching trip for SMS", err); }
                 }
 
-                body += bookmarksText + notesText;
+                body += bookingText + bookmarksText + notesText;
 
                 // Detect iOS vs Android/Others for SMS link format
                 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
@@ -1278,11 +1386,29 @@
                                 const sharedSnap = await db.collection('shared_trips').doc(t.shareId).get();
                                 if (sharedSnap.exists) {
                                     const st = sharedSnap.data();
-                                    t.notes = st.notes || [];
-                                    t.bookmarks = st.bookmarks || [];
-                                    t.bookingInfo_flight = st.bookingInfo_flight || t.bookingInfo_flight;
-                                    t.bookingInfo_hotel = st.bookingInfo_hotel || t.bookingInfo_hotel;
-                                    t.bookingInfo_tour = st.bookingInfo_tour || t.bookingInfo_tour;
+                                    t.notes = st.notes || t.notes || [];
+                                    t.bookmarks = st.bookmarks || t.bookmarks || [];
+                                    // For booking info, merge arrays from shared and personal trips
+                                    ['flight', 'hotel', 'tour'].forEach(type => {
+                                        const fieldName = `bookingInfo_${type}`;
+                                        let sharedBookings = st[fieldName] || [];
+                                        let personalBookings = t[fieldName] || [];
+
+                                        // Handle backward compatibility - convert strings to arrays
+                                        if (typeof sharedBookings === 'string') {
+                                            sharedBookings = [{ user: 'User', initials: '?', info: sharedBookings }];
+                                        }
+                                        if (typeof personalBookings === 'string') {
+                                            personalBookings = [{ user: 'User', initials: '?', info: personalBookings }];
+                                        }
+
+                                        // Merge arrays - shared data takes precedence
+                                        if (Array.isArray(sharedBookings) && sharedBookings.length > 0) {
+                                            t[fieldName] = sharedBookings;
+                                        } else if (Array.isArray(personalBookings) && personalBookings.length > 0) {
+                                            t[fieldName] = personalBookings;
+                                        }
+                                    });
                                 }
                             } catch (e) { console.error("Could not fetch shared contents", e); }
                         }
@@ -1294,7 +1420,16 @@
                                 '<div style="font-weight:bold; margin-bottom:.2rem; color:#f20d8f; display:flex; align-items:center; gap:4px;">' +
                                 '<span class="material-symbols-outlined" style="font-size:14px;">bookmarks</span> Bookmarked Places</div>' +
                                 '<ul style="list-style:none; padding:0; margin:0; color:#444;">' +
-                                t.bookmarks.map(b => '<li style="margin-bottom:.2rem; display:flex; align-items:center; gap:4px;"><span class="material-symbols-outlined" style="color:#aaa; font-size:12px;">fiber_manual_record</span> <strong>' + b.name + '</strong> <span style="font-size:.7rem; color:#888;">(' + b.type + ')</span>' + (b.addedBy ? '<span style="font-size:.6rem; color:#fff; background:linear-gradient(90deg,#f20d8f,#86007D); padding:2px 5px; border-radius:99px; font-weight:bold; margin-left:4px;">' + b.addedBy + '</span>' : '') + '</li>').join('') +
+                                t.bookmarks.map(b => {
+                                    const bookmarkObjStr = encodeURIComponent(JSON.stringify(b));
+                                    return '<li style="margin-bottom:.3rem; display:flex; justify-content:space-between; align-items:flex-start; gap:4px; background:#fff; padding:6px; border-radius:4px; border:1px solid #eee;">' +
+                                        '<div style="flex:1; word-break:break-word;">' +
+                                        '<div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;"><strong>' + b.name + '</strong> <span style="font-size:.7rem; color:#888;">(' + b.type + ')</span>' + (b.addedBy ? '<span style="font-size:.6rem; color:#fff; background:linear-gradient(90deg,#f20d8f,#86007D); padding:2px 5px; border-radius:99px; font-weight:bold;">' + b.addedBy + '</span>' : '') + '</div>' +
+                                        '</div>' +
+                                        '<button onclick="psDeleteBookmark(\'' + doc.id + '\', \'' + bookmarkObjStr + '\')" title="Delete Bookmark" style="background:none; border:none; color:#e11d48; cursor:pointer; padding:0; margin-left:4px; opacity:0.6; transition:opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">' +
+                                        '<span class="material-symbols-outlined" style="font-size:16px;">delete</span></button>' +
+                                        '</li>';
+                                }).join('') +
                                 '</ul></div>';
                         }
                         let notesHtml = '';
@@ -1345,25 +1480,63 @@
                             + '</div>'
                             + bookmarksHtml
                             + notesHtml
-                            + '<div style="margin-top:.5rem; font-size:.8rem; background:rgba(0,0,0,0.02); padding:.5rem; border-radius:6px;">'
-                            + '<div style="font-weight:bold; margin-bottom:.4rem; color:#f20d8f; display:flex; align-items:center; gap:4px;">'
-                            + '<span class="material-symbols-outlined" style="font-size:14px;">airplane_ticket</span> Booking Details</div>'
-                            + '<div style="display:flex; flex-direction:column; gap:6px;">'
-                            + '<div style="display:flex; align-items:center; gap:6px;">'
-                            + '<span class="material-symbols-outlined" title="Flight" style="font-size:16px; width:20px; text-align:center; color:#555;">flight_takeoff</span>'
-                            + '<input type="text" id="booking-flight-' + doc.id + '" placeholder="Flight details..." value="' + (t.bookingInfo_flight || '').replace(/"/g, '&quot;') + '" style="flex:1; border:1px solid #ccc; border-radius:4px; padding:.3rem .5rem; font-size:.75rem; font-family:inherit; outline:none; color:#333;">'
-                            + '<button onclick="psSaveBookingInfo(\'' + doc.id + '\', \'flight\', \'booking-flight-' + doc.id + '\')" style="background:#eee;color:#333;border:none;border-radius:4px;padding:.3rem .5rem;font-size:.7rem;font-weight:bold;cursor:pointer;">Save</button>'
-                            + '</div>'
-                            + '<div style="display:flex; align-items:center; gap:6px;">'
-                            + '<span class="material-symbols-outlined" title="Hotel" style="font-size:16px; width:20px; text-align:center; color:#555;">hotel</span>'
-                            + '<input type="text" id="booking-hotel-' + doc.id + '" placeholder="Hotel details..." value="' + (t.bookingInfo_hotel || '').replace(/"/g, '&quot;') + '" style="flex:1; border:1px solid #ccc; border-radius:4px; padding:.3rem .5rem; font-size:.75rem; font-family:inherit; outline:none; color:#333;">'
-                            + '<button onclick="psSaveBookingInfo(\'' + doc.id + '\', \'hotel\', \'booking-hotel-' + doc.id + '\')" style="background:#eee;color:#333;border:none;border-radius:4px;padding:.3rem .5rem;font-size:.7rem;font-weight:bold;cursor:pointer;">Save</button>'
-                            + '</div>'
-                            + '<div style="display:flex; align-items:center; gap:6px;">'
-                            + '<span class="material-symbols-outlined" title="Tour" style="font-size:16px; width:20px; text-align:center; color:#555;">explore</span>'
-                            + '<input type="text" id="booking-tour-' + doc.id + '" placeholder="Tour details..." value="' + (t.bookingInfo_tour || '').replace(/"/g, '&quot;') + '" style="flex:1; border:1px solid #ccc; border-radius:4px; padding:.3rem .5rem; font-size:.75rem; font-family:inherit; outline:none; color:#333;">'
-                            + '<button onclick="psSaveBookingInfo(\'' + doc.id + '\', \'tour\', \'booking-tour-' + doc.id + '\')" style="background:#eee;color:#333;border:none;border-radius:4px;padding:.3rem .5rem;font-size:.7rem;font-weight:bold;cursor:pointer;">Save</button>'
-                            + '</div></div></div>'
+                            + (() => {
+                                const bookingTypes = ['flight', 'hotel', 'tour'];
+                                const bookingIcons = { flight: 'flight_takeoff', hotel: 'hotel', tour: 'explore' };
+                                let bookingHtml = '<div style="margin-top:.5rem; font-size:.8rem; background:rgba(0,0,0,0.02); padding:.5rem; border-radius:6px;">' +
+                                    '<div style="font-weight:bold; margin-bottom:.4rem; color:#f20d8f; display:flex; align-items:center; gap:4px;">' +
+                                    '<span class="material-symbols-outlined" style="font-size:14px;">airplane_ticket</span> Booking Details</div>';
+
+                                bookingTypes.forEach(type => {
+                                    const fieldName = `bookingInfo_${type}`;
+                                    let bookings = t[fieldName] || [];
+
+                                    // Handle backward compatibility - convert string to array
+                                    if (typeof bookings === 'string') {
+                                        bookings = [{ user: 'Unknown', initials: '?', info: bookings, addedAt: Date.now() }];
+                                    }
+
+                                    const currentUserInitials = currentUser ? getUserInitials(currentUser) : '';
+                                    const userHasBooking = bookings.some(b => b.initials === currentUserInitials);
+
+                                    bookingHtml += '<div style="margin-bottom:.8rem;">' +
+                                        '<div style="display:flex; align-items:center; gap:6px; margin-bottom:.3rem;">' +
+                                        '<span class="material-symbols-outlined" style="font-size:16px; color:#555;">' + bookingIcons[type] + '</span>' +
+                                        '<span style="font-weight:bold; text-transform:capitalize;">' + type + '</span>' +
+                                        '</div>';
+
+                                    // Show existing bookings from all users
+                                    if (bookings.length > 0) {
+                                        bookingHtml += '<ul style="list-style:none; padding:0; margin:0 0 .4rem 0; color:#444;">';
+                                        bookings.forEach(b => {
+                                            const bookingObjStr = encodeURIComponent(JSON.stringify(b));
+                                            const dateStr = b.addedAt ? new Date(b.addedAt).toLocaleDateString() : '';
+                                            const canDelete = currentUser && b.initials === currentUserInitials;
+                                            bookingHtml += '<li style="margin-bottom:.2rem; display:flex; justify-content:space-between; align-items:flex-start; gap:4px; background:#fff; padding:6px; border-radius:4px; border:1px solid #eee;">' +
+                                                '<div style="flex:1; word-break:break-word;">' +
+                                                '<div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;"><span style="font-size:.6rem; color:#fff; background:linear-gradient(90deg,#f20d8f,#86007D); padding:2px 5px; border-radius:99px; font-weight:bold;">' + b.initials + '</span><span style="font-size:.7rem; color:#888;">' + b.user + '</span>' + (dateStr ? '<span style="font-size:.65rem; color:#999;">' + dateStr + '</span>' : '') + '</div>' +
+                                                '<span>' + b.info + '</span>' +
+                                                '</div>' +
+                                                (canDelete ? '<button onclick="psDeleteBookingInfo(\'' + doc.id + '\', \'' + type + '\', \'' + bookingObjStr + '\')" title="Delete Booking" style="background:none; border:none; color:#e11d48; cursor:pointer; padding:0; margin-left:4px; opacity:0.6; transition:opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6;"><span class="material-symbols-outlined" style="font-size:16px;">delete</span></button>' : '') +
+                                                '</li>';
+                                        });
+                                        bookingHtml += '</ul>';
+                                    }
+
+                                    // Show input for current user if they haven't added their booking yet
+                                    if (currentUser && !userHasBooking) {
+                                        bookingHtml += '<div style="display:flex; align-items:center; gap:6px;">' +
+                                            '<input type="text" id="booking-' + type + '-' + doc.id + '" placeholder="Add your ' + type + ' details..." style="flex:1; border:1px solid #ccc; border-radius:4px; padding:.3rem .5rem; font-size:.75rem; font-family:inherit; outline:none; color:#333;">' +
+                                            '<button onclick="psSaveBookingInfo(\'' + doc.id + '\', \'' + type + '\', \'booking-' + type + '-' + doc.id + '\')" style="background:#eee;color:#333;border:none;border-radius:4px;padding:.3rem .5rem;font-size:.7rem;font-weight:bold;cursor:pointer;">Save</button>' +
+                                            '</div>';
+                                    }
+
+                                    bookingHtml += '</div>';
+                                });
+
+                                bookingHtml += '</div>';
+                                return bookingHtml;
+                            })()
                             + '<div style="margin-top:.5rem; display:flex; gap:6px;">'
                             + '<input type="text" id="note-input-' + doc.id + '" placeholder="e.g. Meet friends at 8PM" '
                             + 'style="flex:1; border:1px solid #ccc; border-radius:6px; padding:.4rem .6rem; font-size:.8rem; font-family:inherit; outline:none; color:#333; box-sizing:border-box;">'
