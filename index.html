@@ -1728,18 +1728,33 @@
                 if (specialEvents) {
                     SPECIAL_EVENTS_DATA.length = 0;
                     SPECIAL_EVENTS_DATA.push(...specialEvents);
+                    console.log('[Pride Travel Scout] Loaded SPECIAL_EVENTS_DATA:', SPECIAL_EVENTS_DATA.length, 'events');
                 }
                 if (eventHotels) window._EVENT_HOTELS = eventHotels;
                 if (safeHotspots) {
                     SAFE_HOTSPOTS_DATA.length = 0;
                     SAFE_HOTSPOTS_DATA.push(...safeHotspots);
+                    console.log('[Pride Travel Scout] Loaded SAFE_HOTSPOTS_DATA:', SAFE_HOTSPOTS_DATA.length, 'hotspots');
                 }
 
                 window.DATABASE.details = details;
                 _destinationsLoaded = true;
 
-                if (typeof populateTrendingEvents === 'function') populateTrendingEvents();
-                if (typeof populateSafeHotspots === 'function') populateSafeHotspots();
+                console.log('[Pride Travel Scout] Calling populateTrendingEvents...');
+                if (typeof populateTrendingEvents === 'function') {
+                    populateTrendingEvents();
+                    console.log('[Pride Travel Scout] populateTrendingEvents called');
+                } else {
+                    console.error('[Pride Travel Scout] populateTrendingEvents is NOT a function');
+                }
+
+                console.log('[Pride Travel Scout] Calling populateSafeHotspots...');
+                if (typeof populateSafeHotspots === 'function') {
+                    populateSafeHotspots();
+                    console.log('[Pride Travel Scout] populateSafeHotspots called');
+                } else {
+                    console.error('[Pride Travel Scout] populateSafeHotspots is NOT a function');
+                }
 
                 return Promise.resolve();
             }
@@ -2834,12 +2849,18 @@
 
             function populateTrendingEvents() {
                 const grid = document.getElementById('eventsGrid');
-                if (!grid) return;
+                console.log('[Pride Travel Scout] populateTrendingEvents() running, grid element:', !!grid);
+                if (!grid) {
+                    console.error('[Pride Travel Scout] eventsGrid element NOT FOUND');
+                    return;
+                }
 
                 if (!SPECIAL_EVENTS_DATA || SPECIAL_EVENTS_DATA.length === 0) {
+                    console.warn('[Pride Travel Scout] SPECIAL_EVENTS_DATA is empty:', SPECIAL_EVENTS_DATA);
                     grid.innerHTML = '<p class="col-span-full text-center text-slate-400 py-10 italic">Checking for upcoming pride events...</p>';
                     return;
                 }
+                console.log('[Pride Travel Scout] SPECIAL_EVENTS_DATA has', SPECIAL_EVENTS_DATA.length, 'events');
 
                 const cruises = SPECIAL_EVENTS_DATA.filter(e => e.type === 'Cruise');
                 const events = SPECIAL_EVENTS_DATA.filter(e => e.type !== 'Cruise');
@@ -2871,6 +2892,7 @@
                 }
 
                 grid.innerHTML = html;
+                console.log('[Pride Travel Scout] populateTrendingEvents() completed, populated grid with', html.length, 'chars');
             }
 
             function renderTrendingCardSnippet(e) {
@@ -2898,7 +2920,13 @@
 
             function populateSafeHotspots() {
                 const container = document.getElementById('hotspotsContainer');
-                if (!container) return;
+                console.log('[Pride Travel Scout] populateSafeHotspots() running, container element:', !!container);
+                if (!container) {
+                    console.error('[Pride Travel Scout] hotspotsContainer element NOT FOUND');
+                    return;
+                }
+
+                console.log('[Pride Travel Scout] SAFE_HOTSPOTS_DATA has', SAFE_HOTSPOTS_DATA.length, 'hotspots');
 
                 // Amsterdam (World Pride 2026) is always 1st — pulled from safeHotspots data
                 const amsterdam = (SAFE_HOTSPOTS_DATA || []).find(h => h.city && h.city.toLowerCase() === 'amsterdam') || {
@@ -2948,6 +2976,7 @@
                             </div>
                         </div>`;
                 }).join('');
+                console.log('[Pride Travel Scout] populateSafeHotspots() completed, populated container');
             }
         })();
     </script>
