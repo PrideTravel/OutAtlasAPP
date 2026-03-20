@@ -2487,6 +2487,13 @@
                 return shuffled.slice(0, count);
             }
 
+            function countryCodeToFlag(code) {
+                if (!code || code.length !== 2) return '🌍';
+                // Convert ISO 3166-1 alpha-2 code to emoji flag
+                const codePoints = [...code.toUpperCase()].map(char => 127397 + char.charCodeAt());
+                return String.fromCodePoint(...codePoints);
+            }
+
             function getHotelBadge(h) {
                 if (!h) return 'Unknown';
                 if (h.type === 'Event Special') return 'Event Special';
@@ -2798,10 +2805,15 @@
                         params = `'${h.city.replace(/'/g, "\\'")}', '${cityEvents[0].start}', '${cityEvents[0].end}'`;
                     }
                     const borderClass = h.city === 'Amsterdam' ? 'rainbow-border' : '';
+                    // Check if image is a country code (2-letter ISO code) or URL
+                    const isCountryCode = h.image && h.image.length === 2 && /^[A-Z]{2}$/.test(h.image);
+                    const imageUrl = isCountryCode ? 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80' : h.image;
+                    const flagEmoji = isCountryCode ? countryCodeToFlag(h.image) : '';
                     return `
                         <div onclick="quickSearch(${params})"
                              class="rounded-3xl overflow-hidden relative group shadow-2xl cursor-pointer active:scale-95 transition-transform ${borderClass}">
-                            <img class="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110" src="${h.image}" alt="${h.city}" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80';" />
+                            <img class="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110" src="${imageUrl}" alt="${h.city}" loading="lazy" />
+                            ${flagEmoji ? `<div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-900/40 via-transparent to-slate-900/40 text-8xl font-bold">${flagEmoji}</div>` : ''}
                             <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
                             <div class="absolute bottom-5 left-5 right-5">
                                 ${tag}
@@ -2916,10 +2928,16 @@
                     // Add rainbow border class for Amsterdam to make it pop as permanent 1st
                     const borderClass = h.city === 'Amsterdam' ? 'rainbow-border' : '';
 
+                    // Check if image is a country code (2-letter ISO code) or URL
+                    const isCountryCode = h.image && h.image.length === 2 && /^[A-Z]{2}$/.test(h.image);
+                    const imageUrl = isCountryCode ? 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80' : h.image;
+                    const flagEmoji = isCountryCode ? countryCodeToFlag(h.image) : '';
+
                     return `
-                        <div onclick="quickSearch(${params})" 
+                        <div onclick="quickSearch(${params})"
                              class="min-w-[280px] snap-center rounded-3xl overflow-hidden relative group shadow-2xl cursor-pointer active:scale-95 transition-transform ${borderClass}">
-                            <img class="w-full h-72 object-cover transition-transform duration-700 group-hover:scale-110" src="${h.image}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80';" />
+                            <img class="w-full h-72 object-cover transition-transform duration-700 group-hover:scale-110" src="${imageUrl}" />
+                            ${flagEmoji ? `<div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-900/40 via-transparent to-slate-900/40 text-9xl font-bold">${flagEmoji}</div>` : ''}
                             <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
                             <div class="absolute bottom-6 left-6 right-6">
                                 ${tag}
