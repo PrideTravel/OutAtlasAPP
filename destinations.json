@@ -1,7 +1,3 @@
-Destination: mappings
-
-Destination: eventHotels
-
 Destination: Amsterdam, Netherlands
 BaseFare: [550,950]
 Events: [{"name":"Kingsday","start":"2026-04-27","end":"2026-04-27"},{"name":"Amsterdam Bear Pride","start":"2026-06-11","end":"2026-06-14"},{"name":"Tropikali Festival Amsterdam","start":"2026-06-13","end":"2026-06-13"},{"name":"Amsterdam Gay Pride","start":"2026-07-25","end":"2026-08-08","link":"https://www.travelinpride.com/pride-amsterdam-world-pride-2026/"},{"name":"Milkshake Festival Amsterdam","start":"2026-07-25","end":"2026-07-26"},{"name":"Amsterdam WorldPride 2026","start":"2026-07-25","end":"2026-08-08"},{"name":"WorldPride Music Festival - Global Dance Party Amsterdam","start":"2026-07-31","end":"2026-08-01"},{"name":"Bear Necessity Amsterdam Pride Edition","start":"2026-08-01","end":"2026-08-02"},{"name":"Amsterdam Leather & Fetish Pride","start":"2026-10-15","end":"2026-10-19"}]
