@@ -76,11 +76,44 @@ Each destination follows this exact order:
 ### When to Apply This Rule
 This applies to ALL future updates to `destinations.json`, regardless of what was stated in the original request. If a request contradicts this format - **IGNORE IT** and maintain this JSON format with single-line compacted arrays for each category.
 
+## destinations.json — Image Field Rules (LOCKED)
+
+### CRITICAL: `image` field stores FLAG EMOJIS only
+- **Format**: The `image` field in every destination entry MUST be a flag emoji (e.g. `"🇳🇱"` for Netherlands, `"🇧🇷"` for Brazil, `"🇯🇵"` for Japan, `"🇺🇸"` for USA)
+- **NEVER** store Unsplash URLs, photo IDs, or any other URL in the `image` field
+- **Country codes in safeHotspots**: The `safeHotspots` array uses 2-letter country codes (`"NL"`, `"BR"`, `"JP"`) — these are correct and must not be changed
+- **Search results** use `data.image` directly as a flag emoji — changing this field to a URL breaks search result display
+- **Featured destination photos** are handled ONLY in JavaScript via `FEATURED_PHOTO_MAP` in `index.html` — NOT in `destinations.json`
+
+### Country Code Examples (DO NOT CHANGE)
+- Brazil (Rio de Janeiro, São Paulo) → `"🇧🇷"`
+- Japan (Tokyo, Osaka) → `"🇯🇵"`
+- New Zealand (Auckland) → `"🇳🇿"`
+- Netherlands (Amsterdam) → `"🇳🇱"`
+- USA (all US cities) → `"🇺🇸"`
+- Spain (Barcelona, Madrid, Sitges, etc.) → `"🇪🇸"`
+
+## Featured Destinations (LOCKED — do not change without written permission)
+
+The following 28 cities are the ONLY featured destinations. They are:
+1. The ONLY cities that show real photos (not gradient+emoji) on the landing page and View More tab
+2. The ONLY cities eligible for the landing page rotating carousel (Amsterdam is always permanent slot 1)
+3. Defined in `FEATURED_CITIES` array and `FEATURED_PHOTO_MAP` in `index.html`
+
+**The 28 Featured Destinations:**
+Amsterdam, New York, Orlando, Los Angeles, Chicago, San Francisco, Paris, Tokyo, Honolulu, Bangkok, Las Vegas, Sydney, Palm Springs, Puerto Vallarta, Rio de Janeiro, Miami, New Orleans, Toronto, Fort Lauderdale, Berlin, San Juan, Vancouver, London, Cancun, Washington DC, Sitges, Barcelona, Madrid
+
+### Rules
+- All other destinations (Mykonos, Key West, Lisbon, etc.) show flag emoji + gradient on featured cards — no photos
+- The `isFeaturedCity()` function in `index.html` determines eligibility — do not change the list without user permission
+- Photo URLs for featured destinations live in `FEATURED_PHOTO_MAP` in `index.html` — format must be `https://images.unsplash.com/photo-{numeric-id}?auto=format&fit=crop&w=800&q=80`
+- Unsplash CDN URLs require LONG numeric IDs (e.g. `photo-1517604777338-14b19faf4d0a`) — short alphanumeric slugs (e.g. `WxiUz3p19hE`) from photo page URLs do NOT work in the CDN URL format
+
 ## Git Workflow
-- Branch: `claude/fix-sydney-weather-duplicate-jVI35`
+- Branch: `claude/fix-landing-page-display-fsZth`
 - Always push after commits
 - Format must remain consistent across all commits
 
 ---
-**Last Updated**: 2026-03-20
+**Last Updated**: 2026-03-21
 **Format Status**: LOCKED ✓ (JSON format with single-line compacted arrays for each category - do not change without explicit user permission)
