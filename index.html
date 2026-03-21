@@ -1761,37 +1761,34 @@
                 const dateEndInput = document.querySelector('#dateEnd');
 
                 if (dateStartInput && dateEndInput) {
-                    dateStartInput.addEventListener('input', function () {
-                        // Only auto-fill return date if it's empty (don't overwrite pre-filled event dates)
-                        if (this.value && !dateEndInput.value) {
-                            try {
-                                // Create date safely in local time
-                                const parts = this.value.split('-');
-                                if (parts.length !== 3) return;
-
-                                const year = parseInt(parts[0], 10);
-                                const month = parseInt(parts[1], 10) - 1;
-                                const day = parseInt(parts[2], 10);
-
-                                // Do NOT auto-fill until the user has typed a full valid modern year.
-                                // This stops interstitial year typing (like '0002') from auto-filling as 1902.
-                                if (isNaN(year) || year < 2000) return;
-
-                                const startDate = new Date(year, month, day);
-                                startDate.setFullYear(year);
-                                const nextDay = new Date(startDate);
-                                nextDay.setDate(startDate.getDate() + 1);
-
-                                const yyyy = String(nextDay.getFullYear()).padStart(4, '0');
-                                const mm = String(nextDay.getMonth() + 1).padStart(2, '0');
-                                const dd = String(nextDay.getDate()).padStart(2, '0');
-
-                                dateEndInput.value = `${yyyy}-${mm}-${dd}`;
-                            } catch (e) {
-                                console.error("Date auto-update error", e);
-                            }
+                    function autoSetReturnDate() {
+                        const val = dateStartInput.value;
+                        if (!val) return;
+                        try {
+                            const parts = val.split('-');
+                            if (parts.length !== 3) return;
+                            const year = parseInt(parts[0], 10);
+                            const month = parseInt(parts[1], 10) - 1;
+                            const day = parseInt(parts[2], 10);
+                            // Wait for a fully typed modern year before auto-filling
+                            if (isNaN(year) || year < 2000) return;
+                            const startDate = new Date(year, month, day);
+                            startDate.setFullYear(year);
+                            // Auto-fill when return is empty or would be on/before departure
+                            const returnAlreadyAfter = dateEndInput.value && dateEndInput.value > val;
+                            if (returnAlreadyAfter) return;
+                            const nextDay = new Date(startDate);
+                            nextDay.setDate(startDate.getDate() + 1);
+                            const yyyy = String(nextDay.getFullYear()).padStart(4, '0');
+                            const mm = String(nextDay.getMonth() + 1).padStart(2, '0');
+                            const dd = String(nextDay.getDate()).padStart(2, '0');
+                            dateEndInput.value = `${yyyy}-${mm}-${dd}`;
+                        } catch (e) {
+                            console.error("Date auto-update error", e);
                         }
-                    });
+                    }
+                    dateStartInput.addEventListener('change', autoSetReturnDate);
+                    dateStartInput.addEventListener('input', autoSetReturnDate);
                 }
                 form.addEventListener('submit', async function (e) {
                     e.preventDefault();
