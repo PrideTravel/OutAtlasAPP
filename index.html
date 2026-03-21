@@ -1684,6 +1684,7 @@
             window.DATABASE = { mappings: { regions: {}, countries: {}, cities: {} }, details: {} };
             let SPECIAL_EVENTS_DATA = [];
             let SAFE_HOTSPOTS_DATA = [];
+            let _evtByType = {}; // keyed by type, populated in populateAllHotspots
 
             // === DESTINATIONS DATA LOADER ===
             // Load all destination data from destinations.json
@@ -2886,21 +2887,23 @@
                         </div>`;
                 }).join('');
 
-                // Build filterable event pool (all 6 filterable types, up to 8 per type)
-                const FILTER_TYPES = [
-                    {key:'all',      emoji:'✦',  label:'All Events'},
-                    {key:'Pride Event', emoji:'🌈', label:'Pride'},
-                    {key:'Fetish',   emoji:'⛓️', label:'Fetish'},
-                    {key:'Bear',     emoji:'🐻', label:'Bear'},
-                    {key:'Cruise',   emoji:'🚢', label:'Cruise'},
-                    {key:'Halloween',emoji:'🎃', label:'Halloween'},
-                    {key:'NYE',      emoji:'🥂', label:'NYE'},
-                ];
-                const filterPool = [];
-                FILTER_TYPES.filter(f => f.key !== 'all').forEach(f => {
-                    const pool = SPECIAL_EVENTS_DATA.filter(e => e.type === f.key);
-                    filterPool.push(...getRandomSubset(pool, 8));
+                // Index all events by type for dynamic filter rendering
+                _evtByType = {};
+                SPECIAL_EVENTS_DATA.forEach(e => {
+                    const t = e.type || 'Pride Event';
+                    if (!_evtByType[t]) _evtByType[t] = [];
+                    _evtByType[t].push(e);
                 });
+
+                const FILTER_TYPES = [
+                    {key:'all',         emoji:'✦',  label:'All Events'},
+                    {key:'Pride Event',  emoji:'🌈', label:'Pride'},
+                    {key:'Fetish',      emoji:'⛓️', label:'Fetish'},
+                    {key:'Bear',        emoji:'🐻', label:'Bear'},
+                    {key:'Cruise',      emoji:'🚢', label:'Cruise'},
+                    {key:'Halloween',   emoji:'🎃', label:'Halloween'},
+                    {key:'NYE',         emoji:'🥂', label:'NYE'},
+                ];
 
                 const filterBtns = FILTER_TYPES.map(f => `
                     <button onclick="hotspotFilter('${f.key}')" data-fkey="${f.key}"
@@ -2918,33 +2921,46 @@
                         <div class="flex gap-2 overflow-x-auto pb-2 hide-scrollbar flex-wrap sm:flex-nowrap">${filterBtns}</div>
                     </div>`;
 
-                const eventCards = filterPool.map(h => {
-                    const s = getEventTypeStyle(h.type);
-                    const query = h.city || h.name;
-                    return `
-                        <div onclick="quickSearch('${query.replace(/'/g,"\\'")}','${h.start||''}','${h.end||''}')"
-                             data-etype="${h.type}"
-                             class="hotspot-event-card bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-lg border-l-4 ${s.border} flex gap-4 cursor-pointer hover:scale-[1.02] transition-transform group relative">
-                            <div class="w-12 h-12 rounded-xl ${s.bg} flex items-center justify-center shrink-0 text-2xl leading-none">${s.emoji}</div>
-                            <div class="overflow-hidden flex-1 pr-6">
-                                <p class="font-black text-slate-900 dark:text-white truncate text-base">${h.name}</p>
-                                <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide ${s.badge} px-2 py-0.5 rounded-full mt-0.5 mb-1">${s.emoji} ${s.label}</span>
-                                <p class="text-xs font-bold text-slate-500 uppercase tracking-tighter">${h.city || ''} &bull; ${formatDateShort(h.start)}</p>
-                            </div>
-                            <div class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <span class="material-symbols-outlined text-slate-300">chevron_right</span>
-                            </div>
-                        </div>`;
-                }).join('');
-
                 grid.innerHTML =
                     destTitleBox +
                     `<div class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">${destCards}</div>` +
                     filterHeader +
-                    `<div id="hotspotEventGrid" class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${eventCards}</div>`;
+                    `<div id="hotspotEventGrid" class="col-span-full"></div>`;
+
+                // Render initial "all" state
+                hotspotFilter('all');
+            }
+
+            function buildHotspotEventCard(h) {
+                const s = getEventTypeStyle(h.type);
+                const query = (h.city || h.name || '').replace(/'/g, "\\'");
+                return `
+                    <div onclick="quickSearch('${query}','${h.start||''}','${h.end||''}')"
+                         class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-lg border-l-4 ${s.border} flex gap-4 cursor-pointer hover:scale-[1.02] transition-transform group relative">
+                        <div class="w-12 h-12 rounded-xl ${s.bg} flex items-center justify-center shrink-0 text-2xl leading-none">${s.emoji}</div>
+                        <div class="overflow-hidden flex-1 pr-6">
+                            <p class="font-black text-slate-900 dark:text-white truncate text-base">${h.name}</p>
+                            <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide ${s.badge} px-2 py-0.5 rounded-full mt-0.5 mb-1">${s.emoji} ${s.label}</span>
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-tighter">${h.city||''} &bull; ${formatDateShort(h.start)}</p>
+                        </div>
+                        <div class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="material-symbols-outlined text-slate-300">chevron_right</span>
+                        </div>
+                    </div>`;
+            }
+
+            function buildFilterSectionHead(label, s) {
+                return `
+                    <div class="col-span-full mt-5 mb-2">
+                        <div class="px-4 py-2 ${s.bg} rounded-xl inline-flex items-center gap-2 border-l-4 ${s.border} shadow-sm">
+                            <span class="text-xl leading-none">${s.emoji}</span>
+                            <span class="font-extrabold text-lg pride-gradient-text">${label}</span>
+                        </div>
+                    </div>`;
             }
 
             window.hotspotFilter = function(type) {
+                // Update pill button states
                 document.querySelectorAll('.hotspot-filter-btn').forEach(btn => {
                     const active = btn.dataset.fkey === type;
                     btn.classList.toggle('bg-primary', active);
@@ -2957,9 +2973,58 @@
                     btn.classList.toggle('border-slate-200', !active);
                     btn.classList.toggle('dark:border-slate-600', !active);
                 });
-                document.querySelectorAll('.hotspot-event-card').forEach(card => {
-                    card.style.display = (type === 'all' || card.dataset.etype === type) ? '' : 'none';
-                });
+
+                const grid = document.getElementById('hotspotEventGrid');
+                if (!grid) return;
+
+                let html = '';
+
+                if (type === 'all') {
+                    // Default: 25 Pride Events + 5 Cruises
+                    const pride   = getRandomSubset(_evtByType['Pride Event'] || [], 25);
+                    const cruises = getRandomSubset(_evtByType['Cruise'] || [], 5);
+                    if (pride.length) {
+                        const s = getEventTypeStyle('Pride Event');
+                        html += buildFilterSectionHead(`Pride Events (${pride.length})`, s);
+                        html += `<div class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${pride.map(buildHotspotEventCard).join('')}</div>`;
+                    }
+                    if (cruises.length) {
+                        const s = getEventTypeStyle('Cruise');
+                        html += buildFilterSectionHead(`LGBTQ Cruises (${cruises.length})`, s);
+                        html += `<div class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${cruises.map(buildHotspotEventCard).join('')}</div>`;
+                    }
+
+                } else if (type === 'Cruise') {
+                    // Cruise selected: show all 25 cruises first
+                    const cruises = getRandomSubset(_evtByType['Cruise'] || [], 25);
+                    const s = getEventTypeStyle('Cruise');
+                    html += buildFilterSectionHead(`LGBTQ Cruises (${cruises.length})`, s);
+                    html += `<div class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${cruises.map(buildHotspotEventCard).join('')}</div>`;
+
+                } else {
+                    // Selected type: up to 10, FIRST
+                    const selected = getRandomSubset(_evtByType[type] || [], 10);
+                    const s = getEventTypeStyle(type);
+                    if (selected.length) {
+                        html += buildFilterSectionHead(`${s.label} Events (${selected.length})`, s);
+                        html += `<div class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${selected.map(buildHotspotEventCard).join('')}</div>`;
+                    }
+                    // Others: 15 mixed — Pride max 25, Cruise max 5, others uncapped
+                    const othersPool = [];
+                    Object.keys(_evtByType).forEach(t => {
+                        if (t === type) return;
+                        const cap = t === 'Pride Event' ? 25 : t === 'Cruise' ? 5 : _evtByType[t].length;
+                        othersPool.push(...getRandomSubset(_evtByType[t], cap));
+                    });
+                    const others = getRandomSubset(othersPool, 15);
+                    if (others.length) {
+                        const sO = {emoji:'✨',border:'border-slate-400',bg:'bg-slate-100 dark:bg-slate-700/30',badge:'bg-slate-500 text-white'};
+                        html += buildFilterSectionHead(`More LGBTQ Events (${others.length})`, sO);
+                        html += `<div class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${others.map(buildHotspotEventCard).join('')}</div>`;
+                    }
+                }
+
+                grid.innerHTML = html;
             };
 
             function populateTrendingEvents() {
