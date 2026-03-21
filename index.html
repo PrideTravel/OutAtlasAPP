@@ -2545,6 +2545,70 @@
                 return codeMap[code] || 'bg-gradient-to-br from-pride-purple via-pride-blue to-pride-green';
             }
 
+            // Featured destination photo map — only these 28 cities show real photos on landing/view-more cards
+            const FEATURED_CITIES = ['amsterdam','new york','orlando','los angeles','chicago','san francisco','paris','tokyo','honolulu','bangkok','las vegas','sydney','palm springs','puerto vallarta','rio de janeiro','miami','new orleans','toronto','fort lauderdale','berlin','san juan','vancouver','london','cancun','washington','sitges','barcelona','madrid'];
+
+            const FEATURED_PHOTO_MAP = {
+                'amsterdam':      'https://images.unsplash.com/photo-1517604777338-14b19faf4d0a?auto=format&fit=crop&w=800&q=80',
+                'new york':       'https://images.unsplash.com/photo-1534430480872-3498386e7847?auto=format&fit=crop&w=800&q=80',
+                'orlando':        'https://images.unsplash.com/photo-1518235506717-e1ed3306a326?auto=format&fit=crop&w=800&q=80',
+                'los angeles':    'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&q=80',
+                'chicago':        'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=800&q=80',
+                'san francisco':  'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=80',
+                'paris':          'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80',
+                'tokyo':          'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=800&q=80',
+                'honolulu':       'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
+                'bangkok':        'https://images.unsplash.com/photo-1508009603885-50cf7c57936?auto=format&fit=crop&w=800&q=80',
+                'las vegas':      'https://images.unsplash.com/photo-1581351721010-8cf859cb14a4?auto=format&fit=crop&w=800&q=80',
+                'sydney':         'https://images.unsplash.com/photo-1506973404872-a77ad0d36000?auto=format&fit=crop&w=800&q=80',
+                'palm springs':   'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=80',
+                'puerto vallarta':'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80',
+                'rio de janeiro': 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=800&q=80',
+                'miami':          'https://images.unsplash.com/photo-1535498730771-e735b998cd64?auto=format&fit=crop&w=800&q=80',
+                'new orleans':    'https://images.unsplash.com/photo-1509895393505-d27f5b8617dd?auto=format&fit=crop&w=800&q=80',
+                'toronto':        'https://images.unsplash.com/photo-1517090504586-fde19ea6066f?auto=format&fit=crop&w=800&q=80',
+                'fort lauderdale':'https://images.unsplash.com/photo-1520454974749-a436a1b2ead5?auto=format&fit=crop&w=800&q=80',
+                'berlin':         'https://images.unsplash.com/photo-1553531088-e67cbb91da6c?auto=format&fit=crop&w=800&q=80',
+                'san juan':       'https://images.unsplash.com/photo-1473093295203-cad00df16207?auto=format&fit=crop&w=800&q=80',
+                'vancouver':      'https://images.unsplash.com/photo-1560814304-4f05b62af116?auto=format&fit=crop&w=800&q=80',
+                'london':         'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80',
+                'cancun':         'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=800&q=80',
+                'washington':     'https://images.unsplash.com/photo-1505978346881-b72b27e84530?auto=format&fit=crop&w=800&q=80',
+                'sitges':         'https://images.unsplash.com/photo-1534008757030-27299c4371b6?auto=format&fit=crop&w=800&q=80',
+                'barcelona':      'https://images.unsplash.com/photo-1562883676-8c6feb6f328e?auto=format&fit=crop&w=800&q=80',
+                'madrid':         'https://images.unsplash.com/photo-1564095267537-b85cab00c77b?auto=format&fit=crop&w=800&q=80',
+            };
+
+            function getFeaturedPhotoUrl(city) {
+                if (!city) return null;
+                const c = city.toLowerCase();
+                // Direct match
+                if (FEATURED_PHOTO_MAP[c]) return FEATURED_PHOTO_MAP[c];
+                // Partial match (e.g. "New York City (All Airports)" → "new york")
+                for (const key of FEATURED_CITIES) {
+                    if (c.includes(key) || c.startsWith(key)) return FEATURED_PHOTO_MAP[key] || null;
+                }
+                return null;
+            }
+
+            function isFeaturedCity(city) {
+                if (!city) return false;
+                const c = city.toLowerCase();
+                return FEATURED_CITIES.some(k => c === k || c.includes(k) || c.startsWith(k));
+            }
+
+            // Returns the image HTML block for a featured destination card (photo or gradient fallback)
+            function featuredCardImageHtml(city, code, heightClass) {
+                const h = heightClass || 'h-56';
+                const photoUrl = getFeaturedPhotoUrl(city);
+                const grad = getCityGradient(city, code);
+                const flagEmoji = countryCodeToFlag(code || 'US');
+                if (photoUrl) {
+                    return `<div class="w-full ${h} relative overflow-hidden"><img src="${photoUrl}" alt="${city}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" onerror="this.parentElement.className='w-full ${h} ${grad} flex items-center justify-center text-8xl select-none drop-shadow-lg group-hover:scale-105 transition-transform duration-700';this.parentElement.innerHTML='${flagEmoji}';"></div>`;
+                }
+                return `<div class="w-full ${h} ${grad} flex items-center justify-center text-8xl select-none drop-shadow-lg group-hover:scale-105 transition-transform duration-700">${flagEmoji}</div>`;
+            }
+
             function getHotelBadge(h) {
                 if (!h) return 'Unknown';
                 if (h.type === 'Event Special') return 'Event Special';
@@ -2848,8 +2912,8 @@
                     return titleBox + `<div class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">${cards}</div>`;
                 }
 
-                // More Featured Destinations section — 6 randomly selected, excluding Amsterdam (featured on home page)
-                const allDestinations = (SAFE_HOTSPOTS_DATA || []).filter(h => h.city && h.city.toLowerCase() !== 'amsterdam');
+                // More Featured Destinations section — 6 randomly selected from the 28 featured list, excluding Amsterdam
+                const allDestinations = (SAFE_HOTSPOTS_DATA || []).filter(h => h.city && h.city.toLowerCase() !== 'amsterdam' && isFeaturedCity(h.city));
                 const featuredDestinations = getRandomSubset(allDestinations, 6);
                 const destTitleBox = `
                     <div class="col-span-full mt-8 mb-4">
@@ -2870,12 +2934,10 @@
                         params = `'${h.city.replace(/'/g, "\\'")}', '${cityEvents[0].start}', '${cityEvents[0].end}'`;
                     }
                     const borderClass = h.city === 'Amsterdam' ? 'rainbow-border' : '';
-                    const flagEmoji = countryCodeToFlag(h.image || 'US');
-                    const grad = getCityGradient(h.city, h.image);
                     return `
                         <div onclick="quickSearch(${params})"
                              class="rounded-3xl overflow-hidden relative group shadow-2xl cursor-pointer active:scale-95 transition-transform ${borderClass}">
-                            <div class="w-full h-56 ${grad} flex items-center justify-center text-8xl select-none drop-shadow-lg group-hover:scale-105 transition-transform duration-700">${flagEmoji}</div>
+                            ${featuredCardImageHtml(h.city, h.image, 'h-56')}
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
                             <div class="absolute bottom-5 left-5 right-5">
                                 ${tag}
@@ -3126,7 +3188,8 @@
                     city: 'Amsterdam', country: 'Netherlands', safetyScore: 76, image: 'NL', featured: true
                 };
 
-                const others = (SAFE_HOTSPOTS_DATA || []).filter(h => h.city && h.city.toLowerCase() !== 'amsterdam');
+                // Rotating 2 slots: only pick from the 28 featured destinations (excludes Amsterdam which is slot 1)
+                const others = (SAFE_HOTSPOTS_DATA || []).filter(h => h.city && h.city.toLowerCase() !== 'amsterdam' && isFeaturedCity(h.city));
                 const selectedOthers = getRandomSubset(others, 2);
                 const selected = [amsterdam, ...selectedOthers];
 
@@ -3144,13 +3207,11 @@
                     }
 
                     const borderClass = h.city === 'Amsterdam' ? 'rainbow-border' : '';
-                    const flagEmoji = countryCodeToFlag(h.image || 'US');
-                    const grad = getCityGradient(h.city, h.image);
 
                     return `
                         <div onclick="quickSearch(${params})"
                              class="min-w-[280px] snap-center rounded-3xl overflow-hidden relative group shadow-2xl cursor-pointer active:scale-95 transition-transform ${borderClass}">
-                            <div class="w-full h-72 ${grad} transition-transform duration-700 group-hover:scale-110 flex items-center justify-center text-9xl select-none drop-shadow-lg">${flagEmoji}</div>
+                            ${featuredCardImageHtml(h.city, h.image, 'h-72')}
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
                             <div class="absolute bottom-6 left-6 right-6">
                                 ${tag}
