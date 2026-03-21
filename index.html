@@ -2486,9 +2486,62 @@
 
             function countryCodeToFlag(code) {
                 if (!code || code.length !== 2) return '🌍';
-                // Convert ISO 3166-1 alpha-2 code to emoji flag
                 const codePoints = [...code.toUpperCase()].map(char => 127397 + char.charCodeAt());
                 return String.fromCodePoint(...codePoints);
+            }
+
+            function getCityGradient(city, code) {
+                const c = (city || '').toLowerCase();
+                const gradients = {
+                    amsterdam:'bg-gradient-to-br from-orange-500 via-white to-red-600',
+                    'new york city':'bg-gradient-to-br from-slate-700 via-blue-900 to-slate-900',
+                    'san francisco':'bg-gradient-to-br from-orange-400 via-amber-300 to-sky-500',
+                    paris:'bg-gradient-to-br from-blue-800 via-white to-red-600',
+                    london:'bg-gradient-to-br from-blue-900 via-red-600 to-blue-900',
+                    berlin:'bg-gradient-to-br from-slate-900 via-red-700 to-amber-400',
+                    barcelona:'bg-gradient-to-br from-yellow-400 via-red-600 to-yellow-400',
+                    madrid:'bg-gradient-to-br from-red-700 via-yellow-400 to-red-700',
+                    sydney:'bg-gradient-to-br from-blue-400 via-sky-200 to-emerald-400',
+                    miami:'bg-gradient-to-br from-cyan-400 via-pink-300 to-orange-400',
+                    'los angeles':'bg-gradient-to-br from-amber-400 via-orange-300 to-sky-500',
+                    tokyo:'bg-gradient-to-br from-red-600 via-pink-200 to-white',
+                    dubai:'bg-gradient-to-br from-amber-400 via-yellow-200 to-green-600',
+                    bangkok:'bg-gradient-to-br from-blue-800 via-white to-red-600',
+                    'mexico city':'bg-gradient-to-br from-green-600 via-white to-red-600',
+                    'buenos aires':'bg-gradient-to-br from-sky-400 via-white to-sky-400',
+                    'rio de janeiro':'bg-gradient-to-br from-green-600 via-yellow-400 to-blue-700',
+                    toronto:'bg-gradient-to-br from-red-600 via-white to-red-600',
+                    chicago:'bg-gradient-to-br from-blue-600 via-red-600 to-blue-600',
+                    'las vegas':'bg-gradient-to-br from-purple-700 via-pink-500 to-amber-400',
+                    mykonos:'bg-gradient-to-br from-blue-500 via-white to-sky-300',
+                    ibiza:'bg-gradient-to-br from-orange-500 via-pink-400 to-purple-600',
+                    rome:'bg-gradient-to-br from-green-600 via-white to-red-600',
+                    vienna:'bg-gradient-to-br from-red-700 via-white to-red-700',
+                    prague:'bg-gradient-to-br from-blue-600 via-white to-red-600',
+                    amsterdam:'bg-gradient-to-br from-red-600 via-white to-blue-600',
+                };
+                if (gradients[c]) return gradients[c];
+                // Country-code fallback palettes
+                const codeMap = {
+                    US:'bg-gradient-to-br from-blue-700 via-white to-red-600',
+                    GB:'bg-gradient-to-br from-blue-900 via-red-600 to-blue-900',
+                    AU:'bg-gradient-to-br from-blue-700 via-red-600 to-yellow-400',
+                    FR:'bg-gradient-to-br from-blue-700 via-white to-red-600',
+                    DE:'bg-gradient-to-br from-slate-900 via-red-700 to-amber-400',
+                    ES:'bg-gradient-to-br from-red-700 via-yellow-400 to-red-700',
+                    IT:'bg-gradient-to-br from-green-600 via-white to-red-600',
+                    NL:'bg-gradient-to-br from-red-600 via-white to-blue-700',
+                    PT:'bg-gradient-to-br from-green-600 via-red-600 to-green-600',
+                    BR:'bg-gradient-to-br from-green-600 via-yellow-400 to-blue-700',
+                    MX:'bg-gradient-to-br from-green-600 via-white to-red-600',
+                    CA:'bg-gradient-to-br from-red-600 via-white to-red-600',
+                    JP:'bg-gradient-to-br from-white via-red-100 to-red-600',
+                    TH:'bg-gradient-to-br from-red-600 via-white to-blue-700',
+                    GR:'bg-gradient-to-br from-blue-600 via-white to-blue-600',
+                    ZA:'bg-gradient-to-br from-green-700 via-yellow-400 to-red-600',
+                    AR:'bg-gradient-to-br from-sky-400 via-white to-sky-400',
+                };
+                return codeMap[code] || 'bg-gradient-to-br from-pride-purple via-pride-blue to-pride-green';
             }
 
             function getHotelBadge(h) {
@@ -2816,16 +2869,13 @@
                         params = `'${h.city.replace(/'/g, "\\'")}', '${cityEvents[0].start}', '${cityEvents[0].end}'`;
                     }
                     const borderClass = h.city === 'Amsterdam' ? 'rainbow-border' : '';
-                    // Check if image is a country code (2-letter ISO code) or URL
-                    const isCountryCode = h.image && h.image.length === 2 && /^[A-Z]{2}$/.test(h.image);
-                    const imageUrl = isCountryCode ? 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80' : h.image;
-                    const flagEmoji = isCountryCode ? countryCodeToFlag(h.image) : '';
+                    const flagEmoji = countryCodeToFlag(h.image || 'US');
+                    const grad = getCityGradient(h.city, h.image);
                     return `
                         <div onclick="quickSearch(${params})"
                              class="rounded-3xl overflow-hidden relative group shadow-2xl cursor-pointer active:scale-95 transition-transform ${borderClass}">
-                            <img class="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110" src="${imageUrl}" alt="${h.city}" loading="lazy" />
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-                            ${flagEmoji ? `<div class="absolute inset-0 flex items-center justify-center pb-16 text-8xl drop-shadow-lg">${flagEmoji}</div>` : ''}
+                            <div class="w-full h-56 ${grad} flex items-center justify-center text-8xl select-none drop-shadow-lg group-hover:scale-105 transition-transform duration-700">${flagEmoji}</div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
                             <div class="absolute bottom-5 left-5 right-5">
                                 ${tag}
                                 <h4 class="text-white text-xl font-black mb-1">${h.city}, ${h.country}</h4>
@@ -2836,12 +2886,81 @@
                         </div>`;
                 }).join('');
 
+                // Build filterable event pool (all 6 filterable types, up to 8 per type)
+                const FILTER_TYPES = [
+                    {key:'all',      emoji:'✦',  label:'All Events'},
+                    {key:'Pride Event', emoji:'🌈', label:'Pride'},
+                    {key:'Fetish',   emoji:'⛓️', label:'Fetish'},
+                    {key:'Bear',     emoji:'🐻', label:'Bear'},
+                    {key:'Cruise',   emoji:'🚢', label:'Cruise'},
+                    {key:'Halloween',emoji:'🎃', label:'Halloween'},
+                    {key:'NYE',      emoji:'🥂', label:'NYE'},
+                ];
+                const filterPool = [];
+                FILTER_TYPES.filter(f => f.key !== 'all').forEach(f => {
+                    const pool = SPECIAL_EVENTS_DATA.filter(e => e.type === f.key);
+                    filterPool.push(...getRandomSubset(pool, 8));
+                });
+
+                const filterBtns = FILTER_TYPES.map(f => `
+                    <button onclick="hotspotFilter('${f.key}')" data-fkey="${f.key}"
+                        class="hotspot-filter-btn shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black border-2 transition-all
+                               ${f.key==='all' ? 'border-primary bg-primary text-white' : 'border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:border-primary hover:text-primary'}">
+                        <span>${f.emoji}</span> ${f.label}
+                    </button>`).join('');
+
+                const filterHeader = `
+                    <div class="col-span-full mt-8 mb-2">
+                        <div class="px-4 py-2 bg-pride-purple/10 rounded-xl inline-flex items-center gap-2 border-l-4 border-pride-purple shadow-sm mb-4">
+                            <span class="material-symbols-outlined text-pride-purple">filter_list</span>
+                            <span class="font-extrabold text-xl pride-gradient-text">Browse LGBTQ Events</span>
+                        </div>
+                        <div class="flex gap-2 overflow-x-auto pb-2 hide-scrollbar flex-wrap sm:flex-nowrap">${filterBtns}</div>
+                    </div>`;
+
+                const eventCards = filterPool.map(h => {
+                    const s = getEventTypeStyle(h.type);
+                    const query = h.city || h.name;
+                    return `
+                        <div onclick="quickSearch('${query.replace(/'/g,"\\'")}','${h.start||''}','${h.end||''}')"
+                             data-etype="${h.type}"
+                             class="hotspot-event-card bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-lg border-l-4 ${s.border} flex gap-4 cursor-pointer hover:scale-[1.02] transition-transform group relative">
+                            <div class="w-12 h-12 rounded-xl ${s.bg} flex items-center justify-center shrink-0 text-2xl leading-none">${s.emoji}</div>
+                            <div class="overflow-hidden flex-1 pr-6">
+                                <p class="font-black text-slate-900 dark:text-white truncate text-base">${h.name}</p>
+                                <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide ${s.badge} px-2 py-0.5 rounded-full mt-0.5 mb-1">${s.emoji} ${s.label}</span>
+                                <p class="text-xs font-bold text-slate-500 uppercase tracking-tighter">${h.city || ''} &bull; ${formatDateShort(h.start)}</p>
+                            </div>
+                            <div class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="material-symbols-outlined text-slate-300">chevron_right</span>
+                            </div>
+                        </div>`;
+                }).join('');
+
                 grid.innerHTML =
                     destTitleBox +
                     `<div class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">${destCards}</div>` +
-                    listSection('LGBTQ Events', 'pride-purple', 'event_upcoming', selEvents) +
-                    listSection('LGBTQ Cruises', 'pride-blue', 'directions_boat', selCruises);
+                    filterHeader +
+                    `<div id="hotspotEventGrid" class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${eventCards}</div>`;
             }
+
+            window.hotspotFilter = function(type) {
+                document.querySelectorAll('.hotspot-filter-btn').forEach(btn => {
+                    const active = btn.dataset.fkey === type;
+                    btn.classList.toggle('bg-primary', active);
+                    btn.classList.toggle('text-white', active);
+                    btn.classList.toggle('border-primary', active);
+                    btn.classList.toggle('bg-white', !active);
+                    btn.classList.toggle('dark:bg-slate-800', !active);
+                    btn.classList.toggle('text-slate-700', !active);
+                    btn.classList.toggle('dark:text-slate-200', !active);
+                    btn.classList.toggle('border-slate-200', !active);
+                    btn.classList.toggle('dark:border-slate-600', !active);
+                });
+                document.querySelectorAll('.hotspot-event-card').forEach(card => {
+                    card.style.display = (type === 'all' || card.dataset.etype === type) ? '' : 'none';
+                });
+            };
 
             function populateTrendingEvents() {
                 const grid = document.getElementById('eventsGrid');
@@ -2939,13 +3058,10 @@
 
                 // Amsterdam (World Pride 2026) is always 1st — pulled from safeHotspots data
                 const amsterdam = (SAFE_HOTSPOTS_DATA || []).find(h => h.city && h.city.toLowerCase() === 'amsterdam') || {
-                    city: 'Amsterdam', country: 'Netherlands', safetyScore: 76,
-                    image: 'https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?auto=format&fit=crop&w=800&q=80',
-                    featured: true
+                    city: 'Amsterdam', country: 'Netherlands', safetyScore: 76, image: 'NL', featured: true
                 };
 
                 const others = (SAFE_HOTSPOTS_DATA || []).filter(h => h.city && h.city.toLowerCase() !== 'amsterdam');
-                // Randomly pick 2 more from the 19 remaining featured destinations
                 const selectedOthers = getRandomSubset(others, 2);
                 const selected = [amsterdam, ...selectedOthers];
 
@@ -2962,20 +3078,15 @@
                         params = `'${h.city.replace(/'/g, "\\'")}', '${cityEvents[0].start}', '${cityEvents[0].end}'`;
                     }
 
-                    // Add rainbow border class for Amsterdam to make it pop as permanent 1st
                     const borderClass = h.city === 'Amsterdam' ? 'rainbow-border' : '';
-
-                    // Check if image is a country code (2-letter ISO code) or URL
-                    const isCountryCode = h.image && h.image.length === 2 && /^[A-Z]{2}$/.test(h.image);
-                    const imageUrl = isCountryCode ? 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80' : h.image;
-                    const flagEmoji = isCountryCode ? countryCodeToFlag(h.image) : '';
+                    const flagEmoji = countryCodeToFlag(h.image || 'US');
+                    const grad = getCityGradient(h.city, h.image);
 
                     return `
                         <div onclick="quickSearch(${params})"
                              class="min-w-[280px] snap-center rounded-3xl overflow-hidden relative group shadow-2xl cursor-pointer active:scale-95 transition-transform ${borderClass}">
-                            <img class="w-full h-72 object-cover transition-transform duration-700 group-hover:scale-110" src="${imageUrl}" />
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-                            ${flagEmoji ? `<div class="absolute inset-0 flex items-center justify-center pb-20 text-9xl drop-shadow-lg">${flagEmoji}</div>` : ''}
+                            <div class="w-full h-72 ${grad} transition-transform duration-700 group-hover:scale-110 flex items-center justify-center text-9xl select-none drop-shadow-lg">${flagEmoji}</div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
                             <div class="absolute bottom-6 left-6 right-6">
                                 ${tag}
                                 <h4 class="text-white text-2xl font-black mb-1">${h.city}, ${h.country}</h4>
