@@ -1995,8 +1995,8 @@
                         const lgbtqTours = allTours.filter(isLgbtqTour);
                         const otherTours = allTours.filter(t => !isLgbtqTour(t));
                         const randomTours = [
-                          ...shuffle(lgbtqTours).slice(0, 1),
-                          ...shuffle(otherTours).slice(0, 4)
+                          ...shuffle(lgbtqTours).slice(0, 2),
+                          ...shuffle(otherTours).slice(0, 3)
                         ];
 
                         const randomParks = shuffle(data.amusementParks || []).slice(0, 2);
