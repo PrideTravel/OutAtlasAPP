@@ -3167,8 +3167,8 @@
                 let html = '';
 
                 if (type === 'all') {
-                    // Default: 25 Pride Events + 5 Cruises
-                    const pride   = getRandomSubset(_evtByType['Pride Event'] || [], 25);
+                    // Default: 15 Pride Events + 5 Cruises
+                    const pride   = getRandomSubset(_evtByType['Pride Event'] || [], 15);
                     const cruises = getRandomSubset(_evtByType['Cruise'] || [], 5);
                     if (pride.length) {
                         const s = getEventTypeStyle('Pride Event');
@@ -3189,8 +3189,8 @@
                     html += `<div class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${cruises.map(buildHotspotEventCard).join('')}</div>`;
 
                 } else {
-                    // Selected type: up to 10, FIRST
-                    const selected = getRandomSubset(_evtByType[type] || [], 10);
+                    // Selected type: up to 15, FIRST
+                    const selected = getRandomSubset(_evtByType[type] || [], 15);
                     const s = getEventTypeStyle(type);
                     if (selected.length) {
                         html += buildFilterSectionHead(`${s.label} Events (${selected.length})`, s);

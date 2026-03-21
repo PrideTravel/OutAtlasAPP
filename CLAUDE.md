@@ -148,6 +148,13 @@ Search result cards MUST display exactly:
 - Cards 2 and 3 must NOT be selected from non-featured destinations
 - Implementation: `getRandomSubset(others, 2)` where `others` is filtered by `isFeaturedCity()`
 
+### Rule 6 — View More Tab Event Display Counts (LOCKED)
+- **Default "All" view**: Show **15 Pride Events** + **5 Cruises** (never revert to 25 Pride Events)
+- **When a specific filter is selected** (non-All, non-Cruise): Show **up to 15** of that filter type first, then a mixed "More LGBTQ Events" pool (up to 15 others), then **5 Cruises** at the bottom
+- **Cruise filter selected**: Show up to 25 Cruises
+- Implementation: `populateViewMoreEvents()` function — `getRandomSubset(..., 15)` for Pride in `all` branch; `getRandomSubset(..., 15)` for selected type in the `else` branch; `getRandomSubset(..., 5)` for Cruises in all non-Cruise branches
+- DO NOT change these counts without explicit user permission
+
 ## Git Workflow
 - Branch: `claude/fix-landing-page-display-fsZth`
 - Always push after commits
