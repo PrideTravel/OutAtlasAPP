@@ -2559,46 +2559,50 @@
             const FEATURED_CITIES = ['amsterdam','new york','orlando','los angeles','chicago','san francisco','paris','tokyo','honolulu','bangkok','las vegas','sydney','palm springs','puerto vallarta','rio de janeiro','miami','new orleans','toronto','fort lauderdale','berlin','san juan','vancouver','london','cancun','washington','sitges','barcelona','madrid'];
 
             const FEATURED_PHOTO_MAP = {
-                'amsterdam':      'https://images.unsplash.com/photo-1517604777338-14b19faf4d0a?auto=format&fit=crop&w=800&q=80',
-                'new york':       'https://images.unsplash.com/photo-1534430480872-3498386e7847?auto=format&fit=crop&w=800&q=80',
-                'orlando':        'https://images.unsplash.com/photo-1518235506717-e1ed3306a326?auto=format&fit=crop&w=800&q=80',
-                'los angeles':    'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&q=80',
-                'chicago':        'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=800&q=80',
-                'san francisco':  'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=80',
-                'paris':          'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80',
-                'tokyo':          'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=800&q=80',
-                'honolulu':       'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
-                'bangkok':        'https://images.unsplash.com/photo-1508009603885-50cf7c57936?auto=format&fit=crop&w=800&q=80',
-                'las vegas':      'https://images.unsplash.com/photo-1581351721010-8cf859cb14a4?auto=format&fit=crop&w=800&q=80',
-                'sydney':         'https://images.unsplash.com/photo-1506973404872-a77ad0d36000?auto=format&fit=crop&w=800&q=80',
-                'palm springs':   'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=80',
-                'puerto vallarta':'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80',
-                'rio de janeiro': 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=800&q=80',
-                'miami':          'https://images.unsplash.com/photo-1535498730771-e735b998cd64?auto=format&fit=crop&w=800&q=80',
-                'new orleans':    'https://images.unsplash.com/photo-1509895393505-d27f5b8617dd?auto=format&fit=crop&w=800&q=80',
-                'toronto':        'https://images.unsplash.com/photo-1517090504586-fde19ea6066f?auto=format&fit=crop&w=800&q=80',
-                'fort lauderdale':'https://images.unsplash.com/photo-1520454974749-a436a1b2ead5?auto=format&fit=crop&w=800&q=80',
-                'berlin':         'https://images.unsplash.com/photo-1553531088-e67cbb91da6c?auto=format&fit=crop&w=800&q=80',
-                'san juan':       'https://images.unsplash.com/photo-1473093295203-cad00df16207?auto=format&fit=crop&w=800&q=80',
-                'vancouver':      'https://images.unsplash.com/photo-1560814304-4f05b62af116?auto=format&fit=crop&w=800&q=80',
-                'london':         'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80',
-                'cancun':         'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=800&q=80',
-                'washington':     'https://images.unsplash.com/photo-1505978346881-b72b27e84530?auto=format&fit=crop&w=800&q=80',
-                'sitges':         'https://images.unsplash.com/photo-1534008757030-27299c4371b6?auto=format&fit=crop&w=800&q=80',
-                'barcelona':      'https://images.unsplash.com/photo-1562883676-8c6feb6f328e?auto=format&fit=crop&w=800&q=80',
-                'madrid':         'https://images.unsplash.com/photo-1564095267537-b85cab00c77b?auto=format&fit=crop&w=800&q=80',
+                'amsterdam':      ['https://images.unsplash.com/photo-ADeB2z6OUjs?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-QRtym77B6xk?auto=format&fit=crop&w=800&q=80'],
+                'new york':       ['https://images.unsplash.com/photo-u6gmScTHFug?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-l8ypMiU1Hio?auto=format&fit=crop&w=800&q=80'],
+                'orlando':        ['https://images.unsplash.com/photo-vVRGc5JWvIo?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-NZ-tswCm84c?auto=format&fit=crop&w=800&q=80'],
+                'los angeles':    ['https://images.unsplash.com/photo-vVRGc5JWvIo?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-4iL7UMW8iBQ?auto=format&fit=crop&w=800&q=80'],
+                'chicago':        ['https://images.unsplash.com/photo-y_bBlfqga78?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-f8jskRIAqIc?auto=format&fit=crop&w=800&q=80'],
+                'san francisco':  ['https://images.unsplash.com/photo-gZXx8lKAb7Y?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-toPrdh32kG4?auto=format&fit=crop&w=800&q=80'],
+                'paris':          ['https://images.unsplash.com/photo-nnzkZNYWHaU?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-rn7eNpSks00?auto=format&fit=crop&w=800&q=80'],
+                'tokyo':          ['https://images.unsplash.com/photo-4HG5hlhmZg8?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-tKCd-IWc4gI?auto=format&fit=crop&w=800&q=80'],
+                'honolulu':       ['https://images.unsplash.com/photo-hiIaDHN5kMY?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-gI-xTuBrG2E?auto=format&fit=crop&w=800&q=80'],
+                'bangkok':        ['https://images.unsplash.com/photo--y3sidWvDxg?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-v5L8LbMLVQQ?auto=format&fit=crop&w=800&q=80'],
+                'las vegas':      ['https://images.unsplash.com/photo-7PTF47Q9dFE?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-DTKEGvV_9_0?auto=format&fit=crop&w=800&q=80'],
+                'sydney':         ['https://images.unsplash.com/photo-ZXlfq5mExMs?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-pwgyV3Pd8sA?auto=format&fit=crop&w=800&q=80'],
+                'palm springs':   ['https://images.unsplash.com/photo-Uw2hMJSyAyU?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-NXml0rHglyI?auto=format&fit=crop&w=800&q=80'],
+                'puerto vallarta':['https://images.unsplash.com/photo-l-7gFewfyEU?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-67BQ1eXDIdY?auto=format&fit=crop&w=800&q=80'],
+                'rio de janeiro': ['https://images.unsplash.com/photo-n6zdsEq8I3g?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-UHGZVk6WAkw?auto=format&fit=crop&w=800&q=80'],
+                'miami':          ['https://images.unsplash.com/photo-Um9AkOiIDcU?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-4JrhdmdeuKI?auto=format&fit=crop&w=800&q=80'],
+                'new orleans':    ['https://images.unsplash.com/photo-Rv7Oi-XBOcQ?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-den6EylZH9w?auto=format&fit=crop&w=800&q=80'],
+                'toronto':        ['https://images.unsplash.com/photo-gOq27RHoL3s?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-WDcgQEno24E?auto=format&fit=crop&w=800&q=80'],
+                'fort lauderdale':['https://images.unsplash.com/photo-fYiuzfeeZfo?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-TE_ScyIE6Sc?auto=format&fit=crop&w=800&q=80'],
+                'berlin':         ['https://images.unsplash.com/photo-iPOZf3tQfHA?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-aGjNQlE7aj0?auto=format&fit=crop&w=800&q=80'],
+                'san juan':       ['https://images.unsplash.com/photo-uDSJIaB9p30?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-LEo8D0tCwcU?auto=format&fit=crop&w=800&q=80'],
+                'vancouver':      ['https://images.unsplash.com/photo-WHHY-iBp3aI?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-2yN10KHNTzM?auto=format&fit=crop&w=800&q=80'],
+                'london':         ['https://images.unsplash.com/photo-ZuyQ6VaCyJI?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-7iNteV_zTRU?auto=format&fit=crop&w=800&q=80'],
+                'cancun':         ['https://images.unsplash.com/photo-3pWyOGD4Q_I?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-8L7mOETNgHA?auto=format&fit=crop&w=800&q=80'],
+                'washington':     ['https://images.unsplash.com/photo-PuJc2Sodi94?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-PuJc2Sodi94?auto=format&fit=crop&w=800&q=80'],
+                'sitges':         ['https://images.unsplash.com/photo-RMgLYrxWx90?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-ZeSgC7e2_gI?auto=format&fit=crop&w=800&q=80'],
+                'barcelona':      ['https://images.unsplash.com/photo-qiH16d5SRxg?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-yM49wbR0hJM?auto=format&fit=crop&w=800&q=80'],
+                'madrid':         ['https://images.unsplash.com/photo-cOCYoPcsAlM?auto=format&fit=crop&w=800&q=80','https://images.unsplash.com/photo-igwNW819nXU?auto=format&fit=crop&w=800&q=80'],
             };
 
             function getFeaturedPhotoUrl(city) {
                 if (!city) return null;
                 const c = city.toLowerCase();
+                let photos = null;
                 // Direct match
-                if (FEATURED_PHOTO_MAP[c]) return FEATURED_PHOTO_MAP[c];
-                // Partial match (e.g. "New York City (All Airports)" → "new york")
-                for (const key of FEATURED_CITIES) {
-                    if (c.includes(key) || c.startsWith(key)) return FEATURED_PHOTO_MAP[key] || null;
+                if (FEATURED_PHOTO_MAP[c]) photos = FEATURED_PHOTO_MAP[c];
+                else {
+                    // Partial match (e.g. "New York City (All Airports)" → "new york")
+                    for (const key of FEATURED_CITIES) {
+                        if (c.includes(key) || c.startsWith(key)) { photos = FEATURED_PHOTO_MAP[key] || null; break; }
+                    }
                 }
-                return null;
+                if (!photos || !photos.length) return null;
+                return photos[Math.floor(Math.random() * photos.length)];
             }
 
             function isFeaturedCity(city) {
