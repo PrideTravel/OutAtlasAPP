@@ -155,11 +155,40 @@ Search result cards MUST display exactly:
 - Implementation: `populateViewMoreEvents()` function — `getRandomSubset(..., 15)` for Pride in `all` branch; `getRandomSubset(..., 15)` for selected type in the `else` branch; `getRandomSubset(..., 5)` for Cruises in all non-Cruise branches
 - DO NOT change these counts without explicit user permission
 
+## Safe Update Protocol (CRITICAL — NEVER VIOLATE)
+
+### Core Rule: NEVER Remove Existing Data Unless Explicitly Told To
+- **Any field that exists in a destination entry MUST be preserved exactly as-is** unless the user explicitly says to remove or replace it
+- This includes: `hotels`, `nightlife`, `restaurants`, `tours`, `stores`, `saunas`, `events`, `monthlyWeather`, `lgbtqDistrict`, `lgbtqSafety`, `safetyScore`, `baseFare`, `iata`, `image`, and any extra fields like `beaches`, `community`, `newspapers`
+- **NEVER rewrite an entire destination block** to fulfill a partial update — only touch the specific field(s) named in the request
+- If a field is not mentioned in the request, it must remain byte-for-byte identical after the edit
+
+### Field-Level Edits Only
+- When asked to update one field (e.g., `monthlyWeather`), use a targeted find-and-replace on that field's line only
+- Read the current value of the field before editing — confirm all sub-fields are carried forward
+- For `monthlyWeather`: always preserve all four sub-fields (`high`, `low`, `description`, `gear`) for every month. If a request only provides some sub-fields, **merge** the new values into the existing object — do not overwrite the entire block
+- Never silently drop a sub-field because it wasn't included in the user's update request
+
+### Before Editing destinations.json — Required Checklist
+1. Read the current destination entry in full
+2. Identify exactly which field(s) the request targets
+3. Confirm all other fields will remain unchanged
+4. After editing, verify the field that was NOT requested still matches the original exactly
+
+### Prohibited Actions (Without Explicit Written Permission)
+- Removing any array item (hotel, tour, store, sauna, nightlife venue, restaurant, event)
+- Replacing a field's content with training-knowledge data instead of the user-provided data
+- Rewriting a destination entry from scratch
+- Removing extra fields (`beaches`, `community`, `newspapers`, `amusementParks`, etc.) that fall outside the standard 16-field structure — these are intentional additions and must be kept
+
+### Why This Rule Exists
+The user has invested significant time uploading and curating destination data (hotel lists, weather descriptions, tours, venues). Any accidental removal wastes that effort and requires the user to re-upload data they already provided. Treat every existing value in `destinations.json` as user-owned and irreplaceable unless the user explicitly instructs otherwise.
+
 ## Git Workflow
 - Branch: `claude/fix-landing-page-display-fsZth`
 - Always push after commits
 - Format must remain consistent across all commits
 
 ---
-**Last Updated**: 2026-03-21
+**Last Updated**: 2026-03-22
 **Format Status**: LOCKED ✓ (JSON format with single-line compacted arrays for each category - do not change without explicit user permission)
