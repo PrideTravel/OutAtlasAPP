@@ -1,12 +1,12 @@
-const CACHE_NAME = 'outatlas-v1';
-const DATA_CACHE_NAME = 'outatlas-data-v1';
+const CACHE_NAME = 'outatlas-v2';
+const DATA_CACHE_NAME = 'outatlas-data-v2';
 
 // Static assets to cache on install
 const STATIC_ASSETS = [
-    '/',
-    '/index.html',
-    '/tailwind.min.css',
-    '/manifest.json',
+    '/OutAtlasAPP/',
+    '/OutAtlasAPP/index.html',
+    '/OutAtlasAPP/tailwind.min.css',
+    '/OutAtlasAPP/manifest.json',
 ];
 
 // Install: pre-cache static assets
