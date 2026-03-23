@@ -2917,7 +2917,7 @@
                             </div>
                             <div class="overflow-hidden pr-6 flex-1">
                                 <p class="font-black text-slate-900 dark:text-white break-words leading-snug text-base">${ev.name}</p>
-                                <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide ${s.badge} px-2 py-0.5 rounded-full mt-0.5 mb-1">${s.emoji} ${s.label}</span>
+                                ${buildTypeBadges(ev.type)}
                                 <p class="text-xs font-bold text-slate-500 uppercase tracking-tighter">${cityLabel} &bull; ${formatDateShort(ev.start)}</p>
                             </div>
                             <div class="flex items-center">
@@ -3020,7 +3020,7 @@
                                 </div>
                                 <div class="overflow-hidden flex-1 pr-6">
                                     <p class="font-black text-slate-900 dark:text-white break-words leading-snug text-lg">${h.name}</p>
-                                    <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide ${s.badge} px-2 py-0.5 rounded-full mt-0.5 mb-1">${s.emoji} ${s.label}</span>
+                                    ${buildTypeBadges(h.type)}
                                     <p class="text-xs font-bold text-slate-500 uppercase tracking-tighter">${meta}</p>
                                 </div>
                                 <div class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -3129,7 +3129,7 @@
                         <div class="w-14 h-14 rounded-xl ${s.bg} flex items-center justify-center shrink-0 text-3xl leading-none">${s.emoji}</div>
                         <div class="overflow-hidden flex-1 pr-6">
                             <p class="font-black text-slate-900 dark:text-white break-words leading-snug text-lg">${h.name}</p>
-                            <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide ${s.badge} px-2 py-0.5 rounded-full mt-0.5 mb-1">${s.emoji} ${s.label}</span>
+                            ${buildTypeBadges(h.type)}
                             <p class="text-xs font-bold text-slate-500 uppercase tracking-tighter">${h.city||''} &bull; ${formatDateShort(h.start)}</p>
                         </div>
                         <div class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -3300,6 +3300,19 @@
                 }
             }
 
+            // Returns one badge per distinct type for comma-separated multi-type events
+            function buildTypeBadges(type) {
+                const types = (type || 'Pride Event').split(',').map(t => t.trim()).filter(Boolean);
+                const seen = new Set();
+                const badges = types.map(t => {
+                    const s = getEventTypeStyle(t);
+                    if (seen.has(s.label)) return '';
+                    seen.add(s.label);
+                    return `<span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide ${s.badge} px-2 py-0.5 rounded-full">${s.emoji} ${s.label}</span>`;
+                }).join('');
+                return `<div class="flex flex-wrap gap-1 mt-0.5 mb-1">${badges}</div>`;
+            }
+
             function renderTrendingCardSnippet(e) {
                 const s = getEventTypeStyle(e.type);
                 const cityName = (e.city || e.name || 'All').replace(/'/g, "\\'");
@@ -3311,7 +3324,7 @@
                         </div>
                         <div class="overflow-hidden pr-6 flex-1">
                             <p class="font-black text-slate-900 dark:text-white break-words leading-snug text-lg">${e.name}</p>
-                            <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide ${s.badge} px-2 py-0.5 rounded-full mt-0.5 mb-1">${s.emoji} ${s.label}</span>
+                            ${buildTypeBadges(e.type)}
                             <p class="text-xs font-bold text-slate-500 uppercase tracking-tighter">${e.city} &bull; ${formatDateShort(e.start)}</p>
                         </div>
                         <div class="flex items-center">
