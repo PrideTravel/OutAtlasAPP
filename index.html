@@ -522,8 +522,7 @@
                 <div class="flex justify-between items-end mb-4">
                     <h3 class="text-xl font-bold inline-block dark-pill"><span class="pride-gradient-text">Safe
                             Hotspots</span></h3>
-                    <button onclick="showAllHotspots()" class="text-sm text-primary font-bold hover:underline">View
-                        More</button>
+                    <button onclick="showAllHotspots()" class="text-sm font-black text-primary bg-primary/10 hover:bg-primary/20 px-4 py-1.5 rounded-full border border-primary/30 transition-colors">View More</button>
                 </div>
                 <div id="hotspotsContainer" class="flex gap-4 overflow-x-auto hide-scrollbar pb-6 -mx-4 px-4 snap-x">
                     <!-- JS populated -->
@@ -3119,9 +3118,9 @@
                 return `
                     <div onclick="quickSearch('${query}','${h.start||''}','${h.end||''}')"
                          class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-lg border-l-4 ${s.border} flex gap-4 cursor-pointer hover:scale-[1.02] transition-transform group relative">
-                        <div class="w-12 h-12 rounded-xl ${s.bg} flex items-center justify-center shrink-0 text-2xl leading-none">${s.emoji}</div>
+                        <div class="w-14 h-14 rounded-xl ${s.bg} flex items-center justify-center shrink-0 text-3xl leading-none">${s.emoji}</div>
                         <div class="overflow-hidden flex-1 pr-6">
-                            <p class="font-black text-slate-900 dark:text-white truncate text-base">${h.name}</p>
+                            <p class="font-black text-slate-900 dark:text-white truncate text-lg">${h.name}</p>
                             <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide ${s.badge} px-2 py-0.5 rounded-full mt-0.5 mb-1">${s.emoji} ${s.label}</span>
                             <p class="text-xs font-bold text-slate-500 uppercase tracking-tighter">${h.city||''} &bull; ${formatDateShort(h.start)}</p>
                         </div>
@@ -3184,8 +3183,8 @@
                     html += `<div class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${cruises.map(buildHotspotEventCard).join('')}</div>`;
 
                 } else {
-                    // Selected type: up to 15, FIRST
-                    const selected = getRandomSubset(_evtByType[type] || [], 15);
+                    // Selected type: up to 40, FIRST
+                    const selected = getRandomSubset(_evtByType[type] || [], 40);
                     const s = getEventTypeStyle(type);
                     if (selected.length) {
                         html += buildFilterSectionHead(`${s.label} Events (${selected.length})`, s);
@@ -3198,7 +3197,7 @@
                         const cap = t === 'Pride Event' ? 25 : _evtByType[t].length;
                         othersPool.push(...getRandomSubset(_evtByType[t], cap));
                     });
-                    const others = getRandomSubset(othersPool, 15);
+                    const others = getRandomSubset(othersPool, 40);
                     if (others.length) {
                         const sO = {emoji:'✨',border:'border-slate-400',bg:'bg-slate-100 dark:bg-slate-700/30',badge:'bg-slate-500 text-white'};
                         html += buildFilterSectionHead(`More LGBTQ Events (${others.length})`, sO);
@@ -3291,12 +3290,12 @@
                 const cityName = (e.city || e.name || 'All').replace(/'/g, "\\'");
                 return `
                     <div onclick="quickSearch('${cityName}', '${e.start}', '${e.end}')"
-                         class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg border-l-4 ${s.border} flex gap-4 cursor-pointer hover:scale-[1.02] transition-transform relative group">
-                        <div class="w-12 h-12 rounded-xl ${s.bg} flex items-center justify-center shrink-0 text-2xl leading-none">
+                         class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-lg border-l-4 ${s.border} flex gap-4 cursor-pointer hover:scale-[1.02] transition-transform relative group">
+                        <div class="w-14 h-14 rounded-xl ${s.bg} flex items-center justify-center shrink-0 text-3xl leading-none">
                             ${s.emoji}
                         </div>
                         <div class="overflow-hidden pr-6 flex-1">
-                            <p class="font-black text-slate-900 dark:text-white truncate text-base">${e.name}</p>
+                            <p class="font-black text-slate-900 dark:text-white truncate text-lg">${e.name}</p>
                             <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide ${s.badge} px-2 py-0.5 rounded-full mt-0.5 mb-1">${s.emoji} ${s.label}</span>
                             <p class="text-xs font-bold text-slate-500 uppercase tracking-tighter">${e.city} &bull; ${formatDateShort(e.start)}</p>
                         </div>
