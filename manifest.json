@@ -2,9 +2,9 @@
   "name": "OutAtlas",
   "short_name": "OutAtlas",
   "version": "2.0.1",
-  "id": "/PrideTravelScoutAPP/",
-  "start_url": "/PrideTravelScoutAPP/index.html",
-  "scope": "/PrideTravelScoutAPP/",
+  "id": "/OutAtlasAPP/",
+  "start_url": "/OutAtlasAPP/index.html",
+  "scope": "/OutAtlasAPP/",
   "display": "standalone",
   "display_override": ["standalone", "window-controls-overlay"],
   "background_color": "#0f172a",
@@ -32,13 +32,13 @@
     {
       "name": "Search Hotels",
       "short_name": "Hotels",
-      "url": "/PrideTravelScoutAPP/index.html#hotels",
+      "url": "/OutAtlasAPP/index.html#hotels",
       "description": "Find LGBTQ+ friendly hotels"
     },
     {
       "name": "Upcoming Events",
       "short_name": "Events",
-      "url": "/PrideTravelScoutAPP/index.html#events",
+      "url": "/OutAtlasAPP/index.html#events",
       "description": "View LGBTQ+ events and pride dates"
     }
   ]
