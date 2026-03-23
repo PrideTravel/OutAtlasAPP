@@ -1,4 +1,4 @@
-# Claude Code Configuration & Constraints
+# Claude Code Configuration & Constraints — OutAtlas
 
 ## destinations.json Format Requirements
 
@@ -190,5 +190,6 @@ The user has invested significant time uploading and curating destination data (
 - Format must remain consistent across all commits
 
 ---
-**Last Updated**: 2026-03-22
+**App Name**: OutAtlas (formerly Pride Travel Scout / Pride Scout)
+**Last Updated**: 2026-03-23
 **Format Status**: LOCKED ✓ (JSON format with single-line compacted arrays for each category - do not change without explicit user permission)
