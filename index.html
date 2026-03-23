@@ -21,33 +21,8 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         rel="stylesheet" />
 
-    <!-- Tailwind CSS (CDN) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#f20d8f",
-                        "background-light": "#f8f5f7",
-                        "background-dark": "#22101a",
-                        "pride-red": "#FF0018",
-                        "pride-orange": "#FFA52C",
-                        "pride-yellow": "#FFFF41",
-                        "pride-green": "#008018",
-                        "pride-blue": "#0000F9",
-                        "pride-purple": "#86007D",
-                    },
-                    fontFamily: {
-                        "display": ["Outfit", "sans-serif"],
-                        "sans": ["Outfit", "sans-serif"]
-                    },
-                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
-                }
-            }
-        };
-    </script>
+    <!-- Tailwind CSS (local production build — replaces CDN for performance) -->
+    <link rel="stylesheet" href="tailwind.min.css">
 
     <!-- 2. Custom CSS -->
     <style>
@@ -440,11 +415,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="https://pridetravel.github.io/PrideTravelScoutAPP/icon-512.png">
-    <!-- Firebase SDK (compat) -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
     <script>
         // On page load or when changing themes, best to add inline in `head` to avoid FOUC
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -767,6 +737,12 @@
 
     <!-- User menu button (rendered by JS) -->
     <div id="ps-user-menu-wrap"></div>
+
+    <!-- Firebase SDK (compat) — loaded here (not in <head>) to avoid blocking initial render -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
 
     <script>
         (function () {
