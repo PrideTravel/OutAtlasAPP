@@ -2916,7 +2916,7 @@
                                 ${s.emoji}
                             </div>
                             <div class="overflow-hidden pr-6 flex-1">
-                                <p class="font-black text-slate-900 dark:text-white truncate text-base">${ev.name}</p>
+                                <p class="font-black text-slate-900 dark:text-white break-words leading-snug text-base">${ev.name}</p>
                                 <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide ${s.badge} px-2 py-0.5 rounded-full mt-0.5 mb-1">${s.emoji} ${s.label}</span>
                                 <p class="text-xs font-bold text-slate-500 uppercase tracking-tighter">${cityLabel} &bull; ${formatDateShort(ev.start)}</p>
                             </div>
@@ -2935,7 +2935,7 @@
                         </div>`;
 
                     // Group all events by type for labeled sections
-                    const groupOrder = ['Pride Event','Bear','Fetish','Cruise','Circuit','Lesbian','Festival','Halloween','Christmas','NYE','Christmas,NYE','Easter','4th of July','Labor Day','Memorial Day','Thanksgiving','Themed Event','Carnival','Drag','Con','Amusement Park','Awards','Event'];
+                    const groupOrder = ['Pride Event','Bear','Fetish','Cruise','Circuit','Lesbian','Festival','Carnival','Carnival, Mardi Gras','Mardi Gras','Halloween','Christmas','NYE','Christmas, NYE','Christmas,NYE','Easter','4th of July','Labor Day','Memorial Day','Thanksgiving','Themed Event','Drag','Con','Amusement Park','Awards','Event'];
                     const groupMap = {};
                     allEvents.sort(byDate).forEach(ev => {
                         const k = ev.type || 'Pride Event';
@@ -3019,7 +3019,7 @@
                                     ${s.emoji}
                                 </div>
                                 <div class="overflow-hidden flex-1 pr-6">
-                                    <p class="font-black text-slate-900 dark:text-white truncate text-lg">${h.name}</p>
+                                    <p class="font-black text-slate-900 dark:text-white break-words leading-snug text-lg">${h.name}</p>
                                     <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide ${s.badge} px-2 py-0.5 rounded-full mt-0.5 mb-1">${s.emoji} ${s.label}</span>
                                     <p class="text-xs font-bold text-slate-500 uppercase tracking-tighter">${meta}</p>
                                 </div>
@@ -3069,21 +3069,29 @@
                 }).join('');
 
                 // Index all events by type for dynamic filter rendering
+                // Split comma-separated types so multi-type events appear in all relevant filters
                 _evtByType = {};
                 SPECIAL_EVENTS_DATA.forEach(e => {
-                    const t = e.type || 'Pride Event';
-                    if (!_evtByType[t]) _evtByType[t] = [];
-                    _evtByType[t].push(e);
+                    const types = (e.type || 'Pride Event').split(',').map(t => t.trim()).filter(Boolean);
+                    types.forEach(t => {
+                        if (!_evtByType[t]) _evtByType[t] = [];
+                        _evtByType[t].push(e);
+                    });
                 });
 
                 const FILTER_TYPES = [
                     {key:'all',         emoji:'✦',  label:'All Events'},
                     {key:'Pride Event',  emoji:'🌈', label:'Pride'},
+                    {key:'Lesbian',     emoji:'🌺', label:'Lesbian'},
                     {key:'Fetish',      emoji:'⛓️', label:'Fetish'},
                     {key:'Bear',        emoji:'🐻', label:'Bear'},
                     {key:'Cruise',      emoji:'🚢', label:'Cruise'},
-                    {key:'Halloween',   emoji:'🎃', label:'Halloween'},
+                    {key:'Circuit',     emoji:'🎵', label:'Circuit'},
+                    {key:'Carnival',    emoji:'🎭', label:'Carnival / Mardi Gras'},
+                    {key:'Festival',    emoji:'🎉', label:'Festival'},
+                    {key:'Christmas',   emoji:'🎄', label:'Christmas'},
                     {key:'NYE',         emoji:'🥂', label:'NYE'},
+                    {key:'Halloween',   emoji:'🎃', label:'Halloween'},
                 ];
 
                 const filterBtns = FILTER_TYPES.map(f => `
@@ -3120,7 +3128,7 @@
                          class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-lg border-l-4 ${s.border} flex gap-4 cursor-pointer hover:scale-[1.02] transition-transform group relative">
                         <div class="w-14 h-14 rounded-xl ${s.bg} flex items-center justify-center shrink-0 text-3xl leading-none">${s.emoji}</div>
                         <div class="overflow-hidden flex-1 pr-6">
-                            <p class="font-black text-slate-900 dark:text-white truncate text-lg">${h.name}</p>
+                            <p class="font-black text-slate-900 dark:text-white break-words leading-snug text-lg">${h.name}</p>
                             <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide ${s.badge} px-2 py-0.5 rounded-full mt-0.5 mb-1">${s.emoji} ${s.label}</span>
                             <p class="text-xs font-bold text-slate-500 uppercase tracking-tighter">${h.city||''} &bull; ${formatDateShort(h.start)}</p>
                         </div>
@@ -3259,6 +3267,12 @@
             function getEventTypeStyle(type) {
                 const t = (type || '').toLowerCase().trim();
                 if (t.includes('christmas') && t.includes('nye')) return {emoji:'🎄🥂',icon:'celebration',border:'border-green-600',bg:'bg-green-100 dark:bg-green-900/20',text:'text-green-700 dark:text-green-400',badge:'bg-green-600 text-white',gradient:'from-green-700 to-yellow-500',label:'Christmas & NYE'};
+                if (t.includes('carnival') || t.includes('mardi gras')) return {emoji:'🎭',icon:'masks',border:'border-purple-500',bg:'bg-purple-100 dark:bg-purple-900/20',text:'text-purple-600 dark:text-purple-400',badge:'bg-purple-500 text-white',gradient:'from-purple-600 to-fuchsia-500',label:'Carnival / Mardi Gras'};
+                if (t.includes('lesbian')) return {emoji:'🌺',icon:'favorite',border:'border-rose-400',bg:'bg-rose-50 dark:bg-rose-900/20',text:'text-rose-500 dark:text-rose-300',badge:'bg-rose-500 text-white',gradient:'from-rose-500 to-pink-400',label:'Lesbian'};
+                if (t.includes('fetish') && t.includes('bear')) return {emoji:'⛓️🐻',icon:'link',border:'border-slate-600',bg:'bg-slate-200 dark:bg-slate-700/50',text:'text-slate-700 dark:text-slate-300',badge:'bg-slate-700 text-white',gradient:'from-slate-800 to-amber-700',label:'Fetish / Bear'};
+                if (t.includes('cruise') && t.includes('bear')) return {emoji:'🚢🐻',icon:'directions_boat',border:'border-blue-500',bg:'bg-blue-100 dark:bg-blue-900/20',text:'text-blue-600 dark:text-blue-400',badge:'bg-blue-600 text-white',gradient:'from-blue-600 to-amber-700',label:'Bear Cruise'};
+                if (t.includes('cruise') && t.includes('lesbian')) return {emoji:'🚢🌺',icon:'directions_boat',border:'border-blue-400',bg:'bg-blue-50 dark:bg-blue-900/20',text:'text-blue-500 dark:text-blue-300',badge:'bg-blue-500 text-white',gradient:'from-blue-500 to-rose-400',label:'Lesbian Cruise'};
+                if (t.includes('lesbian') && t.includes('circuit')) return {emoji:'🌺🎵',icon:'favorite',border:'border-rose-400',bg:'bg-rose-50 dark:bg-rose-900/20',text:'text-rose-500 dark:text-rose-300',badge:'bg-rose-500 text-white',gradient:'from-rose-500 to-pink-500',label:'Lesbian Circuit'};
                 switch(t) {
                     case 'cruise':       return {emoji:'🚢',icon:'directions_boat',border:'border-blue-500',bg:'bg-blue-100 dark:bg-blue-900/20',text:'text-blue-600 dark:text-blue-400',badge:'bg-blue-600 text-white',gradient:'from-blue-600 to-cyan-500',label:'Cruise'};
                     case 'bear':         return {emoji:'🐻',icon:'pets',border:'border-amber-700',bg:'bg-amber-100 dark:bg-amber-900/20',text:'text-amber-700 dark:text-amber-400',badge:'bg-amber-700 text-white',gradient:'from-amber-800 to-amber-600',label:'Bear'};
@@ -3267,13 +3281,14 @@
                     case 'christmas':    return {emoji:'🎄',icon:'park',border:'border-green-600',bg:'bg-green-100 dark:bg-green-900/20',text:'text-green-700 dark:text-green-400',badge:'bg-green-600 text-white',gradient:'from-green-700 to-emerald-500',label:'Christmas'};
                     case 'nye':          return {emoji:'🥂',icon:'celebration',border:'border-yellow-500',bg:'bg-yellow-100 dark:bg-yellow-900/20',text:'text-yellow-700 dark:text-yellow-500',badge:'bg-yellow-500 text-white',gradient:'from-yellow-500 to-amber-400',label:"New Year's Eve"};
                     case 'circuit':      return {emoji:'🎵',icon:'music_note',border:'border-pink-500',bg:'bg-pink-100 dark:bg-pink-900/20',text:'text-pink-600 dark:text-pink-400',badge:'bg-pink-500 text-white',gradient:'from-pink-600 to-rose-500',label:'Circuit'};
-                    case 'lesbian':      return {emoji:'🌸',icon:'favorite',border:'border-pink-400',bg:'bg-pink-50 dark:bg-pink-900/20',text:'text-pink-500 dark:text-pink-300',badge:'bg-pink-400 text-white',gradient:'from-pink-500 to-rose-400',label:'Lesbian'};
+                    case 'lesbian':      return {emoji:'🌺',icon:'favorite',border:'border-rose-400',bg:'bg-rose-50 dark:bg-rose-900/20',text:'text-rose-500 dark:text-rose-300',badge:'bg-rose-500 text-white',gradient:'from-rose-500 to-pink-400',label:'Lesbian'};
                     case 'easter':       return {emoji:'🐣',icon:'egg_alt',border:'border-yellow-400',bg:'bg-yellow-50 dark:bg-yellow-900/20',text:'text-yellow-600 dark:text-yellow-400',badge:'bg-yellow-400 text-slate-800',gradient:'from-yellow-400 to-lime-400',label:'Easter'};
                     case '4th of july':  return {emoji:'🎆',icon:'flag',border:'border-red-600',bg:'bg-red-100 dark:bg-red-900/20',text:'text-red-700 dark:text-red-400',badge:'bg-red-600 text-white',gradient:'from-red-700 to-red-500',label:'4th of July'};
                     case 'labor day':    return {emoji:'☀️',icon:'beach_access',border:'border-sky-500',bg:'bg-sky-100 dark:bg-sky-900/20',text:'text-sky-600 dark:text-sky-400',badge:'bg-sky-500 text-white',gradient:'from-sky-600 to-blue-400',label:'Labor Day'};
                     case 'festival':     return {emoji:'🎉',icon:'festival',border:'border-rose-500',bg:'bg-rose-100 dark:bg-rose-900/20',text:'text-rose-600 dark:text-rose-400',badge:'bg-rose-500 text-white',gradient:'from-rose-600 to-pink-500',label:'Festival'};
-                    case 'themed event': return {emoji:'🎭',icon:'theater_comedy',border:'border-purple-500',bg:'bg-purple-100 dark:bg-purple-900/20',text:'text-purple-600 dark:text-purple-400',badge:'bg-purple-500 text-white',gradient:'from-purple-600 to-violet-500',label:'Themed Event'};
-                    case 'carnival':     return {emoji:'🎡',icon:'attractions',border:'border-orange-400',bg:'bg-orange-100 dark:bg-orange-900/20',text:'text-orange-500 dark:text-orange-300',badge:'bg-orange-400 text-white',gradient:'from-orange-500 to-yellow-400',label:'Carnival'};
+                    case 'themed event': return {emoji:'🎊',icon:'celebration',border:'border-violet-500',bg:'bg-violet-100 dark:bg-violet-900/20',text:'text-violet-600 dark:text-violet-400',badge:'bg-violet-500 text-white',gradient:'from-violet-600 to-purple-500',label:'Themed Event'};
+                    case 'carnival':     return {emoji:'🎭',icon:'masks',border:'border-purple-500',bg:'bg-purple-100 dark:bg-purple-900/20',text:'text-purple-600 dark:text-purple-400',badge:'bg-purple-500 text-white',gradient:'from-purple-600 to-fuchsia-500',label:'Carnival / Mardi Gras'};
+                    case 'mardi gras':   return {emoji:'🎭',icon:'masks',border:'border-purple-500',bg:'bg-purple-100 dark:bg-purple-900/20',text:'text-purple-600 dark:text-purple-400',badge:'bg-purple-500 text-white',gradient:'from-purple-600 to-fuchsia-500',label:'Carnival / Mardi Gras'};
                     case 'drag':         return {emoji:'👑',icon:'auto_awesome',border:'border-fuchsia-500',bg:'bg-fuchsia-100 dark:bg-fuchsia-900/20',text:'text-fuchsia-600 dark:text-fuchsia-400',badge:'bg-fuchsia-500 text-white',gradient:'from-fuchsia-600 to-pink-500',label:'Drag'};
                     case 'con':          return {emoji:'🎮',icon:'sports_esports',border:'border-indigo-500',bg:'bg-indigo-100 dark:bg-indigo-900/20',text:'text-indigo-600 dark:text-indigo-400',badge:'bg-indigo-500 text-white',gradient:'from-indigo-600 to-blue-500',label:'Con'};
                     case 'amusement park': return {emoji:'🎡',icon:'attractions',border:'border-orange-400',bg:'bg-orange-100 dark:bg-orange-900/20',text:'text-orange-500 dark:text-orange-300',badge:'bg-orange-400 text-white',gradient:'from-orange-500 to-yellow-400',label:'Amusement Park'};
@@ -3295,7 +3310,7 @@
                             ${s.emoji}
                         </div>
                         <div class="overflow-hidden pr-6 flex-1">
-                            <p class="font-black text-slate-900 dark:text-white truncate text-lg">${e.name}</p>
+                            <p class="font-black text-slate-900 dark:text-white break-words leading-snug text-lg">${e.name}</p>
                             <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide ${s.badge} px-2 py-0.5 rounded-full mt-0.5 mb-1">${s.emoji} ${s.label}</span>
                             <p class="text-xs font-bold text-slate-500 uppercase tracking-tighter">${e.city} &bull; ${formatDateShort(e.start)}</p>
                         </div>
