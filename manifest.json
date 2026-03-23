@@ -1,6 +1,6 @@
 {
-  "name": "Pride Travel Scout",
-  "short_name": "PrideTravel",
+  "name": "OutAtlas",
+  "short_name": "OutAtlas",
   "version": "2.0.1",
   "id": "/PrideTravelScoutAPP/",
   "start_url": "/PrideTravelScoutAPP/index.html",
@@ -10,7 +10,7 @@
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
   "orientation": "portrait-primary",
-  "description": "Pride Travel Scout app was created to make travel planning safer, easier, and more empowering for the LGBTQ community. Explore by region or country to discover welcoming destinations with curated listings for hotels, tours, and nightlife.",
+  "description": "OutAtlas was created to make travel planning safer, easier, and more empowering for the LGBTQ community. Explore by region or country to discover welcoming destinations with curated listings for hotels, tours, and nightlife.",
   "dir": "auto",
   "lang": "en-US",
   "categories": ["travel", "lifestyle"],
