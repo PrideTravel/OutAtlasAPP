@@ -575,9 +575,9 @@
             </button>
             <div class="flex items-center justify-between gap-4 mb-2">
                 <h2 class="text-3xl font-black inline-block dark-pill"><span class="pride-gradient-text">Explore More Safe Hotspots</span></h2>
-                <button onclick="hotspotFilter('all')" title="Reset to default view" class="flex flex-col items-center gap-1 text-primary bg-primary/10 hover:bg-primary/20 px-3 py-2 rounded-2xl border border-primary/30 transition-colors shrink-0">
+                <button onclick="hotspotFilter(_currentHotspotType, true)" title="Tap to limit results to 25 — resets to full 40 on next load or search" class="flex flex-col items-center gap-1 text-primary bg-primary/10 hover:bg-primary/20 px-3 py-2 rounded-2xl border border-primary/30 transition-colors shrink-0">
                     <span class="material-symbols-outlined text-2xl">smartphone</span>
-                    <span class="text-[10px] font-black uppercase">Reset</span>
+                    <span class="text-[10px] font-black uppercase leading-tight text-center">Limit<br>Results</span>
                 </button>
             </div>
             <p class="text-slate-500 dark:text-slate-400 dark:text-slate-300 text-sm font-medium mb-6">More featured LGBTQ+ destinations, trending events, and cruises from across the globe.</p>
@@ -3156,7 +3156,15 @@
                     </div>`;
             }
 
-            window.hotspotFilter = function(type) {
+            // Tracks the currently active filter — reset to 'all' each time the view loads (never persisted)
+            let _currentHotspotType = 'all';
+
+            window.hotspotFilter = function(type, compact) {
+                // compact=true → limit to 25 results (mobile-friendly); default=false → full 40 results
+                // compact is NEVER stored/remembered — each new view load or filter click uses full results
+                _currentHotspotType = type;
+                const otherLimit = compact ? 5 : 20;
+
                 // Update pill button states
                 document.querySelectorAll('.hotspot-filter-btn').forEach(btn => {
                     const active = btn.dataset.fkey === type;
@@ -3177,7 +3185,7 @@
                 let html = '';
 
                 if (type === 'all') {
-                    // Default: 15 Pride Events + 5 Other + 5 Cruises (= 25 total)
+                    // Full: 15 Pride + up to 20 Other + 5 Cruises = ~40 | Compact: 15 + 5 + 5 = 25
                     const pride   = getRandomSubset(_evtByType['Pride Event'] || [], 15);
                     const cruises = getRandomSubset(_evtByType['Cruise'] || [], 5);
                     const otherPool = [];
@@ -3185,7 +3193,7 @@
                         if (t === 'Pride Event' || t === 'Cruise') return;
                         otherPool.push(...(_evtByType[t] || []));
                     });
-                    const others = getRandomSubset(otherPool, 5);
+                    const others = getRandomSubset(otherPool, otherLimit);
                     if (pride.length) {
                         const s = getEventTypeStyle('Pride Event');
                         html += buildFilterSectionHead(`Pride Events (${pride.length})`, s);
@@ -3210,26 +3218,26 @@
                     html += `<div class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${cruises.map(buildHotspotEventCard).join('')}</div>`;
 
                 } else {
-                    // Selected type: up to 15 of that type + 5 other + 5 cruises (= 25 total)
+                    // Full: 15 of type + up to 20 other + 5 cruises = ~40 | Compact: 15 + 5 + 5 = 25
                     const selected = getRandomSubset(_evtByType[type] || [], 15);
                     const s = getEventTypeStyle(type);
                     if (selected.length) {
                         html += buildFilterSectionHead(`${s.label} Events (${selected.length})`, s);
                         html += `<div class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${selected.map(buildHotspotEventCard).join('')}</div>`;
                     }
-                    // 5 other mixed events (excluding selected type and cruises)
+                    // Other mixed events (excluding selected type and cruises)
                     const othersPool = [];
                     Object.keys(_evtByType).forEach(t => {
                         if (t === type || t === 'Cruise') return;
                         othersPool.push(...(_evtByType[t] || []));
                     });
-                    const others = getRandomSubset(othersPool, 5);
+                    const others = getRandomSubset(othersPool, otherLimit);
                     if (others.length) {
                         const sO = {emoji:'✨',border:'border-slate-400',bg:'bg-slate-100 dark:bg-slate-700/30',badge:'bg-slate-500 text-white'};
                         html += buildFilterSectionHead(`More LGBTQ Events (${others.length})`, sO);
                         html += `<div class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${others.map(buildHotspotEventCard).join('')}</div>`;
                     }
-                    // Always show 5 cruises at the bottom
+                    // Always 5 cruises at the bottom
                     const cruises = getRandomSubset(_evtByType['Cruise'] || [], 5);
                     if (cruises.length) {
                         const sc = getEventTypeStyle('Cruise');
