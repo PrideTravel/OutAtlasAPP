@@ -3160,10 +3160,11 @@
             let _currentHotspotType = 'all';
 
             window.hotspotFilter = function(type, compact) {
-                // compact=true → limit to 25 results (mobile-friendly); default=false → full 40 results
+                // compact=true → limit to 25 results (mobile-friendly); default=false → full results
                 // compact is NEVER stored/remembered — each new view load or filter click uses full results
                 _currentHotspotType = type;
-                const otherLimit = compact ? 5 : 20;
+                // otherLimit: for 'all' view (full=20, compact=5); for specific filter (full=10, compact=5)
+                const otherLimit = compact ? 5 : (type === 'all' ? 20 : 10);
 
                 // Update pill button states
                 document.querySelectorAll('.hotspot-filter-btn').forEach(btn => {
@@ -3218,8 +3219,8 @@
                     html += `<div class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${cruises.map(buildHotspotEventCard).join('')}</div>`;
 
                 } else {
-                    // Full: 15 of type + up to 20 other + 5 cruises = ~40 | Compact: 15 + 5 + 5 = 25
-                    const selected = getRandomSubset(_evtByType[type] || [], 15);
+                    // Full: 40 of type + up to 10 other + 5 cruises = ~55 | Compact: 15 + 5 + 5 = 25
+                    const selected = getRandomSubset(_evtByType[type] || [], compact ? 15 : 40);
                     const s = getEventTypeStyle(type);
                     if (selected.length) {
                         html += buildFilterSectionHead(`${s.label} Events (${selected.length})`, s);
