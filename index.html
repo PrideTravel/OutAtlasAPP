@@ -3157,12 +3157,13 @@
             }
 
             // Tracks the currently active filter — reset to 'all' each time the view loads (never persisted)
-            let _currentHotspotType = 'all';
+            // Must be on window so the inline onclick button can read it (IIFE scope isn't accessible from HTML attributes)
+            window._currentHotspotType = 'all';
 
             window.hotspotFilter = function(type, compact) {
                 // compact=true → limit to 25 results (mobile-friendly); default=false → full results
                 // compact is NEVER stored/remembered — each new view load or filter click uses full results
-                _currentHotspotType = type;
+                window._currentHotspotType = type;
                 // otherLimit: for 'all' view (full=20, compact=5); for specific filter (full=10, compact=5)
                 const otherLimit = compact ? 5 : (type === 'all' ? 20 : 10);
 
