@@ -2469,7 +2469,7 @@
                                 const mWeather = data.monthlyWeather ? data.monthlyWeather[monthIndex] : null;
                                 const highTemp = (mWeather && mWeather.high) ? mWeather.high : '72°F';
                                 const lowTemp = (mWeather && mWeather.low) ? mWeather.low : '55°F';
-                                const summary = mWeather && mWeather.summary ? mWeather.summary : 'Sunny';
+                                const summary = mWeather && mWeather.summary ? mWeather.summary : (mWeather && mWeather.description ? mWeather.description.split(/[;.]/)[0].trim() : '');
                                 const description = (mWeather && mWeather.description) ? mWeather.description : (data.weather ? data.weather.replace(/[.\s]*\d+[°&]?(deg;)?\s*[CF]/g, '').trim() : '');
                                 const gear = (mWeather && mWeather.gear) ? mWeather.gear : 'Light layers and comfortable walking shoes.';
 
@@ -2480,7 +2480,7 @@
                                     <p class="text-sm font-semibold text-slate-600 dark:text-slate-300 leading-snug">${description}</p>
                                 </div>
                                 <div class="w-full flex items-start gap-4 p-4 bg-white dark:bg-slate-800/60 rounded-xl">
-                                    <div class="flex-shrink-0 pr-4 border-r border-slate-200 dark:border-slate-700">${getWeatherIcon(summary)}</div>
+                                    <div class="flex-shrink-0 pr-4 border-r border-slate-200 dark:border-slate-700">${getWeatherIcon(description || summary)}</div>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">${monthName} Average</p>
                                         <div class="flex flex-wrap gap-x-4 gap-y-1 mb-3">
@@ -2856,10 +2856,13 @@
             }
 
             function getWeatherIcon(weatherString) {
-                const w = weatherString.toLowerCase();
-                if (w.includes('rain')) return '<span class="material-symbols-outlined text-pride-blue">rainy</span>';
-                if (w.includes('cloud')) return '<span class="material-symbols-outlined text-slate-400 dark:text-slate-300">cloudy</span>';
-                if (w.includes('snow')) return '<span class="material-symbols-outlined text-slate-200">snowing</span>';
+                const w = (weatherString || '').toLowerCase();
+                if (w.includes('snow') || w.includes('freez')) return '<span class="material-symbols-outlined text-slate-200">snowing</span>';
+                if (w.includes('rain') || w.includes('shower') || w.includes('drizzle') || w.includes('wet') || w.includes('humid')) return '<span class="material-symbols-outlined text-pride-blue">rainy</span>';
+                if (w.includes('cloud') || w.includes('overcast') || w.includes('grey') || w.includes('gray') || w.includes('fog') || w.includes('mist')) return '<span class="material-symbols-outlined text-slate-400 dark:text-slate-300">cloudy</span>';
+                if (w.includes('wind') || w.includes('storm') || w.includes('thunder')) return '<span class="material-symbols-outlined text-slate-400 dark:text-slate-300">air</span>';
+                if (w.includes('warm') || w.includes('hot') || w.includes('sunny') || w.includes('dry') || w.includes('clear')) return '<span class="material-symbols-outlined text-pride-orange">sunny</span>';
+                if (w.includes('cool') || w.includes('cold') || w.includes('mild') || w.includes('crisp')) return '<span class="material-symbols-outlined text-pride-blue">thermostat</span>';
                 return '<span class="material-symbols-outlined text-pride-orange">sunny</span>';
             }
 
