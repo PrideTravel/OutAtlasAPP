@@ -2091,6 +2091,28 @@
                         return;
                     }
 
+                    // Validate that dates are not before today
+                    if (dateStart || dateEnd) {
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+
+                        if (dateStart) {
+                            const startDate = new Date(dateStart + 'T00:00:00');
+                            if (startDate < today) {
+                                alert("Your departure date is before today. Please select a future date.");
+                                return;
+                            }
+                        }
+
+                        if (dateEnd) {
+                            const endDate = new Date(dateEnd + 'T00:00:00');
+                            if (endDate < today) {
+                                alert("Your return date is before today. Please select a future date.");
+                                return;
+                            }
+                        }
+                    }
+
                     let targets = [];
 
                     if (DATABASE.mappings.regions[destinationInput]) {
@@ -2167,7 +2189,12 @@
                             const startBuffer = new Date(eStart.getTime() - bufferTime);
                             const endBuffer = new Date(eEnd.getTime() + bufferTime);
 
-                            return (searchStart <= endBuffer && searchEnd >= startBuffer);
+                            if (!(searchStart <= endBuffer && searchEnd >= startBuffer)) return false;
+
+                            // Filter out events that are less than 10 days in the future
+                            if (isEventTooSoon(e)) return false;
+
+                            return true;
                         });
 
                         // 2. Fallback to internal DATABASE.details events
@@ -3541,13 +3568,13 @@
                 grid.innerHTML = html;
             };
 
-            // Returns true if the event starts within 7 days of today (should be hidden)
+            // Returns true if the event starts within 10 days of today (should be hidden)
             function isEventTooSoon(e) {
                 if (!e.start) return false;
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
                 const threshold = new Date(today);
-                threshold.setDate(threshold.getDate() + 7);
+                threshold.setDate(threshold.getDate() + 10);
                 const eventStart = new Date(e.start + 'T00:00:00');
                 return eventStart < threshold;
             }
@@ -3677,7 +3704,7 @@
                 const selected = [amsterdam, ...selectedOthers];
 
                 container.innerHTML = selected.filter(h => h).map((h, index) => {
-                    const cityEvents = SPECIAL_EVENTS_DATA.filter(e => e.city?.toLowerCase() === h.city?.toLowerCase() && e.type !== 'Cruise');
+                    const cityEvents = SPECIAL_EVENTS_DATA.filter(e => e.city?.toLowerCase() === h.city?.toLowerCase() && e.type !== 'Cruise' && !isEventTooSoon(e));
                     let tag = `<span class="bg-pride-blue text-white text-[10px] font-black px-2 py-1 rounded-lg uppercase mb-2 inline-block shadow-lg">Trending Destination</span>`;
                     let params = `'${h.city.replace(/'/g, "\\'")}'`;
 
