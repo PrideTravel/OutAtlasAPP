@@ -748,7 +748,7 @@
             <button
                 id="settings-trigger"
                 onclick="openSettingsModal()"
-                class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95"
+                class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 mr-4"
                 aria-label="Open appearance and accessibility settings"
                 title="Settings (appearance, accessibility)">
                 <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">settings</span>
@@ -873,7 +873,7 @@
             </button>
             <div>
                 <h2 class="text-2xl font-black inline-block dark-pill"><span class="pride-gradient-text">All LGBTQ+ Events</span></h2>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Showing all known events for this destination. Add travel dates to see flights, hotels &amp; full recommendations.</p>
+                <p class="text-sm text-slate-700 dark:text-slate-300 mt-2">Showing all known events for this destination. Add travel dates to see flights, hotels &amp; full recommendations.</p>
             </div>
             <div id="eventsOnlyContainer">
                 <!-- Events injected here by JS -->
@@ -893,7 +893,7 @@
                     <span class="text-[10px] font-black uppercase leading-tight text-center">Limit<br>Results</span>
                 </button>
             </div>
-            <p class="text-slate-500 dark:text-slate-400 dark:text-slate-300 text-sm font-medium mb-6">More featured LGBTQ+ destinations, trending events, and cruises from across the globe.</p>
+            <p class="text-slate-700 dark:text-slate-300 dark:text-slate-300 text-sm font-medium mb-6">More featured LGBTQ+ destinations, trending events, and cruises from across the globe.</p>
 
             <div id="allHotspotsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Randomized Hotspots injected here -->
@@ -906,7 +906,7 @@
             Conditions and Legal
             Disclaimer
         </h4>
-        <div class="space-y-4 text-[10px] leading-relaxed text-slate-500 dark:text-slate-400 dark:text-slate-300">
+        <div class="space-y-4 text-[10px] leading-relaxed text-slate-700 dark:text-slate-300 dark:text-slate-300">
             <p><span class="font-bold text-slate-600">1. SCOPE OF SERVICE:</span> This Application curated to prioritize
                 locations that demonstrate established LGBTQ+ inclusivity and maintain robust legislative protections.
             </p>
@@ -921,7 +921,7 @@
                 prepaid funds.</p>
             <p><span class="font-bold text-slate-600">5. PURPOSE OF DATA COLLECTION:</span> Your email address is
                 collected specifically to provide you with curated updates, including but not limited to:</p>
-            <ul class="list-disc list-inside pl-2 space-y-2 text-sm text-slate-600 dark:text-slate-300">
+            <ul class="list-disc list-inside pl-2 space-y-2 text-sm text-slate-700 dark:text-slate-300">
                 <li><span class="font-semibold text-slate-700 dark:text-slate-200">Event Alerts:</span> Updates on upcoming festivals, pride
                     events, and seasonal gatherings (e.g., Pig Week, Beef Dip, Christmas Markets).</li>
                 <li><span class="font-semibold text-slate-700 dark:text-slate-200">Travel &amp; Lodging:</span> Exclusive hotel offers,
@@ -935,7 +935,7 @@
                 our emails or by contacting our support team directly.</p>
             <p><span class="font-bold text-slate-600">7. PRIVACY &amp; SECURITY:</span> We value your privacy,
                 especially regarding travel preferences and community affiliations.</p>
-            <ul class="list-disc list-inside pl-2 space-y-2 text-sm text-slate-600 dark:text-slate-300">
+            <ul class="list-disc list-inside pl-2 space-y-2 text-sm text-slate-700 dark:text-slate-300">
                 <li><span class="font-semibold text-slate-700 dark:text-slate-200">No Third-Party Sales:</span> We do not sell, rent, or
                     lease our subscription lists to third parties.</li>
                 <li><span class="font-semibold text-slate-700 dark:text-slate-200">Secure Storage:</span> Your data is stored using
@@ -2298,7 +2298,7 @@
                                         ${event.name}
                                     </a>
                                     <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide bg-white/20 text-white px-2 py-0.5 rounded-full mb-2 backdrop-blur-sm">${s.emoji} ${s.label}</span>
-                                    <p class="text-xs text-white/80 mb-4 flex items-center gap-1 font-medium">
+                                    <p class="text-xs text-white mb-4 flex items-center gap-1 font-medium">
                                         <span class="material-symbols-outlined text-sm">calendar_today</span>
                                         ${event.start} &ndash; ${event.end}
                                     </p>
@@ -2356,7 +2356,7 @@
                                 <div class="text-4xl select-none filter drop-shadow-md">${data.image}</div>
                                 <div>
                                     <h2 class="text-sm font-black italic text-white">${formatDisplayName(data)}</h2>
-                                    <span class="text-[10px] font-black text-white/80 uppercase tracking-widest flex items-center gap-1">
+                                    <span class="text-[10px] font-black text-white uppercase tracking-widest flex items-center gap-1">
                                         <span class="material-symbols-outlined text-[12px] text-primary">verified</span> Travel Scout Report
                                     </span>
                                 </div>
@@ -2383,8 +2383,8 @@
                                             <span class="text-[11px] font-bold text-pride-blue">${formatDateShort(dateStart)} &ndash; ${formatDateShort(dateEnd)}</span>
                                         </div>
                                     </div>
-                                    <p class="text-2xl font-bold mb-1 text-slate-900 dark:text-white">${fareEstimate} <span class="text-xs font-normal text-slate-500 dark:text-slate-400 dark:text-slate-300">/ round-trip</span></p>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-300 mb-4">Cheapest options via regional budget carriers</p>
+                                    <p class="text-2xl font-bold mb-1 text-slate-900 dark:text-white">${fareEstimate} <span class="text-xs font-normal text-slate-700 dark:text-slate-300 dark:text-slate-300">/ round-trip</span></p>
+                                    <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 mb-4">Cheapest options via regional budget carriers</p>
                                     <div class="flex gap-2">
                                         <a href="${getGoogleFlightsLink(origin, data.name, dateStart, dateEnd, data)}" target="_blank"
                                            class="flex-1 py-2 bg-pride-blue text-white rounded-full font-bold text-sm flex items-center justify-center gap-2 transition-opacity hover:opacity-90">
@@ -2392,47 +2392,47 @@
                                         </a>
                                     </div>
                                 </div>
-                                <!-- Hotel Card -->
-                                <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border-2 border-slate-200 dark:border-slate-700 shadow-md relative overflow-hidden">
-                                    <div class="absolute -right-4 -top-4 w-16 h-16 pride-gradient-bg rotate-45 opacity-10"></div>
-                                    <div class="flex justify-between items-start mb-4">
-                                        <div class="px-3 py-1 bg-pride-purple/10 rounded-lg">
-                                            <span class="font-extrabold text-lg dark-pill">Hotels</span>
-                                        </div>
-                                        <div class="text-right">
-                                            <span class="text-[10px] font-black text-slate-400 dark:text-slate-300 uppercase tracking-widest block">Stay Period</span>
-                                            <span class="text-[11px] font-bold text-pride-purple">${formatDateShort(dateStart)} &ndash; ${formatDateShort(dateEnd)}</span>
-                                        </div>
-                                    </div>
+                                <!-- Hotels Section -->
+                                <section>
+                                    <h3 class="text-xl font-bold mb-4 inline-block dark-pill">
+                                        Hotels
+                                    </h3>
                                     <div class="space-y-3 mb-6">
                                         ${randomHotels.map(h => {
                             const tagInfo = getHotelTagsInfo(h);
                             const primaryBadge = tagInfo.specialty || (tagInfo.certifications.length > 0 ? tagInfo.certifications[0] : null);
                             const badgeColor = !primaryBadge ? '' : primaryBadge === 'Luxury' ? 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300' : primaryBadge === 'LGBTQ Friendly' ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300' : 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white dark:from-pink-600 dark:via-purple-600 dark:to-blue-600';
                             return `
-                                            <div class="flex items-start justify-between gap-3 border-b border-slate-50 dark:border-slate-700 pb-3 last:border-0">
-                                                <div class="flex-1 min-w-0 flex flex-col gap-2">
-                                                    <span class="font-black text-slate-800 dark:text-slate-100 leading-tight">${h.name}</span>
-                                                    <div class="flex flex-wrap gap-2">
-                                                        ${primaryBadge ? `<span class="text-[10px] font-bold px-3 py-1 rounded-full whitespace-nowrap ${badgeColor}">${primaryBadge}</span>` : ''}
-                                                        ${tagInfo.priceTag ? `<span class="text-[10px] font-bold px-3 py-1 rounded-lg whitespace-nowrap bg-teal-100 dark:bg-teal-900/40 text-teal-800 dark:text-teal-200" style="background-color: #0d7d63; color: white;">${tagInfo.priceTag}</span>` : ''}
+                                            <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border-2 border-slate-200 dark:border-slate-700 shadow-md">
+                                                <div class="flex justify-between items-start mb-3">
+                                                    <div class="flex-1">
+                                                        <span class="font-black text-slate-800 dark:text-slate-100 leading-tight text-lg">${h.name}</span>
+                                                        <div class="flex flex-wrap gap-2 mt-2">
+                                                            ${primaryBadge ? `<span class="text-[10px] font-bold px-3 py-1 rounded-full whitespace-nowrap ${badgeColor}">${primaryBadge}</span>` : ''}
+                                                            ${tagInfo.priceTag ? `<span class="text-[10px] font-bold px-3 py-1 rounded-lg whitespace-nowrap" style="background-color: #0d7d63; color: white;">${tagInfo.priceTag}</span>` : ''}
+                                                        </div>
                                                     </div>
+                                                    <button onclick="window.psBookmarkPlace('${h.name.replace(/'/g, "\\'")}', 'Hotel', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this hotel" class="w-11 h-11 flex items-center justify-center rounded bg-slate-700 dark:bg-slate-600 hover:bg-slate-800 dark:hover:bg-slate-500 transition-colors text-white shrink-0">
+                                                        <span class="material-symbols-outlined text-[20px]">bookmark</span>
+                                                    </button>
                                                 </div>
-                                                <button onclick="window.psBookmarkPlace('${h.name.replace(/'/g, "\\'")}', 'Hotel', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this hotel" class="w-8 h-8 flex items-center justify-center rounded bg-slate-700 dark:bg-slate-600 hover:bg-slate-800 dark:hover:bg-slate-500 transition-colors text-white shrink-0 mt-0.5">
-                                                    <span class="material-symbols-outlined text-[18px]">bookmark</span>
-                                                </button>
+                                                <div class="text-right text-xs">
+                                                    <span class="font-black text-slate-400 dark:text-slate-300 uppercase tracking-widest block">Stay: ${formatDateShort(dateStart)} – ${formatDateShort(dateEnd)}</span>
+                                                </div>
                                             </div>
                                         `}).join('')}
                                     </div>
-                                    <a href="${getExpediaLink(data.name, dateStart, dateEnd)}" target="_blank"
-                                       class="w-full py-3 bg-pride-purple text-white rounded-full font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-pride-purple/20 active:scale-95 transition-all mb-2">
-                                        <span class="material-symbols-outlined text-sm">open_in_new</span> Book All on Expedia
-                                    </a>
-                                    <a href="${getBookingComLink(data.name, dateStart, dateEnd)}" target="_blank"
-                                       class="w-full py-3 bg-blue-600 text-white rounded-full font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20 active:scale-95 transition-all">
-                                        <span class="material-symbols-outlined text-sm">open_in_new</span> Book on Booking.com
-                                    </a>
-                                </div>
+                                    <div class="space-y-3">
+                                        <a href="${getExpediaLink(data.name, dateStart, dateEnd)}" target="_blank"
+                                           class="w-full py-3 bg-pride-purple text-white rounded-full font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-pride-purple/20 active:scale-95 transition-all">
+                                            <span class="material-symbols-outlined text-sm">open_in_new</span> Book All on Expedia
+                                        </a>
+                                        <a href="${getBookingComLink(data.name, dateStart, dateEnd)}" target="_blank"
+                                           class="w-full py-3 bg-blue-600 text-white rounded-full font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20 active:scale-95 transition-all">
+                                            <span class="material-symbols-outlined text-sm">open_in_new</span> Book on Booking.com
+                                        </a>
+                                    </div>
+                                </section>
                             </div>
                             <!-- Misterbnb Card -->
                             <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border-2 border-slate-200 dark:border-slate-700 shadow-md mb-4">
@@ -2447,11 +2447,12 @@
                                 </div>
                                 <p class="text-sm font-bold text-slate-900 dark:text-white mb-2">Apartments, Condos, Villas and Homes</p>
                                 <a href="https://www.misterbandb.com" target="_blank"
-                                   class="w-full py-3 bg-pride-red text-black rounded-full font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-pride-red/20 active:scale-95 transition-all mb-4">
-                                    <span class="material-symbols-outlined text-sm">search</span> Search on Misterb&b
+                                   class="w-full py-3 bg-pride-red rounded-full font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-pride-red/20 active:scale-95 transition-all mb-4"
+                                   style="color: black !important;">
+                                    <span class="material-symbols-outlined text-sm" style="color: black !important;">search</span> Search on Misterb&b
                                 </a>
                                 <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-lg border border-slate-100 dark:border-slate-700">
-                                    <p class="text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+                                    <p class="text-xs text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
                                         <strong class="text-pride-red">Reminder:</strong> Before you book, double-check the listing details! Ensure you've selected "Entire Place" if you want total privacy. If you’re okay with a "Shared Room" or "Private Room in a Home," make sure the host’s house rules align with your comfort and safety.
                                     </p>
                                 </div>
@@ -2466,7 +2467,7 @@
 
                                 <div class="flex flex-col items-center gap-6 my-6">
                                     <a href="https://www.equaldex.com/equality-index" target="_blank" class="flex flex-col items-center hover:scale-105 transition-transform flex-shrink-0">
-                                        <span class="text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 underline tracking-wider uppercase">Equaldex</span>
+                                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 underline tracking-wider uppercase">Equaldex</span>
                                         <div class="relative w-32 h-32 flex items-center justify-center">
                                             <svg viewBox="0 0 96 96" class="w-full h-full transform -rotate-90">
                                                 <circle class="text-slate-100 dark:text-slate-700" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-width="8"></circle>
@@ -2480,10 +2481,10 @@
                                     </a>
                                     <div class="w-full text-center">
                                         <p class="font-black text-slate-800 dark:text-slate-100">${safetyLabel}</p>
-                                        <p class="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-300 leading-relaxed flex-wrap">${data.lgbtqSafety}</p>
+                                        <p class="text-sm text-slate-700 dark:text-slate-300 dark:text-slate-300 leading-relaxed flex-wrap">${data.lgbtqSafety}</p>
                                     </div>
                                 </div>
-                                <p class="text-sm text-slate-600 dark:text-slate-300 mb-6 -mt-2 font-medium">
+                                <p class="text-sm text-slate-700 dark:text-slate-300 mb-6 -mt-2 font-medium">
                                     The Equality Index measures the current status of LGBT rights, laws, and freedoms as well as public attitudes towards LGBT people.
                                 </p>
 
@@ -2495,7 +2496,7 @@
                                             <span class="material-symbols-outlined font-black">hub</span>
                                         </div>
                                         <div class="flex-1 min-w-0">
-                                            <p class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">LGBTQ+ Neighborhood${displayDistricts.length !== 1 ? 's' : ''}</p>
+                                            <p class="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest mb-1">LGBTQ+ Neighborhood${displayDistricts.length !== 1 ? 's' : ''}</p>
                                             <div class="flex flex-wrap gap-1">
                                                 ${displayDistricts.map(d => `<span class="text-xs font-bold px-2 py-0.5 bg-green-500/10 text-green-700 dark:text-green-400 rounded-full border border-green-500/30">${d}</span>`).join('')}
                                                 ${allDistricts.length > 2 ? `<span class="text-xs text-slate-400 dark:text-slate-500 self-center pl-1">+${allDistricts.length - 2} more</span>` : ''}
@@ -2520,7 +2521,7 @@
                                     <div class="px-3 py-1 bg-pride-purple/10 rounded-lg">
                                         <span class="font-extrabold text-lg dark-pill"><span class="pride-gradient-text">LGBTQ Community Resources</span></span>
                                     </div>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">Shops &bull; Bars &bull; Dining &bull; Publications &amp; More</p>
+                                    <p class="text-xs text-slate-700 dark:text-slate-300 hidden sm:block">Shops &bull; Bars &bull; Dining &bull; Publications &amp; More</p>
                                 </div>
                             </div>
 
@@ -2543,7 +2544,7 @@
                                                 ${icon}
                                             </div>
                                             <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${n.name}</p>
-                                            <p class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-300 group-hover:text-white/80">${n.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
+                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${n.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
                                         </div>
                                         `;
                             }).join('')}
@@ -2570,7 +2571,7 @@
                                                 ${icon}
                                             </div>
                                             <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${n.name}</p>
-                                            <p class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-300 group-hover:text-white/80">${n.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
+                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${n.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
                                         </div>
                                         `;
                             }).join('')}
@@ -2602,7 +2603,7 @@
                                                 ${icon}
                                             </div>
                                             <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${n.name}</p>
-                                            <p class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-300 group-hover:text-white/80">${n.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
+                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${n.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
                                         </div>
                                         `;
                             }).join('')}
@@ -2633,7 +2634,7 @@
                                                 ${icon}
                                             </div>
                                             <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${r.name}</p>
-                                            <p class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-300 group-hover:text-white/80">${r.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
+                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${r.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
                                         </div>
                                         `;
                             }).join('')}
@@ -2664,7 +2665,7 @@
                                                 <span class="material-symbols-outlined text-[20px]">${pubUrl ? 'open_in_new' : 'menu_book'}</span>
                                             </div>
                                             <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${pubName}</p>
-                                            <p class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-300 group-hover:text-white/80">${pubUrl ? p.url : pubType}</p>
+                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${pubUrl ? p.url : pubType}</p>
                                         </${cardTag}>
                                         `;
                             }).join('')}
@@ -2692,7 +2693,7 @@
                                                 <span class="material-symbols-outlined text-[20px]">waves</span>
                                             </div>
                                             <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${beachName}</p>
-                                            <p class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-300 group-hover:text-white/80">${beachType}</p>
+                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${beachType}</p>
                                         </div>
                                         `;
                             }).join('')}
@@ -2720,7 +2721,7 @@
                                                 <span class="material-symbols-outlined text-[20px]">account_balance</span>
                                             </div>
                                             <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${placeName}</p>
-                                            <p class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-300 group-hover:text-white/80">${placeType}</p>
+                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${placeType}</p>
                                         </div>
                                         `;
                             }).join('')}
@@ -2744,15 +2745,15 @@
                                 return `
                                 <div class="mb-4">
                                     <h3 class="text-xl font-bold dark-pill mb-1"><a href="https://www.google.com/search?q=Weather+in+${encodeURIComponent(data.name)}+in+${encodeURIComponent(monthName)}" target="_blank" class="pride-gradient-text hover:underline">${monthName} Weather</a></h3>
-                                    <p class="text-sm font-semibold text-slate-600 dark:text-slate-300 leading-snug">${description}</p>
+                                    <p class="text-sm font-semibold text-slate-700 dark:text-slate-300 leading-snug">${description}</p>
                                 </div>
                                 <div class="w-full flex items-start gap-4 p-4 bg-white dark:bg-slate-800/60 rounded-xl">
                                     <div class="flex-shrink-0 pr-4 border-r border-slate-200 dark:border-slate-700">${getWeatherIcon(description || summary)}</div>
                                     <div class="flex-1 min-w-0">
-                                        <p class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">${monthName} Average</p>
+                                        <p class="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest mb-2">${monthName} Average</p>
                                         <div class="flex flex-wrap gap-x-4 gap-y-1 mb-3">
                                             <span class="text-base font-black text-slate-900 dark:text-white">${highTemp} <span class="font-bold text-slate-400 dark:text-slate-300">High</span></span>
-                                            <span class="text-base font-bold text-slate-500 dark:text-slate-400">${lowTemp} <span class="font-bold text-slate-400 dark:text-slate-300">Low</span></span>
+                                            <span class="text-base font-bold text-slate-700 dark:text-slate-300">${lowTemp} <span class="font-bold text-slate-400 dark:text-slate-300">Low</span></span>
                                         </div>
                                         <p class="text-sm font-bold text-primary leading-snug">Gear &amp; Packing: <span class="font-normal text-slate-600 dark:text-slate-400">${gear}</span></p>
                                     </div>
@@ -2799,7 +2800,7 @@
                                                 ${isThisLgbtqTour ? '<span class="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-pride-purple/10 text-pride-purple flex-shrink-0">LGBTQ+</span>' : ''}
                                                 ${priceBadge}
                                             </div>
-                                            <p class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-300">${tourDesc}</p>
+                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300">${tourDesc}</p>
                                         </div>
                                         <button onclick="window.psBookmarkPlace('${tourName.replace(/'/g, "\\'")}', 'Tour', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this tour" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors text-slate-400 flex-shrink-0">
                                             <span class="material-symbols-outlined text-[18px]">bookmark</span>
@@ -2826,7 +2827,7 @@
                                         const parkName = p.name || '';
                                         const parkLocation = p.location || '';
                                         const parkType = p.type || 'Amusement Park';
-                                        const badgeClass = parkType === 'Disney' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' : parkType === 'Universal' ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300';
+                                        const badgeClass = parkType === 'Disney' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' : parkType === 'Universal' ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300' : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300';
                                         return `
                                     <div class="flex gap-4 items-center bg-white dark:bg-slate-800 p-3 rounded-xl shadow-sm border-2 border-slate-100 dark:border-slate-700">
                                         <span class="material-symbols-outlined text-2xl text-pride-purple flex-shrink-0">attractions</span>
@@ -2835,7 +2836,7 @@
                                                 <p class="font-bold text-sm text-slate-900 dark:text-white truncate">${parkName}</p>
                                                 <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full flex-shrink-0 ${badgeClass}">${parkType}</span>
                                             </div>
-                                            <p class="text-xs text-slate-500 dark:text-slate-400 truncate">${parkLocation}</p>
+                                            <p class="text-xs text-slate-700 dark:text-slate-300 truncate">${parkLocation}</p>
                                         </div>
                                         <button onclick="window.psBookmarkPlace('${parkName.replace(/'/g, "\\'")}', 'Amusement Park', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this park" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors text-slate-400 flex-shrink-0">
                                             <span class="material-symbols-outlined text-[18px]">bookmark</span>
@@ -3227,7 +3228,7 @@
                         const label = k === 'Pride Event' ? 'Pride Events' : k === 'Cruise' ? 'LGBTQ Cruises' : k;
                         sectionsHtml += sectionHeader(label, s.border.replace('border-',''), s.icon) + `<div class="grid grid-cols-1 md:grid-cols-2 gap-3">${groupMap[k].map(renderEventCard).join('')}</div>`;
                     });
-                    if (!sectionsHtml) sectionsHtml = `<p class="text-sm text-slate-500 dark:text-slate-400 py-6 text-center italic">No events currently listed for ${data.name}.</p>`;
+                    if (!sectionsHtml) sectionsHtml = `<p class="text-sm text-slate-700 dark:text-slate-300 py-6 text-center italic">No events currently listed for ${data.name}.</p>`;
 
                     const total = allEvents.length;
                     const card = document.createElement('div');
@@ -3237,7 +3238,7 @@
                             <div class="text-4xl select-none filter drop-shadow-md">${data.image || '🏳️‍🌈'}</div>
                             <div class="flex-1 min-w-0">
                                 <h2 class="text-lg font-black text-white truncate">${data.name}</h2>
-                                <span class="text-[10px] font-bold text-white/80 uppercase tracking-widest">${total} event${total !== 1 ? 's' : ''} found</span>
+                                <span class="text-[10px] font-bold text-white uppercase tracking-widest">${total} event${total !== 1 ? 's' : ''} found</span>
                             </div>
                             <a href="https://www.google.com/search?q=${encodeURIComponent('LGBTQ events ' + data.name + ' 2026')}" target="_blank"
                                class="shrink-0 px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white rounded-full text-xs font-bold flex items-center gap-1 transition-colors">
@@ -3246,7 +3247,7 @@
                         </div>
                         <div class="p-4 space-y-1">${sectionsHtml}</div>
                         <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700">
-                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-3 font-medium">Want full trip details — flights, hotels &amp; venues?</p>
+                            <p class="text-xs text-slate-700 dark:text-slate-300 mb-3 font-medium">Want full trip details — flights, hotels &amp; venues?</p>
                             <button onclick="document.getElementById('dateStart').focus(); toggleView('homeView');"
                                 class="w-full py-2.5 btn-pride-yellow font-black rounded-full text-sm flex items-center justify-center gap-2 active:scale-95 transition-all border-b-2 border-orange-500">
                                 <span class="material-symbols-outlined text-sm">calendar_today</span> Add Dates for Full Results
@@ -3605,7 +3606,7 @@
                     case 'awards':       return {emoji:'🏆',icon:'emoji_events',border:'border-yellow-600',bg:'bg-yellow-100 dark:bg-yellow-900/20',text:'text-yellow-700 dark:text-yellow-400',badge:'bg-yellow-600 text-white',gradient:'from-yellow-600 to-amber-500',label:'Awards'};
                     case 'memorial day': return {emoji:'🇺🇸',icon:'flag',border:'border-red-600',bg:'bg-red-100 dark:bg-red-900/20',text:'text-red-700 dark:text-red-400',badge:'bg-red-600 text-white',gradient:'from-red-700 to-blue-600',label:'Memorial Day'};
                     case 'thanksgiving': return {emoji:'🦃',icon:'set_meal',border:'border-orange-700',bg:'bg-orange-100 dark:bg-orange-900/20',text:'text-orange-700 dark:text-orange-400',badge:'bg-orange-700 text-white',gradient:'from-orange-700 to-amber-600',label:'Thanksgiving'};
-                    case 'event':        return {emoji:'✨',icon:'star',border:'border-slate-400',bg:'bg-slate-100 dark:bg-slate-700/30',text:'text-slate-600 dark:text-slate-300',badge:'bg-slate-500 text-white',gradient:'from-slate-600 to-slate-500',label:'Event'};
+                    case 'event':        return {emoji:'✨',icon:'star',border:'border-slate-400',bg:'bg-slate-100 dark:bg-slate-700/30',text:'text-slate-700 dark:text-slate-300',badge:'bg-slate-500 text-white',gradient:'from-slate-600 to-slate-500',label:'Event'};
                     default:             return {emoji:'🌈',icon:'celebration',border:'border-pride-purple',bg:'bg-pride-purple/10',text:'text-pride-purple',badge:'bg-pride-purple text-white',gradient:'from-pride-purple to-pride-blue',label:'Pride Event'};
                 }
             }
