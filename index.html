@@ -2413,20 +2413,16 @@
                                     </div>
                                     <div class="space-y-3 mb-6">
                                         ${randomHotels.map(h => {
-                            const badge = getHotelBadge(h);
                             const tagInfo = getHotelTagsInfo(h);
-                            const isRainbowPill = h.tags && h.tags.some(t => t.includes('LGBTQ Owned') || t.includes('LGBTQ Hotel') || t.includes('Gay Hotel') || t.includes('World Rainbow') || t.includes('IGLTA') || t.includes('Rainbow Registered'));
+                            const primaryBadge = tagInfo.specialty || (tagInfo.certifications.length > 0 ? tagInfo.certifications[0] : null);
+                            const badgeColor = !primaryBadge ? '' : primaryBadge === 'Luxury' ? 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300' : primaryBadge === 'LGBTQ Friendly' ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300' : 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white dark:from-pink-600 dark:via-purple-600 dark:to-blue-600';
                             return `
-                                            <div class="flex items-start justify-between text-xs border-b border-slate-50 dark:border-slate-700 pb-2 last:border-0 gap-2">
+                                            <div class="flex items-center justify-between text-xs border-b border-slate-50 dark:border-slate-700 pb-2 last:border-0 gap-2">
                                                 <div class="flex-1 min-w-0">
                                                     <span class="font-black text-slate-800 dark:text-slate-100 block leading-tight">${h.name}</span>
-                                                    <div class="flex flex-wrap items-center gap-1 mt-0.5">
-                                                        ${tagInfo.specialty ? `<span class="text-[9px] font-bold px-1.5 py-0.5 rounded whitespace-nowrap ${tagInfo.specialty === 'Luxury' ? 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300' : tagInfo.specialty === 'LGBTQ Friendly' ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300' : tagInfo.specialty === 'LGBTQ Owned' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white dark:from-pink-600 dark:via-purple-600 dark:to-blue-600' : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200'}">${tagInfo.specialty}</span>` : ''}
-                                                        ${tagInfo.certifications.map(cert => `<span class="text-[9px] font-bold px-1.5 py-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 dark:from-pink-600 dark:via-purple-600 dark:to-blue-600 text-white rounded whitespace-nowrap">${cert}</span>`).join('')}
-                                                        ${tagInfo.priceTag ? `<span class="text-[9px] font-bold px-1.5 py-0.5 rounded whitespace-nowrap bg-white text-slate-700">${tagInfo.priceTag}</span>` : ''}
-                                                    </div>
+                                                    ${primaryBadge ? `<span class="text-[9px] font-bold px-2 py-0.5 rounded inline-block mt-1 whitespace-nowrap ${badgeColor}">${primaryBadge}</span>` : ''}
                                                 </div>
-                                                <button onclick="window.psBookmarkPlace('${h.name.replace(/'/g, "\\'")}', 'Hotel', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this hotel" class="w-6 h-6 flex items-center justify-center rounded bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors text-slate-400 shrink-0 mt-0.5">
+                                                <button onclick="window.psBookmarkPlace('${h.name.replace(/'/g, "\\'")}', 'Hotel', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this hotel" class="w-6 h-6 flex items-center justify-center rounded bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors text-slate-400 shrink-0">
                                                     <span class="material-symbols-outlined text-[14px]">bookmark</span>
                                                 </button>
                                             </div>
@@ -3735,7 +3731,7 @@
                             data-theme="clear"
                             onclick="setTheme('clear'); updateThemeSelection();"
                             aria-label="Select Clear View theme - WCAG AAA accessible mode with solid colors">
-                            <div class="theme-preview">Accessible</div>
+                            <div class="theme-preview"><span class="material-symbols-outlined" style="font-size: 28px;">contrast</span></div>
                             <div class="theme-name">Clear View</div>
                             <div class="theme-description">High contrast, solid colors</div>
                             <div class="theme-checkmark">✓</div>
@@ -3747,7 +3743,7 @@
                             data-theme="light"
                             onclick="setTheme('light'); updateThemeSelection();"
                             aria-label="Select Light Mode - bright and clean interface">
-                            <div class="theme-preview">Light</div>
+                            <div class="theme-preview"><span class="material-symbols-outlined" style="font-size: 28px;">light_mode</span></div>
                             <div class="theme-name">Light Mode</div>
                             <div class="theme-description">Bright & clean</div>
                             <div class="theme-checkmark">✓</div>
@@ -3759,7 +3755,7 @@
                             data-theme="dark"
                             onclick="setTheme('dark'); updateThemeSelection();"
                             aria-label="Select Dark Mode - reduces eye strain at night">
-                            <div class="theme-preview">Dark</div>
+                            <div class="theme-preview"><span class="material-symbols-outlined" style="font-size: 28px;">dark_mode</span></div>
                             <div class="theme-name">Dark Mode</div>
                             <div class="theme-description">Easy on the eyes</div>
                             <div class="theme-checkmark">✓</div>
