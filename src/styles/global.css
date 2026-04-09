@@ -423,14 +423,10 @@ button.btn-full {
 
 /* ============================================================================
    PART D: ACCESSIBILITY & MOTION
-   Import accessibility styles (will be created in Prompt 7)
+   Import accessibility styles including reduce-motion, high-contrast, focus states
    ============================================================================ */
 
-/* Placeholder for accessibility.css import
-   Uncomment when accessibility.css is created:
-
-   @import './accessibility.css';
-*/
+@import './accessibility.css';
 
 /* Respect prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
