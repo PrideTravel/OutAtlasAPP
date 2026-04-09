@@ -727,6 +727,15 @@
             <h1 class="text-xl font-extrabold tracking-tight inline-block dark-pill"><span
                     class="outatlas-name-text">OutAtlas</span></h1>
         </div>
+        <!-- Settings Button - Opens Theme & Accessibility Modal -->
+        <button
+            id="settings-trigger"
+            onclick="openSettingsModal()"
+            class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95"
+            aria-label="Open appearance and accessibility settings"
+            title="Settings (appearance, accessibility)">
+            <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">settings</span>
+        </button>
     </header>
 
     <main class="max-w-5xl mx-auto mt-6 px-4">
@@ -873,29 +882,6 @@
             </div>
         </div>
     </main>
-
-
-    <!-- Dark Mode Toggle -->
-    <div class="max-w-5xl mx-auto px-6 mb-8 flex justify-end">
-        <button onclick="toggleDarkMode()"
-            class="flex items-center gap-2 px-4 py-2 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-100 dark:text-white rounded-full font-bold text-sm shadow-sm transition-colors hover:bg-slate-300 dark:hover:bg-slate-600">
-            <span class="material-symbols-outlined text-sm hidden dark:block">light_mode</span>
-            <span class="material-symbols-outlined text-sm block dark:hidden">dark_mode</span>
-            Toggle Light / Dark View
-        </button>
-    </div>
-
-    <script>
-        function toggleDarkMode() {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.theme = 'light';
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.theme = 'dark';
-            }
-        }
-    </script>
     <!-- Footer / Legal Section -->
     <section class="max-w-5xl mx-auto pt-8 pb-12 px-6 border-t border-slate-200 dark:border-slate-700">
         <h4 class="text-xs font-bold text-slate-700 dark:text-slate-200 mb-4 uppercase tracking-wider">Terms &
@@ -3723,6 +3709,7 @@
             <div class="modal-header">
                 <h2 class="modal-title">Appearance</h2>
                 <button
+                    id="close-modal"
                     class="modal-close-btn"
                     onclick="closeSettingsModal()"
                     aria-label="Close settings modal"
@@ -3742,6 +3729,7 @@
                         <!-- Clear View Option -->
                         <button
                             class="theme-option clear-view"
+                            data-theme="clear"
                             onclick="setTheme('clear'); updateThemeSelection();"
                             aria-label="Select Clear View theme - WCAG AAA accessible mode with solid colors">
                             <div class="theme-preview">Accessible</div>
@@ -3753,6 +3741,7 @@
                         <!-- Light Mode Option -->
                         <button
                             class="theme-option light-mode"
+                            data-theme="light"
                             onclick="setTheme('light'); updateThemeSelection();"
                             aria-label="Select Light Mode - bright and clean interface">
                             <div class="theme-preview">Light</div>
@@ -3764,6 +3753,7 @@
                         <!-- Dark Mode Option -->
                         <button
                             class="theme-option dark-mode"
+                            data-theme="dark"
                             onclick="setTheme('dark'); updateThemeSelection();"
                             aria-label="Select Dark Mode - reduces eye strain at night">
                             <div class="theme-preview">Dark</div>
@@ -3899,9 +3889,16 @@
          */
         document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('settingsModal');
+            const modalOverlay = modal.querySelector('.modal-overlay');
             const modalContent = document.querySelector('.modal-content');
+            const closeBtn = document.getElementById('close-modal');
+            const themeButtons = document.querySelectorAll('[data-theme]');
 
-            // Close when clicking outside the modal content
+            // Initialize with current theme on page load
+            updateThemeSelection();
+            updateReduceMotionCheckbox();
+
+            // Close when clicking outside the modal content (on overlay background)
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
                     closeSettingsModal();
@@ -3913,7 +3910,23 @@
                 e.stopPropagation();
             });
 
-            // Close on Escape key
+            // Close button click handler
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeSettingsModal);
+            }
+
+            // Theme button click handlers (alternative to inline onclick)
+            themeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const theme = this.getAttribute('data-theme');
+                    if (theme) {
+                        setTheme(theme);
+                        updateThemeSelection();
+                    }
+                });
+            });
+
+            // Close on Escape key (globally)
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && modal.classList.contains('open')) {
                     closeSettingsModal();
