@@ -604,6 +604,18 @@
         }
 
         /* ============================================================================
+           Cycle Theme - Toggle between Clear View, Light, and Dark modes
+           ============================================================================ */
+        function cycleTheme() {
+            const currentTheme = localStorage.getItem(THEME_CONFIG.STORAGE_KEY) || 'clear';
+            const themes = ['clear', 'light', 'dark'];
+            const currentIndex = themes.indexOf(currentTheme);
+            const nextTheme = themes[(currentIndex + 1) % themes.length];
+            setTheme(nextTheme);
+            updateThemeSelection();
+        }
+
+        /* ============================================================================
            Initialize Theme on Page Load
 
            Runs when DOM is ready to:
@@ -744,14 +756,14 @@
                 <span class="material-symbols-outlined text-xl text-slate-200 hidden dark:block">dark_mode</span>
             </button>
 
-            <!-- Settings Button - Opens Theme & Accessibility Modal -->
+            <!-- Theme Toggle Button -->
             <button
-                id="settings-trigger"
-                onclick="openSettingsModal()"
+                id="theme-toggle"
+                onclick="cycleTheme()"
                 class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 mr-4"
-                aria-label="Open appearance and accessibility settings"
-                title="Settings (appearance, accessibility)">
-                <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">settings</span>
+                aria-label="Toggle theme (Clear View, Light, Dark)"
+                title="Toggle theme">
+                <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">brightness_4</span>
             </button>
         </div>
     </header>
