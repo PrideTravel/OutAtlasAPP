@@ -37,6 +37,8 @@
     <!-- 3. Component & Layout Styles -->
     <!-- Core component classes using CSS variables -->
     <link rel="stylesheet" href="src/styles/components.css">
+    <!-- Modal dialog styles (Settings, theme selector) -->
+    <link rel="stylesheet" href="src/styles/modal.css">
     <!-- App Layout -->
     <link rel="stylesheet" href="src/components/App.css">
     <!-- Theme Toggle Button -->
@@ -3713,6 +3715,216 @@
                 .catch(function (error) { console.log('Service Worker failed', error); });
         }
     </script>
+
+    <!-- Settings Modal for Theme & Accessibility Selection -->
+    <div id="settingsModal" class="modal-overlay">
+        <div class="modal-content">
+            <!-- Modal Header with Close Button -->
+            <div class="modal-header">
+                <h2 class="modal-title">Appearance</h2>
+                <button
+                    class="modal-close-btn"
+                    onclick="closeSettingsModal()"
+                    aria-label="Close settings modal"
+                    title="Close (ESC)">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Modal Body Content -->
+            <div class="modal-body">
+                <!-- Display Mode Section -->
+                <section>
+                    <label class="modal-section-label">Display Mode</label>
+
+                    <!-- Theme Options Grid -->
+                    <div class="theme-options-grid">
+                        <!-- Clear View Option -->
+                        <button
+                            class="theme-option clear-view"
+                            onclick="setTheme('clear'); updateThemeSelection();"
+                            aria-label="Select Clear View theme - WCAG AAA accessible mode with solid colors">
+                            <div class="theme-preview">Accessible</div>
+                            <div class="theme-name">Clear View</div>
+                            <div class="theme-description">High contrast, solid colors</div>
+                            <div class="theme-checkmark">✓</div>
+                        </button>
+
+                        <!-- Light Mode Option -->
+                        <button
+                            class="theme-option light-mode"
+                            onclick="setTheme('light'); updateThemeSelection();"
+                            aria-label="Select Light Mode - bright and clean interface">
+                            <div class="theme-preview">Light</div>
+                            <div class="theme-name">Light Mode</div>
+                            <div class="theme-description">Bright & clean</div>
+                            <div class="theme-checkmark">✓</div>
+                        </button>
+
+                        <!-- Dark Mode Option -->
+                        <button
+                            class="theme-option dark-mode"
+                            onclick="setTheme('dark'); updateThemeSelection();"
+                            aria-label="Select Dark Mode - reduces eye strain at night">
+                            <div class="theme-preview">Dark</div>
+                            <div class="theme-name">Dark Mode</div>
+                            <div class="theme-description">Easy on the eyes</div>
+                            <div class="theme-checkmark">✓</div>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Clear View Information Box -->
+                <div class="modal-info-box">
+                    <div class="modal-info-icon">♿</div>
+                    <div class="modal-info-text">
+                        <div class="modal-info-title">Clear View Mode</div>
+                        <div class="modal-info-description">
+                            WCAG AAA compliant with maximum contrast for accessibility.
+                            Colorful gradients are converted to solid colors for optimal readability.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <div class="modal-divider"></div>
+
+                <!-- Accessibility Section -->
+                <section class="accessibility-section">
+                    <label class="modal-section-label">Accessibility</label>
+
+                    <label class="accessibility-option">
+                        <input
+                            type="checkbox"
+                            class="accessibility-checkbox"
+                            id="reduceAnimations"
+                            onchange="toggleReduceMotion()"
+                            aria-label="Reduce animations preference">
+                        <div class="accessibility-label">
+                            <span class="accessibility-label-title">Reduce animations</span>
+                            <span class="accessibility-label-description">Disables transitions and animations</span>
+                        </div>
+                    </label>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal JavaScript -->
+    <script>
+        /* ============================================================================
+           SETTINGS MODAL MANAGEMENT
+           Handles modal open/close and theme selection UI updates
+           ============================================================================ */
+
+        /**
+         * Open the Settings Modal
+         */
+        function openSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            updateThemeSelection();
+            updateReduceMotionCheckbox();
+            // Focus on modal for accessibility
+            modal.focus();
+        }
+
+        /**
+         * Close the Settings Modal
+         */
+        function closeSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            modal.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        /**
+         * Update active state of theme buttons to match current theme
+         */
+        function updateThemeSelection() {
+            const currentTheme = getSavedTheme();
+
+            // Remove active class from all theme options
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.classList.remove('active');
+            });
+
+            // Add active class to current theme
+            const themeMap = {
+                'clear': '.clear-view',
+                'light': '.light-mode',
+                'dark': '.dark-mode'
+            };
+
+            const activeButton = document.querySelector(themeMap[currentTheme]);
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+        }
+
+        /**
+         * Update reduce motion checkbox state
+         */
+        function updateReduceMotionCheckbox() {
+            const checkbox = document.getElementById('reduceAnimations');
+            const preferReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const savedPreference = localStorage.getItem('reduce-motion') === 'true';
+
+            checkbox.checked = savedPreference || preferReduceMotion;
+        }
+
+        /**
+         * Toggle reduce motion preference
+         */
+        function toggleReduceMotion() {
+            const checkbox = document.getElementById('reduceAnimations');
+            const isChecked = checkbox.checked;
+
+            localStorage.setItem('reduce-motion', isChecked ? 'true' : 'false');
+
+            if (isChecked) {
+                document.documentElement.style.setProperty('--transition-base', 'none');
+                document.body.classList.add('reduce-motion');
+                console.log('Reduce motion enabled');
+            } else {
+                document.documentElement.style.removeProperty('--transition-base');
+                document.body.classList.remove('reduce-motion');
+                console.log('Reduce motion disabled');
+            }
+        }
+
+        /**
+         * Initialize modal event listeners
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('settingsModal');
+            const modalContent = document.querySelector('.modal-content');
+
+            // Close when clicking outside the modal content
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeSettingsModal();
+                }
+            });
+
+            // Prevent closing when clicking inside modal content
+            modalContent.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            // Close on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal.classList.contains('open')) {
+                    closeSettingsModal();
+                }
+            });
+        });
+
+        // Listen for theme changes and update UI
+        window.addEventListener('themechange', updateThemeSelection);
+    </script>
+
 </body>
 
 </html>
