@@ -7,6 +7,8 @@
 import React, { useState } from 'react';
 import { ThemeProvider } from '../context/ThemeContext';
 import { ThemeToggle } from './ThemeToggle';
+import { SettingsIcon } from './SettingsIcon';
+import { SettingsModal } from './SettingsModal';
 import { Search } from './Search';
 import { Bookmarks } from './Bookmarks';
 import { Messages } from './Messages';
@@ -66,6 +68,7 @@ import './App.css';
 function App() {
   const currentYear = new Date().getFullYear();
   const [currentPage, setCurrentPage] = useState('home');
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   return (
     <ThemeProvider>
@@ -81,8 +84,9 @@ function App() {
               <p className="app-subtitle">LGBTQ+ Travel Experiences</p>
             </div>
 
-            {/* Header Actions (Theme Toggle, etc.) */}
+            {/* Header Actions (Theme Toggle, Settings Icon, etc.) */}
             <div className="header-actions">
+              <SettingsIcon onOpenModal={() => setSettingsOpen(true)} />
               <ThemeToggle />
             </div>
           </div>
@@ -90,6 +94,11 @@ function App() {
           {/* Rainbow Brand Bar */}
           <div className="rainbow-bar" aria-hidden="true"></div>
         </header>
+
+        {/* ================================================================== */}
+        {/* SETTINGS MODAL */}
+        {/* ================================================================== */}
+        <SettingsModal isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} />
 
         {/* ================================================================== */}
         {/* MAIN CONTENT SECTION */}
