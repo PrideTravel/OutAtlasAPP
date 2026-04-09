@@ -3811,6 +3811,19 @@
                             <span class="accessibility-label-description">Disables transitions and animations</span>
                         </div>
                     </label>
+
+                    <label class="accessibility-option">
+                        <input
+                            type="checkbox"
+                            class="accessibility-checkbox"
+                            id="highContrast"
+                            onchange="toggleHighContrast()"
+                            aria-label="High contrast mode preference">
+                        <div class="accessibility-label">
+                            <span class="accessibility-label-title">High contrast</span>
+                            <span class="accessibility-label-description">Increases border thickness and font weight</span>
+                        </div>
+                    </label>
                 </section>
             </div>
         </div>
@@ -3861,6 +3874,7 @@
             document.body.style.overflow = 'hidden';
             updateThemeSelection();
             updateReduceMotionCheckbox();
+            updateHighContrastCheckbox();
             // Focus on modal for accessibility
             modal.focus();
         }
@@ -3930,6 +3944,35 @@
         }
 
         /**
+         * Update high contrast checkbox state
+         */
+        function updateHighContrastCheckbox() {
+            const checkbox = document.getElementById('highContrast');
+            const preferHighContrast = window.matchMedia('(prefers-contrast: more)').matches;
+            const savedPreference = localStorage.getItem('high-contrast') === 'true';
+
+            checkbox.checked = savedPreference || preferHighContrast;
+        }
+
+        /**
+         * Toggle high contrast preference
+         */
+        function toggleHighContrast() {
+            const checkbox = document.getElementById('highContrast');
+            const isChecked = checkbox.checked;
+
+            localStorage.setItem('high-contrast', isChecked ? 'true' : 'false');
+
+            if (isChecked) {
+                document.body.classList.add('high-contrast');
+                console.log('High contrast enabled');
+            } else {
+                document.body.classList.remove('high-contrast');
+                console.log('High contrast disabled');
+            }
+        }
+
+        /**
          * Initialize modal event listeners
          */
         document.addEventListener('DOMContentLoaded', function() {
@@ -3943,6 +3986,7 @@
             // Initialize with current theme on page load
             updateThemeSelection();
             updateReduceMotionCheckbox();
+            updateHighContrastCheckbox();
 
             // Dark mode toggle button listener
             if (darkModeToggle) {
