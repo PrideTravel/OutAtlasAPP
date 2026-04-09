@@ -2094,18 +2094,6 @@
                         return;
                     }
 
-                    // Validate that search dates are not in the past
-                    if (dateStart) {
-                        const today = new Date();
-                        today.setHours(0, 0, 0, 0);
-                        const searchDate = new Date(dateStart + 'T00:00:00');
-
-                        if (searchDate < today) {
-                            alert("Your search is in the Past- Don't go Back!");
-                            return;
-                        }
-                    }
-
                     let targets = [];
 
                     if (DATABASE.mappings.regions[destinationInput]) {
