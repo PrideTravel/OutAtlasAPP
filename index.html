@@ -763,20 +763,23 @@
                 <span class="material-symbols-outlined text-xl text-slate-200 hidden dark:block">dark_mode</span>
             </button>
         </div>
-        <!-- Theme Toggle Button - Positioned Below Rainbow Border -->
-        <button
-            id="theme-toggle"
-            onclick="cycleTheme()"
-            class="absolute right-6 top-20 flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 z-50"
-            aria-label="Toggle theme (Clear View, Light, Dark)"
-            title="Toggle theme">
-            <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">dark_mode</span>
-        </button>
     </header>
 
     <main class="max-w-5xl mx-auto mt-6 px-4">
         <!-- View 1: Explore (Home) -->
         <div id="homeView" class="view-section active space-y-8">
+            <!-- Theme Toggle Button - Below Rainbow Border, Right Side -->
+            <div class="flex justify-end pr-2">
+                <button
+                    id="theme-toggle"
+                    onclick="cycleTheme()"
+                    class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95"
+                    aria-label="Toggle theme (Clear View, Light, Dark)"
+                    title="Toggle theme">
+                    <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">dark_mode</span>
+                </button>
+            </div>
+
             <!-- 1. Search & Info Section -->
             <section class="rainbow-card-bg rounded-3xl p-6 shadow-2xl relative overflow-hidden">
 
@@ -2091,28 +2094,6 @@
                         return;
                     }
 
-                    // Validate that dates are not before today
-                    if (dateStart || dateEnd) {
-                        const today = new Date();
-                        today.setHours(0, 0, 0, 0);
-
-                        if (dateStart) {
-                            const startDate = new Date(dateStart + 'T00:00:00');
-                            if (startDate < today) {
-                                alert("Your departure date is before today. Please select a future date.");
-                                return;
-                            }
-                        }
-
-                        if (dateEnd) {
-                            const endDate = new Date(dateEnd + 'T00:00:00');
-                            if (endDate < today) {
-                                alert("Your return date is before today. Please select a future date.");
-                                return;
-                            }
-                        }
-                    }
-
                     let targets = [];
 
                     if (DATABASE.mappings.regions[destinationInput]) {
@@ -2189,12 +2170,7 @@
                             const startBuffer = new Date(eStart.getTime() - bufferTime);
                             const endBuffer = new Date(eEnd.getTime() + bufferTime);
 
-                            if (!(searchStart <= endBuffer && searchEnd >= startBuffer)) return false;
-
-                            // Filter out events that are less than 10 days in the future
-                            if (isEventTooSoon(e)) return false;
-
-                            return true;
+                            return (searchStart <= endBuffer && searchEnd >= startBuffer);
                         });
 
                         // 2. Fallback to internal DATABASE.details events
@@ -3568,13 +3544,13 @@
                 grid.innerHTML = html;
             };
 
-            // Returns true if the event starts within 10 days of today (should be hidden)
+            // Returns true if the event starts within 7 days of today (should be hidden)
             function isEventTooSoon(e) {
                 if (!e.start) return false;
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
                 const threshold = new Date(today);
-                threshold.setDate(threshold.getDate() + 10);
+                threshold.setDate(threshold.getDate() + 7);
                 const eventStart = new Date(e.start + 'T00:00:00');
                 return eventStart < threshold;
             }
@@ -3704,7 +3680,7 @@
                 const selected = [amsterdam, ...selectedOthers];
 
                 container.innerHTML = selected.filter(h => h).map((h, index) => {
-                    const cityEvents = SPECIAL_EVENTS_DATA.filter(e => e.city?.toLowerCase() === h.city?.toLowerCase() && e.type !== 'Cruise' && !isEventTooSoon(e));
+                    const cityEvents = SPECIAL_EVENTS_DATA.filter(e => e.city?.toLowerCase() === h.city?.toLowerCase() && e.type !== 'Cruise');
                     let tag = `<span class="bg-pride-blue text-white text-[10px] font-black px-2 py-1 rounded-lg uppercase mb-2 inline-block shadow-lg">Trending Destination</span>`;
                     let params = `'${h.city.replace(/'/g, "\\'")}'`;
 
