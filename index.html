@@ -493,75 +493,222 @@
 
     <!-- destinations-data script removed -->
 
-    <!-- 5. Theme System Initialization -->
+    <!-- 5. Theme System Initialization with localStorage & System Preferences -->
     <script>
-        // Initialize theme system on page load
-        (function initializeThemeSystem() {
-            const CLEAR_MODE = 'clear-mode';
-            const LIGHT_MODE = 'light-mode';
-            const DARK_MODE = 'dark-mode';
-            const THEME_STORAGE_KEY = 'theme-mode';
-            const REDUCE_MOTION_KEY = 'reduce-motion';
-            const HIGH_CONTRAST_KEY = 'high-contrast';
+        /* ============================================================================
+           OUTATLAS THEME MANAGER
+           Manages three-theme system with localStorage persistence and system preference detection
+           ============================================================================ */
 
-            // Get saved theme from localStorage or use system preference
-            function getInitialTheme() {
-                const saved = localStorage.getItem(THEME_STORAGE_KEY);
-                if (saved) return saved;
+        // Theme configuration constants
+        const THEME_CONFIG = {
+            CLEAR: 'clear-mode',
+            LIGHT: 'light-mode',
+            DARK: 'dark-mode',
+            STORAGE_KEY: 'outatlas-theme',
+            REDUCE_MOTION_KEY: 'reduce-motion',
+            HIGH_CONTRAST_KEY: 'high-contrast'
+        };
 
-                // Check system preference
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                return prefersDark ? DARK_MODE : LIGHT_MODE;
+        /* ============================================================================
+           getSavedTheme()
+
+           Retrieves the user's theme preference in this order:
+           1. localStorage.getItem('outatlas-theme') - User's manual selection
+           2. System preference via window.matchMedia('(prefers-color-scheme: dark)')
+           3. 'clear' as absolute default (WCAG AAA accessible default)
+
+           Returns: 'clear', 'light', or 'dark'
+           ============================================================================ */
+        function getSavedTheme() {
+            // Check if user has manually saved a theme preference
+            const saved = localStorage.getItem(THEME_CONFIG.STORAGE_KEY);
+            if (saved) {
+                return saved;
             }
 
-            // Apply theme to document
-            function applyTheme(theme) {
-                document.documentElement.classList.remove(CLEAR_MODE, LIGHT_MODE, DARK_MODE);
-                if (theme) {
-                    document.documentElement.classList.add(theme);
-                }
-                localStorage.setItem(THEME_STORAGE_KEY, theme || LIGHT_MODE);
+            // Check system preference for dark mode
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+                return 'dark';
             }
 
-            // Apply accessibility settings
-            function applyAccessibilitySettings() {
-                const reduceMotion = localStorage.getItem(REDUCE_MOTION_KEY) === 'true' ||
-                    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-                const highContrast = localStorage.getItem(HIGH_CONTRAST_KEY) === 'true' ||
-                    window.matchMedia('(prefers-contrast: more)').matches;
-
-                if (reduceMotion) {
-                    document.documentElement.style.setProperty('--transition-base', 'none');
-                }
-                if (highContrast) {
-                    document.documentElement.classList.add('high-contrast');
-                }
+            // Check system preference for light mode
+            const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+            if (prefersLight) {
+                return 'light';
             }
 
-            // Initialize on load
-            const initialTheme = getInitialTheme();
-            applyTheme(initialTheme);
+            // Absolute default: Clear View (WCAG AAA accessible)
+            return 'clear';
+        }
+
+        /* ============================================================================
+           setTheme(theme)
+
+           Applies the specified theme to the document and saves preference.
+
+           Process:
+           1. Remove all theme classes from document.body
+           2. Add the appropriate class based on theme parameter
+           3. For dark mode: set document.documentElement.style.colorScheme = 'dark'
+           4. Save preference to localStorage
+           5. Log the change to console
+           6. Trigger CSS variable updates (immediate theme switch)
+
+           Parameters: theme - 'clear', 'light', or 'dark'
+           ============================================================================ */
+        function setTheme(theme) {
+            // Validate theme parameter
+            if (!['clear', 'light', 'dark'].includes(theme)) {
+                console.warn(`Invalid theme: ${theme}. Using 'clear' instead.`);
+                theme = 'clear';
+            }
+
+            // Map theme names to CSS class names
+            const themeClass = {
+                'clear': THEME_CONFIG.CLEAR,
+                'light': THEME_CONFIG.LIGHT,
+                'dark': THEME_CONFIG.DARK
+            }[theme];
+
+            // Remove all existing theme classes from document.body
+            document.body.classList.remove(
+                THEME_CONFIG.CLEAR,
+                THEME_CONFIG.LIGHT,
+                THEME_CONFIG.DARK
+            );
+
+            // Add the new theme class to document.body
+            document.body.classList.add(themeClass);
+
+            // Set color-scheme for dark mode (helps native elements like inputs, scrollbars)
+            if (theme === 'dark') {
+                document.documentElement.style.colorScheme = 'dark';
+            } else {
+                document.documentElement.style.colorScheme = 'light';
+            }
+
+            // Save theme preference to localStorage for persistence across sessions
+            localStorage.setItem(THEME_CONFIG.STORAGE_KEY, theme);
+
+            // Log the theme change to console for debugging
+            console.log(`Theme changed to: ${theme} (${themeClass})`);
+
+            // Dispatch custom event for other components to listen to
+            window.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
+        }
+
+        /* ============================================================================
+           Initialize Theme on Page Load
+
+           Runs when DOM is ready to:
+           1. Get the appropriate theme (saved, system preference, or default)
+           2. Apply the theme to the document
+           3. Set up system preference monitoring
+           ============================================================================ */
+        function initializeThemeSystem() {
+            // Get the theme to use
+            const initialTheme = getSavedTheme();
+
+            // Apply the theme
+            setTheme(initialTheme);
+
+            // Apply accessibility settings (reduce motion, high contrast)
             applyAccessibilitySettings();
 
-            // Listen for system preference changes
+            // Set up system preference change listeners
+            setupSystemPreferenceListeners();
+        }
+
+        /* ============================================================================
+           Apply Accessibility Settings
+
+           Respects user's system accessibility preferences:
+           - Reduce motion: disables animations
+           - High contrast: increases visual contrast
+           ============================================================================ */
+        function applyAccessibilitySettings() {
+            // Check for reduced motion preference
+            const reduceMotion = localStorage.getItem(THEME_CONFIG.REDUCE_MOTION_KEY) === 'true' ||
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            if (reduceMotion) {
+                document.documentElement.style.setProperty('--transition-base', 'none');
+                document.body.classList.add('reduce-motion');
+            }
+
+            // Check for high contrast preference
+            const highContrast = localStorage.getItem(THEME_CONFIG.HIGH_CONTRAST_KEY) === 'true' ||
+                window.matchMedia('(prefers-contrast: more)').matches;
+
+            if (highContrast) {
+                document.body.classList.add('high-contrast');
+            }
+        }
+
+        /* ============================================================================
+           System Preference Change Listeners
+
+           Monitors OS-level theme changes and respects user's manual selections:
+           - Only auto-switches if user hasn't manually chosen a theme
+           - Allows users to override system preferences via localStorage
+           ============================================================================ */
+        function setupSystemPreferenceListeners() {
+            // Listen for dark mode preference changes
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-                if (!localStorage.getItem(THEME_STORAGE_KEY)) {
-                    applyTheme(e.matches ? DARK_MODE : LIGHT_MODE);
+                // Only auto-switch if user hasn't manually set a theme
+                const hasUserPreference = localStorage.getItem(THEME_CONFIG.STORAGE_KEY);
+                if (!hasUserPreference) {
+                    const newTheme = e.matches ? 'dark' : 'light';
+                    setTheme(newTheme);
+                    console.log(`System preference changed to: ${newTheme}`);
                 }
             });
 
             // Listen for reduced motion preference changes
             window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
-                if (e.matches && !localStorage.getItem(REDUCE_MOTION_KEY)) {
+                if (e.matches) {
                     document.documentElement.style.setProperty('--transition-base', 'none');
+                    document.body.classList.add('reduce-motion');
+                } else {
+                    document.documentElement.style.removeProperty('--transition-base');
+                    document.body.classList.remove('reduce-motion');
                 }
             });
 
-            // Expose theme switcher globally
-            window.toggleTheme = function(theme) {
-                applyTheme(theme || LIGHT_MODE);
-            };
-        })();
+            // Listen for high contrast preference changes
+            window.matchMedia('(prefers-contrast: more)').addEventListener('change', (e) => {
+                if (e.matches) {
+                    document.body.classList.add('high-contrast');
+                } else {
+                    document.body.classList.remove('high-contrast');
+                }
+            });
+        }
+
+        /* ============================================================================
+           Global Exports
+
+           These functions are exposed globally for use in settings modals and buttons:
+           - window.getSavedTheme() - Get current theme preference
+           - window.setTheme(theme) - Change theme (can be called from buttons)
+
+           Example usage in HTML:
+           <button onclick="setTheme('clear')">Clear View</button>
+           <button onclick="setTheme('light')">Light Mode</button>
+           <button onclick="setTheme('dark')">Dark Mode</button>
+           ============================================================================ */
+        window.getSavedTheme = getSavedTheme;
+        window.setTheme = setTheme;
+
+        // Initialize theme system when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeThemeSystem);
+        } else {
+            // If script runs after DOMContentLoaded
+            initializeThemeSystem();
+        }
     </script>
 </head>
 
