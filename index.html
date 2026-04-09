@@ -74,6 +74,13 @@
             display: inline-block !important;
             border: 2px solid white !important;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+            color: black !important;
+        }
+
+        /* Dark mode section headlines - ensure text is black for readability */
+        html.dark section h3.dark-pill,
+        html.dark h3.dark-pill {
+            color: black !important;
         }
 
         html.dark .pride-gradient-text {
@@ -755,17 +762,16 @@
                 <!-- Moon icon (shown in light mode) -->
                 <span class="material-symbols-outlined text-xl text-slate-200 hidden dark:block">dark_mode</span>
             </button>
-
-            <!-- Theme Toggle Button -->
-            <button
-                id="theme-toggle"
-                onclick="cycleTheme()"
-                class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 mr-4"
-                aria-label="Toggle theme (Clear View, Light, Dark)"
-                title="Toggle theme">
-                <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">brightness_4</span>
-            </button>
         </div>
+        <!-- Theme Toggle Button - Positioned Below Rainbow Border -->
+        <button
+            id="theme-toggle"
+            onclick="cycleTheme()"
+            class="absolute right-6 top-20 flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 z-50"
+            aria-label="Toggle theme (Clear View, Light, Dark)"
+            title="Toggle theme">
+            <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">dark_mode</span>
+        </button>
     </header>
 
     <main class="max-w-5xl mx-auto mt-6 px-4">
@@ -2297,13 +2303,13 @@
 
                                 return `
                                 <div class="snap-center shrink-0 w-[85%] sm:w-80 bg-gradient-to-r ${s.gradient} rounded-xl shadow-lg p-5 relative overflow-hidden group">
-                                    <div class="absolute top-0 right-0 p-4 opacity-30 text-7xl leading-none select-none">${s.emoji}</div>
+                                    <div class="absolute top-0 right-0 p-4 opacity-40 text-7xl leading-none select-none">${s.emoji}</div>
                                     <button onclick="window.psBookmarkPlace('${event.name.replace(/'/g, "\\'")}', '${isCruise ? 'Cruise' : 'Event'}', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this event" class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full bg-white/30 hover:bg-white/50 transition-colors text-slate-900 z-10 opacity-0 group-hover:opacity-100 cursor-pointer">
                                         <span class="material-symbols-outlined text-[18px] pointer-events-none fill-1">bookmark</span>
                                     </button>
                                     <div class="flex items-center gap-2 mb-3">
                                         <span class="text-xl leading-none">${s.emoji}</span>
-                                        <h4 class="font-bold text-lg leading-tight truncate text-yellow-200">${bannerTitle}</h4>
+                                        <h4 class="font-bold text-lg leading-tight truncate ${s.bannerTextColor || 'text-white'}">${bannerTitle}</h4>
                                         ${matchingEvents.length > 1 ? '<span class="ml-auto text-[10px] font-black uppercase tracking-wider bg-white/25 px-2 py-0.5 rounded text-slate-900 backdrop-blur-sm shadow-sm ring-1 ring-white/40">MULTIPLE</span>' : ''}
                                     </div>
                                     <a href="${link1}" target="_blank" class="font-bold text-yellow-100 text-xl mb-1 hover:text-white hover:underline cursor-pointer flex items-center gap-1 group block transition-colors">
@@ -3589,37 +3595,37 @@
 
             function getEventTypeStyle(type) {
                 const t = (type || '').toLowerCase().trim();
-                if (t.includes('christmas') && t.includes('nye')) return {emoji:'🎄🥂',icon:'celebration',border:'border-green-600',bg:'bg-green-100 dark:bg-green-900/20',text:'text-green-700 dark:text-green-400',badge:'bg-green-600 text-white',gradient:'from-green-700 to-yellow-500',label:'Christmas & NYE'};
-                if (t.includes('carnival') || t.includes('mardi gras')) return {emoji:'🎭',icon:'masks',border:'border-purple-500',bg:'bg-purple-100 dark:bg-purple-900/20',text:'text-purple-600 dark:text-purple-400',badge:'bg-purple-500 text-white',gradient:'from-purple-600 to-fuchsia-500',label:'Carnival / Mardi Gras'};
-                if (t.includes('lesbian')) return {emoji:'🌺',icon:'favorite',border:'border-rose-400',bg:'bg-rose-50 dark:bg-rose-900/20',text:'text-rose-500 dark:text-rose-300',badge:'bg-rose-500 text-white',gradient:'from-rose-500 to-pink-400',label:'Lesbian'};
-                if (t.includes('fetish') && t.includes('bear')) return {emoji:'⛓️🐻',icon:'link',border:'border-slate-600',bg:'bg-slate-200 dark:bg-slate-700/50',text:'text-slate-700 dark:text-slate-300',badge:'bg-slate-700 text-white',gradient:'from-slate-800 to-amber-700',label:'Fetish / Bear'};
-                if (t.includes('cruise') && t.includes('bear')) return {emoji:'🚢🐻',icon:'directions_boat',border:'border-blue-500',bg:'bg-blue-100 dark:bg-blue-900/20',text:'text-blue-600 dark:text-blue-400',badge:'bg-blue-600 text-white',gradient:'from-blue-600 to-amber-700',label:'Bear Cruise'};
-                if (t.includes('cruise') && t.includes('lesbian')) return {emoji:'🚢🌺',icon:'directions_boat',border:'border-blue-400',bg:'bg-blue-50 dark:bg-blue-900/20',text:'text-blue-500 dark:text-blue-300',badge:'bg-blue-500 text-white',gradient:'from-blue-500 to-rose-400',label:'Lesbian Cruise'};
-                if (t.includes('lesbian') && t.includes('circuit')) return {emoji:'🌺🎵',icon:'favorite',border:'border-rose-400',bg:'bg-rose-50 dark:bg-rose-900/20',text:'text-rose-500 dark:text-rose-300',badge:'bg-rose-500 text-white',gradient:'from-rose-500 to-pink-500',label:'Lesbian Circuit'};
+                if (t.includes('christmas') && t.includes('nye')) return {emoji:'🎄🥂',icon:'celebration',border:'border-green-600',bg:'bg-green-100 dark:bg-green-900/20',text:'text-green-700 dark:text-green-400',badge:'bg-green-600 text-white',gradient:'from-green-700 to-yellow-500',label:'Christmas & NYE',bannerTextColor:'text-yellow-200'};
+                if (t.includes('carnival') || t.includes('mardi gras')) return {emoji:'🎭',icon:'masks',border:'border-purple-500',bg:'bg-purple-100 dark:bg-purple-900/20',text:'text-purple-600 dark:text-purple-400',badge:'bg-purple-500 text-white',gradient:'from-purple-600 to-fuchsia-500',label:'Carnival / Mardi Gras',bannerTextColor:'text-white'};
+                if (t.includes('lesbian')) return {emoji:'🌺',icon:'favorite',border:'border-rose-400',bg:'bg-rose-50 dark:bg-rose-900/20',text:'text-rose-500 dark:text-rose-300',badge:'bg-rose-500 text-white',gradient:'from-rose-500 to-pink-400',label:'Lesbian',bannerTextColor:'text-white'};
+                if (t.includes('fetish') && t.includes('bear')) return {emoji:'⛓️🐻',icon:'link',border:'border-slate-600',bg:'bg-slate-200 dark:bg-slate-700/50',text:'text-slate-700 dark:text-slate-300',badge:'bg-slate-700 text-white',gradient:'from-slate-800 to-amber-700',label:'Fetish / Bear',bannerTextColor:'text-white'};
+                if (t.includes('cruise') && t.includes('bear')) return {emoji:'🚢🐻',icon:'directions_boat',border:'border-blue-500',bg:'bg-blue-100 dark:bg-blue-900/20',text:'text-blue-600 dark:text-blue-400',badge:'bg-blue-600 text-white',gradient:'from-blue-600 to-amber-700',label:'Bear Cruise',bannerTextColor:'text-white'};
+                if (t.includes('cruise') && t.includes('lesbian')) return {emoji:'🚢🌺',icon:'directions_boat',border:'border-blue-400',bg:'bg-blue-50 dark:bg-blue-900/20',text:'text-blue-500 dark:text-blue-300',badge:'bg-blue-500 text-white',gradient:'from-blue-500 to-rose-400',label:'Lesbian Cruise',bannerTextColor:'text-white'};
+                if (t.includes('lesbian') && t.includes('circuit')) return {emoji:'🌺🎵',icon:'favorite',border:'border-rose-400',bg:'bg-rose-50 dark:bg-rose-900/20',text:'text-rose-500 dark:text-rose-300',badge:'bg-rose-500 text-white',gradient:'from-rose-500 to-pink-500',label:'Lesbian Circuit',bannerTextColor:'text-white'};
                 switch(t) {
-                    case 'cruise':       return {emoji:'🚢',icon:'directions_boat',border:'border-blue-500',bg:'bg-blue-100 dark:bg-blue-900/20',text:'text-blue-600 dark:text-blue-400',badge:'bg-blue-600 text-white',gradient:'from-blue-600 to-cyan-500',label:'Cruise'};
-                    case 'bear':         return {emoji:'🐻',icon:'pets',border:'border-amber-700',bg:'bg-amber-100 dark:bg-amber-900/20',text:'text-amber-700 dark:text-amber-400',badge:'bg-amber-700 text-white',gradient:'from-amber-800 to-amber-600',label:'Bear'};
-                    case 'fetish':       return {emoji:'⛓️',icon:'link',border:'border-slate-600',bg:'bg-slate-200 dark:bg-slate-700/50',text:'text-slate-700 dark:text-slate-300',badge:'bg-slate-700 text-white',gradient:'from-slate-800 to-slate-600',label:'Fetish'};
-                    case 'halloween':    return {emoji:'🎃',icon:'dark_mode',border:'border-orange-500',bg:'bg-orange-100 dark:bg-orange-900/20',text:'text-orange-600 dark:text-orange-400',badge:'bg-orange-500 text-white',gradient:'from-orange-600 to-amber-500',label:'Halloween'};
-                    case 'christmas':    return {emoji:'🎄',icon:'park',border:'border-green-600',bg:'bg-green-100 dark:bg-green-900/20',text:'text-green-700 dark:text-green-400',badge:'bg-green-600 text-white',gradient:'from-green-700 to-emerald-500',label:'Christmas'};
-                    case 'nye':          return {emoji:'🥂',icon:'celebration',border:'border-yellow-500',bg:'bg-yellow-100 dark:bg-yellow-900/20',text:'text-yellow-700 dark:text-yellow-500',badge:'bg-yellow-500 text-white',gradient:'from-yellow-500 to-amber-400',label:"New Year's Eve"};
-                    case 'circuit':      return {emoji:'🎵',icon:'music_note',border:'border-pink-500',bg:'bg-pink-100 dark:bg-pink-900/20',text:'text-pink-600 dark:text-pink-400',badge:'bg-pink-500 text-white',gradient:'from-pink-600 to-rose-500',label:'Circuit'};
-                    case 'lesbian':      return {emoji:'🌺',icon:'favorite',border:'border-rose-400',bg:'bg-rose-50 dark:bg-rose-900/20',text:'text-rose-500 dark:text-rose-300',badge:'bg-rose-500 text-white',gradient:'from-rose-500 to-pink-400',label:'Lesbian'};
-                    case 'easter':       return {emoji:'🐣',icon:'egg_alt',border:'border-yellow-400',bg:'bg-yellow-50 dark:bg-yellow-900/20',text:'text-yellow-600 dark:text-yellow-400',badge:'bg-yellow-400 text-slate-800',gradient:'from-yellow-400 to-lime-400',label:'Easter'};
-                    case '4th of july':  return {emoji:'🎆',icon:'flag',border:'border-red-600',bg:'bg-red-100 dark:bg-red-900/20',text:'text-red-700 dark:text-red-400',badge:'bg-red-600 text-white',gradient:'from-red-700 to-red-500',label:'4th of July'};
-                    case 'labor day':    return {emoji:'☀️',icon:'beach_access',border:'border-sky-500',bg:'bg-sky-100 dark:bg-sky-900/20',text:'text-sky-600 dark:text-sky-400',badge:'bg-sky-500 text-white',gradient:'from-sky-600 to-blue-400',label:'Labor Day'};
-                    case 'festival':     return {emoji:'🎉',icon:'festival',border:'border-rose-500',bg:'bg-rose-100 dark:bg-rose-900/20',text:'text-rose-600 dark:text-rose-400',badge:'bg-rose-500 text-white',gradient:'from-rose-600 to-pink-500',label:'Festival'};
-                    case 'themed event': return {emoji:'🎊',icon:'celebration',border:'border-violet-500',bg:'bg-violet-100 dark:bg-violet-900/20',text:'text-violet-600 dark:text-violet-400',badge:'bg-violet-500 text-white',gradient:'from-violet-600 to-purple-500',label:'Themed Event'};
-                    case 'carnival':     return {emoji:'🎭',icon:'masks',border:'border-purple-500',bg:'bg-purple-100 dark:bg-purple-900/20',text:'text-purple-600 dark:text-purple-400',badge:'bg-purple-500 text-white',gradient:'from-purple-600 to-fuchsia-500',label:'Carnival / Mardi Gras'};
-                    case 'mardi gras':   return {emoji:'🎭',icon:'masks',border:'border-purple-500',bg:'bg-purple-100 dark:bg-purple-900/20',text:'text-purple-600 dark:text-purple-400',badge:'bg-purple-500 text-white',gradient:'from-purple-600 to-fuchsia-500',label:'Carnival / Mardi Gras'};
-                    case 'drag':         return {emoji:'👑',icon:'auto_awesome',border:'border-fuchsia-500',bg:'bg-fuchsia-100 dark:bg-fuchsia-900/20',text:'text-fuchsia-600 dark:text-fuchsia-400',badge:'bg-fuchsia-500 text-white',gradient:'from-fuchsia-600 to-pink-500',label:'Drag'};
-                    case 'con':          return {emoji:'🎮',icon:'sports_esports',border:'border-indigo-500',bg:'bg-indigo-100 dark:bg-indigo-900/20',text:'text-indigo-600 dark:text-indigo-400',badge:'bg-indigo-500 text-white',gradient:'from-indigo-600 to-blue-500',label:'Con'};
-                    case 'amusement park': return {emoji:'🎡',icon:'attractions',border:'border-orange-400',bg:'bg-orange-100 dark:bg-orange-900/20',text:'text-orange-500 dark:text-orange-300',badge:'bg-orange-400 text-white',gradient:'from-orange-500 to-yellow-400',label:'Amusement Park'};
-                    case 'awards':       return {emoji:'🏆',icon:'emoji_events',border:'border-yellow-600',bg:'bg-yellow-100 dark:bg-yellow-900/20',text:'text-yellow-700 dark:text-yellow-400',badge:'bg-yellow-600 text-white',gradient:'from-yellow-600 to-amber-500',label:'Awards'};
-                    case 'memorial day': return {emoji:'🇺🇸',icon:'flag',border:'border-red-600',bg:'bg-red-100 dark:bg-red-900/20',text:'text-red-700 dark:text-red-400',badge:'bg-red-600 text-white',gradient:'from-red-700 to-blue-600',label:'Memorial Day'};
-                    case 'thanksgiving': return {emoji:'🦃',icon:'set_meal',border:'border-orange-700',bg:'bg-orange-100 dark:bg-orange-900/20',text:'text-orange-700 dark:text-orange-400',badge:'bg-orange-700 text-white',gradient:'from-orange-700 to-amber-600',label:'Thanksgiving'};
-                    case 'event':        return {emoji:'✨',icon:'star',border:'border-slate-400',bg:'bg-slate-100 dark:bg-slate-700/30',text:'text-slate-700 dark:text-slate-300',badge:'bg-slate-500 text-white',gradient:'from-slate-600 to-slate-500',label:'Event'};
-                    default:             return {emoji:'🌈',icon:'celebration',border:'border-pride-purple',bg:'bg-pride-purple/10',text:'text-pride-purple',badge:'bg-pride-purple text-white',gradient:'from-pride-purple to-pride-blue',label:'Pride Event'};
+                    case 'cruise':       return {emoji:'🚢',icon:'directions_boat',border:'border-blue-500',bg:'bg-blue-100 dark:bg-blue-900/20',text:'text-blue-600 dark:text-blue-400',badge:'bg-blue-600 text-white',gradient:'from-blue-600 to-cyan-500',label:'Cruise',bannerTextColor:'text-white'};
+                    case 'bear':         return {emoji:'🐻',icon:'pets',border:'border-amber-700',bg:'bg-amber-100 dark:bg-amber-900/20',text:'text-amber-700 dark:text-amber-400',badge:'bg-amber-700 text-white',gradient:'from-amber-800 to-amber-600',label:'Bear',bannerTextColor:'text-white'};
+                    case 'fetish':       return {emoji:'⛓️',icon:'link',border:'border-slate-600',bg:'bg-slate-200 dark:bg-slate-700/50',text:'text-slate-700 dark:text-slate-300',badge:'bg-slate-700 text-white',gradient:'from-slate-800 to-slate-600',label:'Fetish',bannerTextColor:'text-white'};
+                    case 'halloween':    return {emoji:'🎃',icon:'dark_mode',border:'border-orange-500',bg:'bg-orange-100 dark:bg-orange-900/20',text:'text-orange-600 dark:text-orange-400',badge:'bg-orange-500 text-white',gradient:'from-orange-600 to-amber-500',label:'Halloween',bannerTextColor:'text-white'};
+                    case 'christmas':    return {emoji:'🎄',icon:'park',border:'border-green-600',bg:'bg-green-100 dark:bg-green-900/20',text:'text-green-700 dark:text-green-400',badge:'bg-green-600 text-white',gradient:'from-green-700 to-emerald-500',label:'Christmas',bannerTextColor:'text-white'};
+                    case 'nye':          return {emoji:'🥂',icon:'celebration',border:'border-yellow-500',bg:'bg-yellow-100 dark:bg-yellow-900/20',text:'text-yellow-700 dark:text-yellow-500',badge:'bg-yellow-500 text-white',gradient:'from-yellow-500 to-amber-400',label:"New Year's Eve",bannerTextColor:'text-yellow-200'};
+                    case 'circuit':      return {emoji:'🎵',icon:'music_note',border:'border-pink-500',bg:'bg-pink-100 dark:bg-pink-900/20',text:'text-pink-600 dark:text-pink-400',badge:'bg-pink-500 text-white',gradient:'from-pink-600 to-rose-500',label:'Circuit',bannerTextColor:'text-white'};
+                    case 'lesbian':      return {emoji:'🌺',icon:'favorite',border:'border-rose-400',bg:'bg-rose-50 dark:bg-rose-900/20',text:'text-rose-500 dark:text-rose-300',badge:'bg-rose-500 text-white',gradient:'from-rose-500 to-pink-400',label:'Lesbian',bannerTextColor:'text-white'};
+                    case 'easter':       return {emoji:'🐣',icon:'egg_alt',border:'border-yellow-400',bg:'bg-yellow-50 dark:bg-yellow-900/20',text:'text-yellow-600 dark:text-yellow-400',badge:'bg-yellow-400 text-slate-800',gradient:'from-yellow-400 to-lime-400',label:'Easter',bannerTextColor:'text-yellow-200'};
+                    case '4th of july':  return {emoji:'🎆',icon:'flag',border:'border-red-600',bg:'bg-red-100 dark:bg-red-900/20',text:'text-red-700 dark:text-red-400',badge:'bg-red-600 text-white',gradient:'from-red-700 to-red-500',label:'4th of July',bannerTextColor:'text-white'};
+                    case 'labor day':    return {emoji:'☀️',icon:'beach_access',border:'border-sky-500',bg:'bg-sky-100 dark:bg-sky-900/20',text:'text-sky-600 dark:text-sky-400',badge:'bg-sky-500 text-white',gradient:'from-sky-600 to-blue-400',label:'Labor Day',bannerTextColor:'text-white'};
+                    case 'festival':     return {emoji:'🎉',icon:'festival',border:'border-rose-500',bg:'bg-rose-100 dark:bg-rose-900/20',text:'text-rose-600 dark:text-rose-400',badge:'bg-rose-500 text-white',gradient:'from-rose-600 to-pink-500',label:'Festival',bannerTextColor:'text-white'};
+                    case 'themed event': return {emoji:'🎊',icon:'celebration',border:'border-violet-500',bg:'bg-violet-100 dark:bg-violet-900/20',text:'text-violet-600 dark:text-violet-400',badge:'bg-violet-500 text-white',gradient:'from-violet-600 to-purple-500',label:'Themed Event',bannerTextColor:'text-white'};
+                    case 'carnival':     return {emoji:'🎭',icon:'masks',border:'border-purple-500',bg:'bg-purple-100 dark:bg-purple-900/20',text:'text-purple-600 dark:text-purple-400',badge:'bg-purple-500 text-white',gradient:'from-purple-600 to-fuchsia-500',label:'Carnival / Mardi Gras',bannerTextColor:'text-white'};
+                    case 'mardi gras':   return {emoji:'🎭',icon:'masks',border:'border-purple-500',bg:'bg-purple-100 dark:bg-purple-900/20',text:'text-purple-600 dark:text-purple-400',badge:'bg-purple-500 text-white',gradient:'from-purple-600 to-fuchsia-500',label:'Carnival / Mardi Gras',bannerTextColor:'text-white'};
+                    case 'drag':         return {emoji:'👑',icon:'auto_awesome',border:'border-fuchsia-500',bg:'bg-fuchsia-100 dark:bg-fuchsia-900/20',text:'text-fuchsia-600 dark:text-fuchsia-400',badge:'bg-fuchsia-500 text-white',gradient:'from-fuchsia-600 to-pink-500',label:'Drag',bannerTextColor:'text-white'};
+                    case 'con':          return {emoji:'🎮',icon:'sports_esports',border:'border-indigo-500',bg:'bg-indigo-100 dark:bg-indigo-900/20',text:'text-indigo-600 dark:text-indigo-400',badge:'bg-indigo-500 text-white',gradient:'from-indigo-600 to-blue-500',label:'Con',bannerTextColor:'text-white'};
+                    case 'amusement park': return {emoji:'🎡',icon:'attractions',border:'border-orange-400',bg:'bg-orange-100 dark:bg-orange-900/20',text:'text-orange-500 dark:text-orange-300',badge:'bg-orange-400 text-white',gradient:'from-orange-500 to-yellow-400',label:'Amusement Park',bannerTextColor:'text-yellow-200'};
+                    case 'awards':       return {emoji:'🏆',icon:'emoji_events',border:'border-yellow-600',bg:'bg-yellow-100 dark:bg-yellow-900/20',text:'text-yellow-700 dark:text-yellow-400',badge:'bg-yellow-600 text-white',gradient:'from-yellow-600 to-amber-500',label:'Awards',bannerTextColor:'text-yellow-200'};
+                    case 'memorial day': return {emoji:'🇺🇸',icon:'flag',border:'border-red-600',bg:'bg-red-100 dark:bg-red-900/20',text:'text-red-700 dark:text-red-400',badge:'bg-red-600 text-white',gradient:'from-red-700 to-blue-600',label:'Memorial Day',bannerTextColor:'text-white'};
+                    case 'thanksgiving': return {emoji:'🦃',icon:'set_meal',border:'border-orange-700',bg:'bg-orange-100 dark:bg-orange-900/20',text:'text-orange-700 dark:text-orange-400',badge:'bg-orange-700 text-white',gradient:'from-orange-700 to-amber-600',label:'Thanksgiving',bannerTextColor:'text-white'};
+                    case 'event':        return {emoji:'✨',icon:'star',border:'border-slate-400',bg:'bg-slate-100 dark:bg-slate-700/30',text:'text-slate-700 dark:text-slate-300',badge:'bg-slate-500 text-white',gradient:'from-slate-600 to-slate-500',label:'Event',bannerTextColor:'text-white'};
+                    default:             return {emoji:'🌈',icon:'celebration',border:'border-pride-purple',bg:'bg-pride-purple/10',text:'text-pride-purple',badge:'bg-pride-purple text-white',gradient:'from-pride-purple to-pride-blue',label:'Pride Event',bannerTextColor:'text-white'};
                 }
             }
 
