@@ -24,7 +24,29 @@
     <!-- Tailwind CSS (local production build — replaces CDN for performance) -->
     <link rel="stylesheet" href="tailwind.min.css">
 
-    <!-- 2. Custom CSS -->
+    <!-- 2. Theme System & Design Tokens (WCAG AAA Accessible) -->
+    <!-- Theme Variables - Three-theme system with Clear View, Light, Dark modes -->
+    <link rel="stylesheet" href="src/styles/theme-variables.css">
+    <!-- Design System - Complete token set for spacing, typography, shadows -->
+    <link rel="stylesheet" href="src/styles/variables.css">
+    <!-- Global Styles - Base element styles using CSS variables -->
+    <link rel="stylesheet" href="src/styles/global.css">
+    <!-- Accessibility Features - Reduce motion, high contrast, focus states -->
+    <link rel="stylesheet" href="src/styles/accessibility.css">
+
+    <!-- 3. Component Styles -->
+    <!-- App Layout -->
+    <link rel="stylesheet" href="src/components/App.css">
+    <!-- Theme Toggle Button -->
+    <link rel="stylesheet" href="src/components/ThemeToggle.css">
+    <!-- Search Component -->
+    <link rel="stylesheet" href="src/components/Search.css">
+    <!-- Bookmarks Component -->
+    <link rel="stylesheet" href="src/components/Bookmarks.css">
+    <!-- Messages Component -->
+    <link rel="stylesheet" href="src/components/Messages.css">
+
+    <!-- 4. Custom CSS -->
     <style>
         .pride-gradient-text {
             background: linear-gradient(to right, #FF0018, #FFA52C, #eab308, #008018, #0000F9, #86007D);
@@ -468,6 +490,77 @@
     <!-- window._DESTINATIONS_DATA removed so destinations.json is fetched directly -->
 
     <!-- destinations-data script removed -->
+
+    <!-- 5. Theme System Initialization -->
+    <script>
+        // Initialize theme system on page load
+        (function initializeThemeSystem() {
+            const CLEAR_MODE = 'clear-mode';
+            const LIGHT_MODE = 'light-mode';
+            const DARK_MODE = 'dark-mode';
+            const THEME_STORAGE_KEY = 'theme-mode';
+            const REDUCE_MOTION_KEY = 'reduce-motion';
+            const HIGH_CONTRAST_KEY = 'high-contrast';
+
+            // Get saved theme from localStorage or use system preference
+            function getInitialTheme() {
+                const saved = localStorage.getItem(THEME_STORAGE_KEY);
+                if (saved) return saved;
+
+                // Check system preference
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                return prefersDark ? DARK_MODE : LIGHT_MODE;
+            }
+
+            // Apply theme to document
+            function applyTheme(theme) {
+                document.documentElement.classList.remove(CLEAR_MODE, LIGHT_MODE, DARK_MODE);
+                if (theme) {
+                    document.documentElement.classList.add(theme);
+                }
+                localStorage.setItem(THEME_STORAGE_KEY, theme || LIGHT_MODE);
+            }
+
+            // Apply accessibility settings
+            function applyAccessibilitySettings() {
+                const reduceMotion = localStorage.getItem(REDUCE_MOTION_KEY) === 'true' ||
+                    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                const highContrast = localStorage.getItem(HIGH_CONTRAST_KEY) === 'true' ||
+                    window.matchMedia('(prefers-contrast: more)').matches;
+
+                if (reduceMotion) {
+                    document.documentElement.style.setProperty('--transition-base', 'none');
+                }
+                if (highContrast) {
+                    document.documentElement.classList.add('high-contrast');
+                }
+            }
+
+            // Initialize on load
+            const initialTheme = getInitialTheme();
+            applyTheme(initialTheme);
+            applyAccessibilitySettings();
+
+            // Listen for system preference changes
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                if (!localStorage.getItem(THEME_STORAGE_KEY)) {
+                    applyTheme(e.matches ? DARK_MODE : LIGHT_MODE);
+                }
+            });
+
+            // Listen for reduced motion preference changes
+            window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
+                if (e.matches && !localStorage.getItem(REDUCE_MOTION_KEY)) {
+                    document.documentElement.style.setProperty('--transition-base', 'none');
+                }
+            });
+
+            // Expose theme switcher globally
+            window.toggleTheme = function(theme) {
+                applyTheme(theme || LIGHT_MODE);
+            };
+        })();
+    </script>
 </head>
 
 <body class="bg-background-light dark:bg-slate-900 font-display text-slate-900 dark:text-white min-h-screen pb-24">
