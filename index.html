@@ -763,23 +763,20 @@
                 <span class="material-symbols-outlined text-xl text-slate-200 hidden dark:block">dark_mode</span>
             </button>
         </div>
+        <!-- Theme Toggle Button - Positioned Below Rainbow Border -->
+        <button
+            id="theme-toggle"
+            onclick="cycleTheme()"
+            class="absolute right-6 top-20 flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 z-50"
+            aria-label="Toggle theme (Clear View, Light, Dark)"
+            title="Toggle theme">
+            <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">dark_mode</span>
+        </button>
     </header>
 
     <main class="max-w-5xl mx-auto mt-6 px-4">
         <!-- View 1: Explore (Home) -->
         <div id="homeView" class="view-section active space-y-8">
-            <!-- Theme Toggle Button - Below Rainbow Border, Right Side -->
-            <div class="flex justify-end pr-2">
-                <button
-                    id="theme-toggle"
-                    onclick="cycleTheme()"
-                    class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95"
-                    aria-label="Toggle theme (Clear View, Light, Dark)"
-                    title="Toggle theme">
-                    <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">dark_mode</span>
-                </button>
-            </div>
-
             <!-- 1. Search & Info Section -->
             <section class="rainbow-card-bg rounded-3xl p-6 shadow-2xl relative overflow-hidden">
 
@@ -4090,4 +4087,3 @@
 </body>
 
 </html>
-
