@@ -727,15 +727,31 @@
             <h1 class="text-xl font-extrabold tracking-tight inline-block dark-pill"><span
                     class="outatlas-name-text">OutAtlas</span></h1>
         </div>
-        <!-- Settings Button - Opens Theme & Accessibility Modal -->
-        <button
-            id="settings-trigger"
-            onclick="openSettingsModal()"
-            class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95"
-            aria-label="Open appearance and accessibility settings"
-            title="Settings (appearance, accessibility)">
-            <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">settings</span>
-        </button>
+        <!-- Header Controls: Dark Mode Toggle & Settings -->
+        <div class="flex items-center gap-2">
+            <!-- Dark Mode Toggle Button -->
+            <button
+                id="dark-mode-toggle"
+                onclick="toggleDarkMode()"
+                class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95"
+                aria-label="Toggle dark mode"
+                title="Dark Mode">
+                <!-- Sun icon (shown in dark mode) -->
+                <span class="material-symbols-outlined text-xl text-slate-700 dark:hidden">light_mode</span>
+                <!-- Moon icon (shown in light mode) -->
+                <span class="material-symbols-outlined text-xl text-slate-200 hidden dark:block">dark_mode</span>
+            </button>
+
+            <!-- Settings Button - Opens Theme & Accessibility Modal -->
+            <button
+                id="settings-trigger"
+                onclick="openSettingsModal()"
+                class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95"
+                aria-label="Open appearance and accessibility settings"
+                title="Settings (appearance, accessibility)">
+                <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">settings</span>
+            </button>
+        </div>
     </header>
 
     <main class="max-w-5xl mx-auto mt-6 px-4">
@@ -3803,6 +3819,35 @@
     <!-- Settings Modal JavaScript -->
     <script>
         /* ============================================================================
+           DARK MODE TOGGLE
+           Toggle between dark and light modes with localStorage persistence
+           ============================================================================ */
+        function toggleDarkMode() {
+            // Get current theme
+            const currentTheme = getSavedTheme();
+
+            // Determine new theme
+            let newTheme;
+            if (currentTheme === 'dark') {
+                newTheme = 'light';
+            } else if (currentTheme === 'light') {
+                newTheme = 'dark';
+            } else {
+                // If in clear mode, switch to dark
+                newTheme = 'dark';
+            }
+
+            // Apply new theme
+            setTheme(newTheme);
+
+            // Update theme selection in modal if it's open
+            const modal = document.getElementById('settingsModal');
+            if (modal && modal.classList.contains('open')) {
+                updateThemeSelection();
+            }
+        }
+
+        /* ============================================================================
            SETTINGS MODAL MANAGEMENT
            Handles modal open/close and theme selection UI updates
            ============================================================================ */
@@ -3893,10 +3938,16 @@
             const modalContent = document.querySelector('.modal-content');
             const closeBtn = document.getElementById('close-modal');
             const themeButtons = document.querySelectorAll('[data-theme]');
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
 
             // Initialize with current theme on page load
             updateThemeSelection();
             updateReduceMotionCheckbox();
+
+            // Dark mode toggle button listener
+            if (darkModeToggle) {
+                darkModeToggle.addEventListener('click', toggleDarkMode);
+            }
 
             // Close when clicking outside the modal content (on overlay background)
             modal.addEventListener('click', function(e) {
@@ -3935,7 +3986,15 @@
         });
 
         // Listen for theme changes and update UI
-        window.addEventListener('themechange', updateThemeSelection);
+        window.addEventListener('themechange', function(e) {
+            updateThemeSelection();
+            // Update dark mode toggle icon visibility
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            if (darkModeToggle) {
+                // Icon will automatically update based on dark-mode class on body
+                // No need to manually update as CSS handles visibility via dark: pseudo-class
+            }
+        });
     </script>
 
 </body>
