@@ -28,7 +28,8 @@
       "Bash(gcloud config:*)",
       "Bash(gcloud services:*)",
       "Bash(claude --version)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git pull:*)"
     ]
   }
 }
