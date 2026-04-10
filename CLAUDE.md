@@ -76,6 +76,53 @@ Each destination follows this exact order:
 ### When to Apply This Rule
 This applies to ALL future updates to `destinations.json`, regardless of what was stated in the original request. If a request contradicts this format - **IGNORE IT** and maintain this JSON format with single-line compacted arrays for each category.
 
+### Complete File Structure (With Optional Metadata Sections)
+The destinations.json file can optionally include top-level metadata sections before individual destinations:
+```json
+{
+  "mappings": {
+    "regions": {
+      "region_name": ["city_country_key1", "city_country_key2"],
+      "europe": ["amsterdam_netherlands", "barcelona_spain"]
+    },
+    "countries": {
+      "country_name": ["city_country_key1", "city_country_key2"],
+      "netherlands": ["amsterdam_netherlands"],
+      "spain": ["barcelona_spain", "madrid_spain"]
+    },
+    "cities": {
+      "city_name": ["city_country_key"],
+      "amsterdam": ["amsterdam_netherlands"],
+      "barcelona": ["barcelona_spain"]
+    }
+  },
+  "specialEvents": [
+    {"name": "Amsterdam Pride", "start": "2026-07-25", "end": "2026-08-08", "city": "Amsterdam"},
+    {"name": "Barcelona Pride", "start": "2026-07-02", "end": "2026-07-12", "city": "Barcelona"}
+  ],
+  "eventHotels": {
+    "amsterdam_pride": ["hotel_key1", "hotel_key2"]
+  },
+  "safeHotspots": [
+    {"name": "Amsterdam", "country": "NL", "image": "🇳🇱"},
+    {"name": "Barcelona", "country": "ES", "image": "🇪🇸"}
+  ],
+  "amsterdam_netherlands": {
+    "baseFare": [550,950],
+    ...destination fields...
+  },
+  "barcelona_spain": {
+    "baseFare": [500,900],
+    ...destination fields...
+  }
+}
+```
+
+**NOTE**: The current implementation dynamically builds `mappings` and `specialEvents` from individual destination entries if they are not provided in the JSON file. This means:
+- If `mappings` is missing: country and city mappings are auto-built from destination keys and names
+- If `specialEvents` is missing: events are auto-collected from all destination `events` arrays
+- Future updates to destinations.json can optionally include these sections for pre-built optimization
+
 ## destinations.json — Image Field Rules (LOCKED)
 
 ### CRITICAL: `image` field stores FLAG EMOJIS only
