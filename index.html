@@ -3008,6 +3008,14 @@
                 return shuffled.slice(0, count);
             }
 
+            function isPastEvent(event) {
+                if (!event || !event.end) return false;
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const eventEnd = new Date(event.end + 'T00:00:00');
+                return eventEnd < today;
+            }
+
             function countryCodeToFlag(code) {
                 if (!code || code.length !== 2) return '🌍';
                 const codePoints = [...code.toUpperCase()].map(char => 127397 + char.charCodeAt());
@@ -3799,7 +3807,7 @@
                 const selected = [amsterdam, ...selectedOthers];
 
                 container.innerHTML = selected.filter(h => h).map((h, index) => {
-                    const cityEvents = SPECIAL_EVENTS_DATA.filter(e => e.city?.toLowerCase() === h.city?.toLowerCase() && e.type !== 'Cruise');
+                    const cityEvents = SPECIAL_EVENTS_DATA.filter(e => e.city?.toLowerCase() === h.city?.toLowerCase() && e.type !== 'Cruise' && !isPastEvent(e));
                     let tag = `<span class="bg-pride-blue text-white text-[10px] font-black px-2 py-1 rounded-lg uppercase mb-2 inline-block shadow-lg">Trending Destination</span>`;
                     let params = `'${h.city.replace(/'/g, "\\'")}'`;
 
