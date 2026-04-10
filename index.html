@@ -2400,20 +2400,19 @@
                                 return `
                                 <div class="snap-center shrink-0 w-[85%] sm:w-80 bg-gradient-to-r ${s.gradient} rounded-xl shadow-lg p-5 relative overflow-hidden group flex flex-col">
                                     <div class="absolute top-0 right-0 p-4 opacity-40 text-7xl leading-none select-none">${s.emoji}</div>
-                                    <div class="flex items-start gap-2 mb-3">
-                                        <span class="text-xl leading-none flex-shrink-0">${s.emoji}</span>
-                                        <h4 class="font-bold text-lg leading-snug break-words ${s.bannerTextColor || 'text-white'}">${bannerTitle}</h4>
-                                        ${matchingEvents.length > 1 ? '<span class="text-[10px] font-black uppercase tracking-wider bg-white/25 px-2 py-0.5 rounded text-slate-900 backdrop-blur-sm shadow-sm ring-1 ring-white/40 flex-shrink-0">MULTIPLE</span>' : ''}
-                                    </div>
-                                    <div class="flex items-start gap-2 mb-1">
-                                        <button onclick="window.psBookmarkPlace('${event.name.replace(/'/g, "\\'")}', '${isCruise ? 'Cruise' : 'Event'}', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this event" class="w-11 h-11 flex items-center justify-center rounded-full bg-white/50 hover:bg-white/70 transition-colors text-slate-900 z-10 cursor-pointer flex-shrink-0 mt-0.5">
-                                            <span class="material-symbols-outlined text-[20px] pointer-events-none fill-1">bookmark</span>
-                                        </button>
-                                        <a href="${link1}" target="_blank" class="font-bold text-yellow-100 text-xl hover:text-white hover:underline cursor-pointer flex-1 break-words transition-colors">
-                                            ${event.name}
-                                        </a>
-                                    </div>
-                                    <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide bg-white/25 text-slate-900 px-2 py-0.5 rounded-full mb-2 backdrop-blur-sm">${s.emoji} ${s.label}</span>
+                                    <!-- Line 1: Icon -->
+                                    <div class="text-2xl leading-none flex-shrink-0 mb-2">${s.emoji}</div>
+                                    <!-- Line 2: Event Detected / Cruise Alert -->
+                                    <h4 class="font-bold text-lg leading-snug break-words ${s.bannerTextColor || 'text-white'} mb-2">${bannerTitle}${matchingEvents.length > 1 ? ' <span class="text-[10px] font-black uppercase tracking-wider bg-white/25 px-2 py-0.5 rounded text-slate-900 backdrop-blur-sm shadow-sm ring-1 ring-white/40">MULTIPLE</span>' : ''}</h4>
+                                    <!-- Line 3: Bookmark -->
+                                    <button onclick="window.psBookmarkPlace('${event.name.replace(/'/g, "\\'")}', '${isCruise ? 'Cruise' : 'Event'}', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this event" class="w-11 h-11 flex items-center justify-center rounded-full bg-white/50 hover:bg-white/70 transition-colors text-slate-900 z-10 cursor-pointer flex-shrink-0 mb-2 self-start">
+                                        <span class="material-symbols-outlined text-[20px] pointer-events-none fill-1">bookmark</span>
+                                    </button>
+                                    <!-- Line 4: Event Name (WORD WRAP REQUIRED) -->
+                                    <a href="${link1}" target="_blank" class="font-bold text-yellow-100 text-xl hover:text-white hover:underline cursor-pointer break-words transition-colors mb-2">
+                                        ${event.name}
+                                    </a>
+                                    <!-- Line 5: Dates -->
                                     <p class="text-xs text-yellow-100 mb-4 flex items-center gap-1 font-medium">
                                         <span class="material-symbols-outlined text-sm">calendar_today</span>
                                         ${event.start} &ndash; ${event.end}
@@ -2653,17 +2652,19 @@
                                 const icon = getNightlifeIcon(n.type);
                                 const firstTag = n.tags && n.tags.length > 0 ? n.tags[0] : '';
                                 return `
-                                        <div class="bg-white p-4 rounded-xl border-2 border-pride-green/20 group hover:bg-pride-green transition-colors duration-300 cursor-default flex items-start gap-3">
-                                            <button onclick="window.psBookmarkPlace('${n.name.replace(/'/g, "\\'")}', 'Shopping', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0">
+                                        <div class="bg-white p-4 rounded-xl border-2 border-pride-green/20 group hover:bg-pride-green transition-colors duration-300 cursor-default flex flex-col">
+                                            <!-- Line 1: Icon -->
+                                            <div class="w-10 h-10 bg-pride-green rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-green group-hover:text-pride-green flex-shrink-0">
+                                                ${icon}
+                                            </div>
+                                            <!-- Line 2: Name -->
+                                            <p class="font-bold group-hover:text-white text-black break-words mb-1" style="color: black !important;">${n.name}</p>
+                                            <!-- Line 3: Tag -->
+                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white break-words mb-3">${n.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
+                                            <!-- Line 4: Bookmark -->
+                                            <button onclick="window.psBookmarkPlace('${n.name.replace(/'/g, "\\'")}', 'Shopping', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0 self-start">
                                                 <span class="material-symbols-outlined text-[16px]">bookmark</span>
                                             </button>
-                                            <div class="flex-1 min-w-0">
-                                                <div class="w-10 h-10 bg-pride-green rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-green group-hover:text-pride-green flex-shrink-0">
-                                                    ${icon}
-                                                </div>
-                                                <p class="font-bold group-hover:text-white text-black break-words" style="color: black !important;">${n.name}</p>
-                                                <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white break-words">${n.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
-                                            </div>
                                         </div>
                                         `;
                             }).join('')}
@@ -2683,17 +2684,19 @@
                                 const icon = getNightlifeIcon(n.type);
                                 const firstTag = n.tags && n.tags.length > 0 ? n.tags[0] : '';
                                 return `
-                                        <div class="bg-white p-4 rounded-xl border-2 border-pride-red/20 group hover:bg-pride-red transition-colors duration-300 cursor-default flex items-start gap-3">
-                                            <button onclick="window.psBookmarkPlace('${n.name.replace(/'/g, "\\'")}', 'Nightlife', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0">
+                                        <div class="bg-white p-4 rounded-xl border-2 border-pride-red/20 group hover:bg-pride-red transition-colors duration-300 cursor-default flex flex-col">
+                                            <!-- Line 1: Icon -->
+                                            <div class="w-10 h-10 bg-pride-red rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-red group-hover:text-pride-red flex-shrink-0">
+                                                ${icon}
+                                            </div>
+                                            <!-- Line 2: Name -->
+                                            <p class="font-bold group-hover:text-white text-black break-words mb-1" style="color: black !important;">${n.name}</p>
+                                            <!-- Line 3: Tag -->
+                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white break-words mb-3">${n.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
+                                            <!-- Line 4: Bookmark -->
+                                            <button onclick="window.psBookmarkPlace('${n.name.replace(/'/g, "\\'")}', 'Nightlife', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0 self-start">
                                                 <span class="material-symbols-outlined text-[16px]">bookmark</span>
                                             </button>
-                                            <div class="flex-1 min-w-0">
-                                                <div class="w-10 h-10 bg-pride-red rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-red group-hover:text-pride-red flex-shrink-0">
-                                                    ${icon}
-                                                </div>
-                                                <p class="font-bold group-hover:text-white text-black break-words" style="color: black !important;">${n.name}</p>
-                                                <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white break-words">${n.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
-                                            </div>
                                         </div>
                                         `;
                             }).join('')}
@@ -2718,17 +2721,19 @@
                                 const icon = getNightlifeIcon(n.type);
                                 const firstTag = n.tags && n.tags.length > 0 ? n.tags[0] : '';
                                 return `
-                                        <div class="bg-white p-4 rounded-xl border-2 border-${color}/20 group hover:bg-${color} transition-colors duration-300 cursor-default flex items-start gap-3">
-                                            <button onclick="window.psBookmarkPlace('${n.name.replace(/'/g, "\\'")}', 'Nightlife', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0">
+                                        <div class="bg-white p-4 rounded-xl border-2 border-${color}/20 group hover:bg-${color} transition-colors duration-300 cursor-default flex flex-col">
+                                            <!-- Line 1: Icon -->
+                                            <div class="w-10 h-10 bg-${color} rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-${color} group-hover:text-${color} flex-shrink-0">
+                                                ${icon}
+                                            </div>
+                                            <!-- Line 2: Name -->
+                                            <p class="font-bold group-hover:text-white text-black break-words mb-1" style="color: black !important;">${n.name}</p>
+                                            <!-- Line 3: Tag -->
+                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white break-words mb-3">${n.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
+                                            <!-- Line 4: Bookmark -->
+                                            <button onclick="window.psBookmarkPlace('${n.name.replace(/'/g, "\\'")}', 'Nightlife', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0 self-start">
                                                 <span class="material-symbols-outlined text-[16px]">bookmark</span>
                                             </button>
-                                            <div class="flex-1 min-w-0">
-                                                <div class="w-10 h-10 bg-${color} rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-${color} group-hover:text-${color} flex-shrink-0">
-                                                    ${icon}
-                                                </div>
-                                                <p class="font-bold group-hover:text-white text-black break-words" style="color: black !important;">${n.name}</p>
-                                                <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white break-words">${n.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
-                                            </div>
                                         </div>
                                         `;
                             }).join('')}
@@ -2752,17 +2757,19 @@
                                 const icon = getRestaurantIcon(r.type);
                                 const firstTag = r.tags && r.tags.length > 0 ? r.tags[0] : '';
                                 return `
-                                        <div class="bg-white p-4 rounded-xl border-2 border-${color}/20 group hover:bg-${color} transition-colors duration-300 cursor-default flex items-start gap-3">
-                                            <button onclick="window.psBookmarkPlace('${r.name.replace(/'/g, "\\'")}', 'Dining', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0">
+                                        <div class="bg-white p-4 rounded-xl border-2 border-${color}/20 group hover:bg-${color} transition-colors duration-300 cursor-default flex flex-col">
+                                            <!-- Line 1: Icon -->
+                                            <div class="w-10 h-10 bg-${color} rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-${color} group-hover:text-${color} flex-shrink-0">
+                                                ${icon}
+                                            </div>
+                                            <!-- Line 2: Name -->
+                                            <p class="font-bold group-hover:text-white text-black break-words mb-1" style="color: black !important;">${r.name}</p>
+                                            <!-- Line 3: Tag -->
+                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white break-words mb-3">${r.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
+                                            <!-- Line 4: Bookmark -->
+                                            <button onclick="window.psBookmarkPlace('${r.name.replace(/'/g, "\\'")}', 'Dining', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0 self-start">
                                                 <span class="material-symbols-outlined text-[16px]">bookmark</span>
                                             </button>
-                                            <div class="flex-1 min-w-0">
-                                                <div class="w-10 h-10 bg-${color} rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-${color} group-hover:text-${color} flex-shrink-0">
-                                                    ${icon}
-                                                </div>
-                                                <p class="font-bold group-hover:text-white text-black break-words" style="color: black !important;">${r.name}</p>
-                                                <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white break-words">${r.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
-                                            </div>
                                         </div>
                                         `;
                             }).join('')}
@@ -2785,17 +2792,19 @@
                                 const cardTag = pubUrl ? 'a' : 'div';
                                 const cardAttrs = pubUrl ? `href="${pubUrl}" target="_blank" rel="noopener noreferrer"` : '';
                                 return `
-                                        <${cardTag} ${cardAttrs} class="bg-white p-4 rounded-xl border-2 border-pride-purple/20 group hover:bg-pride-purple transition-colors duration-300 flex items-start gap-3 ${pubUrl ? 'cursor-pointer' : 'cursor-default'} block no-underline">
-                                            <button onclick="event.preventDefault();event.stopPropagation();window.psBookmarkPlace('${pubName.replace(/'/g, "\\'")}', 'Publication', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this publication" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0">
+                                        <${cardTag} ${cardAttrs} class="bg-white p-4 rounded-xl border-2 border-pride-purple/20 group hover:bg-pride-purple transition-colors duration-300 flex flex-col ${pubUrl ? 'cursor-pointer' : 'cursor-default'} block no-underline">
+                                            <!-- Line 1: Icon -->
+                                            <div class="w-10 h-10 bg-pride-purple rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-purple group-hover:text-pride-purple flex-shrink-0">
+                                                <span class="material-symbols-outlined text-[20px]">${pubUrl ? 'open_in_new' : 'menu_book'}</span>
+                                            </div>
+                                            <!-- Line 2: Name -->
+                                            <p class="font-bold group-hover:text-white text-black break-words mb-1" style="color: black !important;">${pubName}</p>
+                                            <!-- Line 3: Tag/URL -->
+                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white break-words mb-3">${pubUrl ? p.url : pubType}</p>
+                                            <!-- Line 4: Bookmark -->
+                                            <button onclick="event.preventDefault();event.stopPropagation();window.psBookmarkPlace('${pubName.replace(/'/g, "\\'")}', 'Publication', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this publication" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0 self-start">
                                                 <span class="material-symbols-outlined text-[16px]">bookmark</span>
                                             </button>
-                                            <div class="flex-1 min-w-0">
-                                                <div class="w-10 h-10 bg-pride-purple rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-purple group-hover:text-pride-purple">
-                                                    <span class="material-symbols-outlined text-[20px]">${pubUrl ? 'open_in_new' : 'menu_book'}</span>
-                                                </div>
-                                                <p class="font-bold group-hover:text-white text-black break-words" style="color: black !important;">${pubName}</p>
-                                                <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white break-words">${pubUrl ? p.url : pubType}</p>
-                                            </div>
                                         </${cardTag}>
                                         `;
                             }).join('')}
@@ -2815,17 +2824,19 @@
                                 const beachName = typeof b === 'object' ? b.name : b;
                                 const beachType = typeof b === 'object' ? (b.type || 'Beach') : 'Beach';
                                 return `
-                                        <div class="bg-white p-4 rounded-xl border-2 border-pride-blue/20 group hover:bg-pride-blue transition-colors duration-300 flex items-start gap-3 cursor-default">
-                                            <button onclick="window.psBookmarkPlace('${beachName.replace(/'/g, "\\'")}', 'Beach', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this beach" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0">
+                                        <div class="bg-white p-4 rounded-xl border-2 border-pride-blue/20 group hover:bg-pride-blue transition-colors duration-300 flex flex-col cursor-default">
+                                            <!-- Line 1: Icon -->
+                                            <div class="w-10 h-10 bg-pride-blue rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-blue group-hover:text-pride-blue flex-shrink-0">
+                                                <span class="material-symbols-outlined text-[20px]">waves</span>
+                                            </div>
+                                            <!-- Line 2: Name -->
+                                            <p class="font-bold group-hover:text-white text-black break-words mb-1" style="color: black !important;">${beachName}</p>
+                                            <!-- Line 3: Tag -->
+                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white break-words mb-3">${beachType}</p>
+                                            <!-- Line 4: Bookmark -->
+                                            <button onclick="window.psBookmarkPlace('${beachName.replace(/'/g, "\\'")}', 'Beach', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this beach" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0 self-start">
                                                 <span class="material-symbols-outlined text-[16px]">bookmark</span>
                                             </button>
-                                            <div class="flex-1 min-w-0">
-                                                <div class="w-10 h-10 bg-pride-blue rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-blue group-hover:text-pride-blue">
-                                                    <span class="material-symbols-outlined text-[20px]">waves</span>
-                                                </div>
-                                                <p class="font-bold group-hover:text-white text-black break-words" style="color: black !important;">${beachName}</p>
-                                                <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white break-words">${beachType}</p>
-                                            </div>
                                         </div>
                                         `;
                             }).join('')}
@@ -2845,17 +2856,19 @@
                                 const placeName = typeof c === 'object' ? c.name : c;
                                 const placeType = typeof c === 'object' ? (c.type || 'Community') : 'Community';
                                 return `
-                                        <div class="bg-white p-4 rounded-xl border-2 border-pride-orange/20 group hover:bg-pride-orange transition-colors duration-300 flex items-start gap-3 cursor-default">
-                                            <button onclick="window.psBookmarkPlace('${placeName.replace(/'/g, "\\'")}', 'Community', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0">
+                                        <div class="bg-white p-4 rounded-xl border-2 border-pride-orange/20 group hover:bg-pride-orange transition-colors duration-300 flex flex-col cursor-default">
+                                            <!-- Line 1: Icon -->
+                                            <div class="w-10 h-10 bg-pride-orange rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-orange group-hover:text-pride-orange flex-shrink-0">
+                                                <span class="material-symbols-outlined text-[20px]">account_balance</span>
+                                            </div>
+                                            <!-- Line 2: Name -->
+                                            <p class="font-bold group-hover:text-white text-black break-words mb-1" style="color: black !important;">${placeName}</p>
+                                            <!-- Line 3: Tag -->
+                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white break-words mb-3">${placeType}</p>
+                                            <!-- Line 4: Bookmark -->
+                                            <button onclick="window.psBookmarkPlace('${placeName.replace(/'/g, "\\'")}', 'Community', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0 self-start">
                                                 <span class="material-symbols-outlined text-[16px]">bookmark</span>
                                             </button>
-                                            <div class="flex-1 min-w-0">
-                                                <div class="w-10 h-10 bg-pride-orange rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-orange group-hover:text-pride-orange">
-                                                    <span class="material-symbols-outlined text-[20px]">account_balance</span>
-                                                </div>
-                                                <p class="font-bold group-hover:text-white text-black break-words" style="color: black !important;">${placeName}</p>
-                                                <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white break-words">${placeType}</p>
-                                            </div>
                                         </div>
                                         `;
                             }).join('')}
