@@ -2400,17 +2400,19 @@
                                 return `
                                 <div class="snap-center shrink-0 w-[85%] sm:w-80 bg-gradient-to-r ${s.gradient} rounded-xl shadow-lg p-5 relative overflow-hidden group flex flex-col">
                                     <div class="absolute top-0 right-0 p-4 opacity-40 text-7xl leading-none select-none">${s.emoji}</div>
-                                    <button onclick="window.psBookmarkPlace('${event.name.replace(/'/g, "\\'")}', '${isCruise ? 'Cruise' : 'Event'}', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this event" class="w-11 h-11 flex items-center justify-center rounded-full bg-white/50 hover:bg-white/70 transition-colors text-slate-900 z-10 cursor-pointer mb-3">
-                                        <span class="material-symbols-outlined text-[20px] pointer-events-none fill-1">bookmark</span>
-                                    </button>
                                     <div class="flex items-center gap-2 mb-3">
                                         <span class="text-xl leading-none">${s.emoji}</span>
                                         <h4 class="font-bold text-lg leading-tight truncate ${s.bannerTextColor || 'text-white'}">${bannerTitle}</h4>
                                         ${matchingEvents.length > 1 ? '<span class="ml-auto text-[10px] font-black uppercase tracking-wider bg-white/25 px-2 py-0.5 rounded text-slate-900 backdrop-blur-sm shadow-sm ring-1 ring-white/40">MULTIPLE</span>' : ''}
                                     </div>
-                                    <a href="${link1}" target="_blank" class="font-bold text-yellow-100 text-xl mb-1 hover:text-white hover:underline cursor-pointer flex items-center gap-1 group block transition-colors">
-                                        ${event.name}
-                                    </a>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <a href="${link1}" target="_blank" class="font-bold text-yellow-100 text-xl hover:text-white hover:underline cursor-pointer flex-1 transition-colors">
+                                            ${event.name}
+                                        </a>
+                                        <button onclick="window.psBookmarkPlace('${event.name.replace(/'/g, "\\'")}', '${isCruise ? 'Cruise' : 'Event'}', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this event" class="w-11 h-11 flex items-center justify-center rounded-full bg-white/50 hover:bg-white/70 transition-colors text-slate-900 z-10 cursor-pointer flex-shrink-0">
+                                            <span class="material-symbols-outlined text-[20px] pointer-events-none fill-1">bookmark</span>
+                                        </button>
+                                    </div>
                                     <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide bg-white/25 text-slate-900 px-2 py-0.5 rounded-full mb-2 backdrop-blur-sm">${s.emoji} ${s.label}</span>
                                     <p class="text-xs text-yellow-100 mb-4 flex items-center gap-1 font-medium">
                                         <span class="material-symbols-outlined text-sm">calendar_today</span>
