@@ -777,21 +777,19 @@
     <main class="max-w-5xl mx-auto mt-6 px-4">
         <!-- View 1: Explore (Home) -->
         <div id="homeView" class="view-section active space-y-8">
-            <!-- Theme Toggle Button - Below Rainbow Border, Right Side -->
-            <div class="flex justify-end pr-2" style="position: relative; z-index: 9001;">
-                <button
-                    id="theme-toggle"
-                    onclick="cycleTheme()"
-                    class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95"
-                    aria-label="Toggle theme (Clear View, Light, Dark)"
-                    title="Toggle theme">
-                    <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">dark_mode</span>
-                </button>
-            </div>
-
             <!-- 1. Search & Info Section -->
             <section class="rainbow-card-bg rounded-3xl p-6 shadow-2xl relative overflow-hidden">
-
+                <!-- Theme Toggle Button - Below Rainbow Border, Right Side, Above Plan Your Journey -->
+                <div class="flex justify-end pr-2 mb-4" style="position: relative; z-index: 9001;">
+                    <button
+                        id="theme-toggle"
+                        onclick="cycleTheme()"
+                        class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95"
+                        aria-label="Toggle theme (Clear View, Light, Dark)"
+                        title="Toggle theme">
+                        <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">dark_mode</span>
+                    </button>
+                </div>
 
                 <div class="flex items-center gap-3 mb-6">
                     <span class="material-symbols-outlined text-white text-3xl">map</span>
@@ -3630,9 +3628,9 @@
                 if (selEvents.length) {
                     html += `
                         <div class="col-span-full mb-4">
-                            <div class="px-4 py-2 bg-pride-purple/10 rounded-xl inline-flex items-center gap-2 border-l-4 border-pride-purple shadow-sm">
+                            <div class="px-4 py-2 bg-white dark:bg-white/95 rounded-xl inline-flex items-center gap-2 border-l-4 border-pride-purple shadow-sm">
                                 <span class="material-symbols-outlined text-pride-purple">event_upcoming</span>
-                                <span class="font-extrabold text-xl pride-gradient-text">Upcoming LGBTQ Events</span>
+                                <span class="font-extrabold text-xl pride-gradient-text dark:text-pride-purple">Upcoming LGBTQ Events</span>
                             </div>
                         </div>` + selEvents.map(e => renderTrendingCardSnippet(e)).join('');
                 }
@@ -3640,9 +3638,9 @@
                 if (selCruises.length) {
                     html += `
                         <div class="col-span-full mt-8 mb-4">
-                            <div class="px-4 py-2 bg-pride-blue/10 rounded-xl inline-flex items-center gap-2 border-l-4 border-pride-blue shadow-sm">
+                            <div class="px-4 py-2 bg-white dark:bg-white/95 rounded-xl inline-flex items-center gap-2 border-l-4 border-pride-blue shadow-sm">
                                 <span class="material-symbols-outlined text-pride-blue">directions_boat</span>
-                                <span class="font-extrabold text-xl pride-gradient-text">Trending Cruises</span>
+                                <span class="font-extrabold text-xl pride-gradient-text dark:text-pride-blue">Trending Cruises</span>
                             </div>
                         </div>` + selCruises.map(e => renderTrendingCardSnippet(e)).join('');
                 }
