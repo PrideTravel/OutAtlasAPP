@@ -3022,11 +3022,11 @@
             }
 
             function isPastEvent(event) {
-                if (!event || !event.end) return false;
+                if (!event || !event.start) return false;
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
-                const eventEnd = new Date(event.end + 'T00:00:00');
-                return eventEnd < today;
+                const eventStart = new Date(event.start + 'T00:00:00');
+                return eventStart < today;
             }
 
             function countryCodeToFlag(code) {
