@@ -521,3 +521,91 @@ body.clear-mode .theme-option.active {
     border: 3px solid #0d7d63;
     background-color: #ffffff;
 }
+
+/* ============================================================================
+   SEARCH WARNING MODAL
+   Alert for past date search validation
+   ============================================================================ */
+
+.search-warning-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.search-warning-modal {
+    background: var(--bg-primary);
+    border: 2px solid var(--brand-teal);
+    border-radius: 12px;
+    padding: 32px;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: var(--shadow-2xl);
+    animation: slideUp 0.3s ease-in-out;
+    z-index: 10001;
+}
+
+.search-warning-title {
+    color: var(--brand-teal);
+    margin: 0 0 12px 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.search-warning-text {
+    color: var(--text-secondary);
+    margin: 0 0 24px 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.search-warning-btn {
+    background: var(--brand-teal);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.2s ease;
+}
+
+.search-warning-btn:hover {
+    background: var(--brand-teal-hover, #30a085);
+}
+
+.search-warning-btn:active {
+    transform: scale(0.98);
+}
+
+/* ============================================================================
+   REDUCED MOTION - Search Warning Modal
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .search-warning-overlay,
+    .search-warning-modal {
+        animation: none;
+    }
+
+    .search-warning-btn {
+        transition: none;
+    }
+}
+
+/* ============================================================================
+   DARK MODE - Search Warning Modal
+   ============================================================================ */
+
+body.dark-mode .search-warning-overlay {
+    background: rgba(0, 0, 0, 0.7);
+}

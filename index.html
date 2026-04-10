@@ -834,7 +834,7 @@
                                     class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-primary">calendar_today</span>
                                 <input id="dateStart"
                                     class="w-full pl-12 pr-4 py-4 pill-input border-none focus:ring-4 focus:ring-white/30 text-xs font-bold text-slate-900 dark:text-black"
-                                    type="date" />
+                                    type="date" min="2026-04-09" />
                             </div>
                         </div>
                         <div class="flex flex-col gap-1">
@@ -846,7 +846,7 @@
                                     class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-primary">event_repeat</span>
                                 <input id="dateEnd"
                                     class="w-full pl-12 pr-4 py-4 pill-input border-none focus:ring-4 focus:ring-white/30 text-xs font-bold text-slate-900 dark:text-black"
-                                    type="date" />
+                                    type="date" min="2026-04-09" />
                             </div>
                         </div>
                     </div>
@@ -1919,6 +1919,23 @@
             // Standalone mode IDs matching HTML
             const CONTAINER_ID = '';
 
+            // --- DATE VALIDATION UTILITIES ---
+            window.isPastDate = function (dateString) {
+                if (!dateString) return false;
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const checkDate = new Date(dateString + 'T00:00:00');
+                return checkDate < today;
+            };
+
+            window.isPastEvent = function (event) {
+                if (!event.end) return false;
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const eventEnd = new Date(event.end + 'T00:00:00');
+                return eventEnd < today;
+            };
+
             // --- VIEW MANAGEMENT ---
             window.toggleView = function (viewId, navEl = null) {
                 const views = document.querySelectorAll('.view-section');
@@ -2163,6 +2180,12 @@
 
                     if (!origin || !destinationInput) {
                         alert("Please enter a departure city and destination.");
+                        return;
+                    }
+
+                    // Check if either date is in the past
+                    if ((dateStart && window.isPastDate(dateStart)) || (dateEnd && window.isPastDate(dateEnd))) {
+                        showSearchWarningModal();
                         return;
                     }
 
@@ -2487,7 +2510,7 @@
                                 </div>
                                 <!-- Hotels Section -->
                                 <section>
-                                    <h3 class="text-xl font-bold mb-4 inline-block dark-pill">
+                                    <h3 class="text-xl font-bold mb-4 inline-block" style="background-color: #dc2626; color: white; padding: 0.25rem 1rem; border-radius: 9999px;">
                                         Hotels
                                     </h3>
                                     <div class="space-y-3 mb-6">
@@ -2554,7 +2577,7 @@
                              <!-- 5. Safety & Neighborhoods -->
                             <section class="bg-white dark:bg-slate-800 p-6 rounded-xl border-2 border-slate-200 dark:border-slate-700 shadow-md relative overflow-hidden">
                                 <div class="absolute -right-6 -top-6 w-24 h-24 bg-pride-green/5 rounded-full"></div>
-                                <h3 class="text-xl font-bold mb-4 inline-block dark-pill">
+                                <h3 class="text-xl font-bold mb-4 inline-block" style="background-color: #16a34a; color: white; padding: 0.25rem 1rem; border-radius: 9999px;">
                                     Destination Information
                                 </h3>
 
@@ -2857,7 +2880,7 @@
 
                             <!-- 8. Must-See Tours & Excursions -->
                             <section class="pb-4">
-                                <h3 class="text-xl font-bold mb-4 inline-block dark-pill">
+                                <h3 class="text-xl font-bold mb-4 inline-block" style="background-color: #a855f7; color: white; padding: 0.25rem 1rem; border-radius: 9999px;">
                                     Unmissable Tours
                                 </h3>
                                 <div class="space-y-4">
@@ -3281,14 +3304,16 @@
                         const safeStart = (ev.start || '').replace(/'/g, "\\'");
                         const safeEnd   = (ev.end   || '').replace(/'/g, "\\'");
                         const cityLabel = ev.city || data.name.split(',')[0];
+                        const isPast = window.isPastEvent(ev);
+                        const pastLabel = isPast ? '<span class="past-event-label" style="display:inline-block;background:rgba(100,100,100,0.5);color:white;padding:2px 6px;border-radius:3px;font-size:11px;font-weight:600;margin-left:6px;opacity:0.7;">Past Event</span>' : '';
                         return `
                         <div onclick="quickSearch('${city}', '${safeStart}', '${safeEnd}')"
-                             class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg border-l-4 ${s.border} flex gap-4 cursor-pointer hover:scale-[1.02] transition-transform relative group">
+                             class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg border-l-4 ${s.border} flex gap-4 cursor-pointer hover:scale-[1.02] transition-transform relative group ${isPast ? 'opacity-60' : ''}">
                             <div class="w-12 h-12 rounded-xl ${s.bg} flex items-center justify-center shrink-0 text-2xl leading-none">
                                 ${s.emoji}
                             </div>
                             <div class="overflow-hidden pr-6 flex-1">
-                                <p class="font-black text-slate-900 dark:text-white break-words leading-snug text-base">${ev.name}</p>
+                                <p class="font-black text-slate-900 dark:text-white break-words leading-snug text-base">${ev.name}${pastLabel}</p>
                                 ${buildTypeBadges(ev.type)}
                                 <p class="text-xs font-bold text-slate-500 uppercase tracking-tighter">${cityLabel} &bull; ${formatDateShort(ev.start)}</p>
                             </div>
@@ -3496,12 +3521,14 @@
             function buildHotspotEventCard(h) {
                 const s = getEventTypeStyle(h.type);
                 const query = (h.city || h.name || '').replace(/'/g, "\\'");
+                const isPast = window.isPastEvent(h);
+                const pastLabel = isPast ? '<span class="past-event-label" style="display:inline-block;background:rgba(100,100,100,0.5);color:white;padding:2px 6px;border-radius:3px;font-size:11px;font-weight:600;margin-left:6px;opacity:0.7;">Past Event</span>' : '';
                 return `
                     <div onclick="quickSearch('${query}','${h.start||''}','${h.end||''}')"
-                         class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-lg border-l-4 ${s.border} flex gap-4 cursor-pointer hover:scale-[1.02] transition-transform group relative">
+                         class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-lg border-l-4 ${s.border} flex gap-4 cursor-pointer hover:scale-[1.02] transition-transform group relative ${isPast ? 'opacity-60' : ''}">
                         <div class="w-14 h-14 rounded-xl ${s.bg} flex items-center justify-center shrink-0 text-3xl leading-none">${s.emoji}</div>
                         <div class="overflow-hidden flex-1 pr-6">
-                            <p class="font-black text-slate-900 dark:text-white break-words leading-snug text-lg">${h.name}</p>
+                            <p class="font-black text-slate-900 dark:text-white break-words leading-snug text-lg">${h.name}${pastLabel}</p>
                             ${buildTypeBadges(h.type)}
                             <p class="text-xs font-bold text-slate-500 uppercase tracking-tighter">${h.city||''} &bull; ${formatDateShort(h.start)}</p>
                         </div>
@@ -3720,14 +3747,16 @@
             function renderTrendingCardSnippet(e) {
                 const s = getEventTypeStyle(e.type);
                 const cityName = (e.city || e.name || 'All').replace(/'/g, "\\'");
+                const isPast = window.isPastEvent(e);
+                const pastLabel = isPast ? '<span class="past-event-label" style="display:inline-block;background:rgba(100,100,100,0.5);color:white;padding:2px 6px;border-radius:3px;font-size:11px;font-weight:600;margin-left:6px;opacity:0.7;">Past Event</span>' : '';
                 return `
                     <div onclick="quickSearch('${cityName}', '${e.start}', '${e.end}')"
-                         class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-lg border-l-4 ${s.border} flex gap-4 cursor-pointer hover:scale-[1.02] transition-transform relative group">
+                         class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-lg border-l-4 ${s.border} flex gap-4 cursor-pointer hover:scale-[1.02] transition-transform relative group ${isPast ? 'opacity-60' : ''}">
                         <div class="w-14 h-14 rounded-xl ${s.bg} flex items-center justify-center shrink-0 text-3xl leading-none">
                             ${s.emoji}
                         </div>
                         <div class="overflow-hidden pr-6 flex-1">
-                            <p class="font-black text-slate-900 dark:text-white break-words leading-snug text-lg">${e.name}</p>
+                            <p class="font-black text-slate-900 dark:text-white break-words leading-snug text-lg">${e.name}${pastLabel}</p>
                             ${buildTypeBadges(e.type)}
                             <p class="text-xs font-bold text-slate-500 uppercase tracking-tighter">${e.city} &bull; ${formatDateShort(e.start)}</p>
                         </div>
@@ -3902,6 +3931,17 @@
         </div>
     </div>
 
+    <!-- Search Warning Modal - Past Date Alert -->
+    <div id="searchWarningModal" class="search-warning-overlay" style="display: none;">
+        <div class="search-warning-modal" role="dialog" aria-modal="true" aria-labelledby="warning-title">
+            <h2 id="warning-title" class="search-warning-title">Your search is in the Past- Don't go Back!</h2>
+            <p class="search-warning-text">Please select a travel date that is today or in the future.</p>
+            <button class="search-warning-btn" onclick="closeSearchWarningModal()">
+                Got it, let me fix that
+            </button>
+        </div>
+    </div>
+
     <!-- Settings Modal JavaScript -->
     <script>
         /* ============================================================================
@@ -3987,6 +4027,39 @@
                 document.body.style.overflow = '';
             } catch (error) {
                 console.error('Error closing settings modal:', error);
+            }
+        }
+
+        /**
+         * Show the Search Warning Modal
+         * Called when user tries to search for past dates
+         */
+        function showSearchWarningModal() {
+            try {
+                const modal = document.getElementById('searchWarningModal');
+                if (!modal) {
+                    console.error('Search warning modal element not found');
+                    return;
+                }
+                modal.style.display = 'flex';
+            } catch (error) {
+                console.error('Error showing search warning modal:', error);
+            }
+        }
+
+        /**
+         * Close the Search Warning Modal
+         */
+        function closeSearchWarningModal() {
+            try {
+                const modal = document.getElementById('searchWarningModal');
+                if (!modal) {
+                    console.error('Search warning modal element not found');
+                    return;
+                }
+                modal.style.display = 'none';
+            } catch (error) {
+                console.error('Error closing search warning modal:', error);
             }
         }
 
