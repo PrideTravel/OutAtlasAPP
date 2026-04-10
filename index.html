@@ -780,17 +780,6 @@
             <!-- 1. Search & Info Section -->
             <section class="rainbow-card-bg rounded-3xl p-6 shadow-2xl relative overflow-hidden">
                 <!-- Theme Toggle Button - Below Rainbow Border, Right Side, Above Plan Your Journey -->
-                <div class="flex justify-end pr-2 mb-4" style="position: relative; z-index: 9001;">
-                    <button
-                        id="theme-toggle"
-                        onclick="cycleTheme()"
-                        class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95"
-                        aria-label="Toggle theme (Clear View, Light, Dark)"
-                        title="Toggle theme">
-                        <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">dark_mode</span>
-                    </button>
-                </div>
-
                 <div class="flex items-center gap-3 mb-6">
                     <span class="material-symbols-outlined text-white text-3xl">map</span>
                     <h2 class="text-2xl font-black text-black italic">Plan Your Journey</h2>
@@ -925,7 +914,7 @@
                 <span class="material-symbols-outlined">arrow_back</span> Back
             </button>
             <div class="flex items-center justify-between gap-4 mb-2">
-                <h2 class="text-3xl font-black inline-block dark-pill"><span class="pride-gradient-text">Explore More Safe Hotspots</span></h2>
+                <h2 class="text-xl font-black inline-block dark-pill"><span class="pride-gradient-text">Explore More Safe Hotspots</span></h2>
                 <div class="flex gap-2 shrink-0">
                     <!-- Theme Toggle Button -->
                     <button
@@ -2418,10 +2407,10 @@
                                 const bannerTitle = isCruise ? "LGBTQ Cruise Alert" : "LGBTQ Event Detected!";
 
                                 return `
-                                <div class="snap-center shrink-0 w-[85%] sm:w-80 bg-gradient-to-r ${s.gradient} rounded-xl shadow-lg p-5 relative overflow-hidden group">
+                                <div class="snap-center shrink-0 w-[85%] sm:w-80 bg-gradient-to-r ${s.gradient} rounded-xl shadow-lg p-5 relative overflow-hidden group flex flex-col">
                                     <div class="absolute top-0 right-0 p-4 opacity-40 text-7xl leading-none select-none">${s.emoji}</div>
-                                    <button onclick="window.psBookmarkPlace('${event.name.replace(/'/g, "\\'")}', '${isCruise ? 'Cruise' : 'Event'}', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this event" class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full bg-white/30 hover:bg-white/50 transition-colors text-slate-900 z-10 opacity-0 group-hover:opacity-100 cursor-pointer">
-                                        <span class="material-symbols-outlined text-[18px] pointer-events-none fill-1">bookmark</span>
+                                    <button onclick="window.psBookmarkPlace('${event.name.replace(/'/g, "\\'")}', '${isCruise ? 'Cruise' : 'Event'}', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this event" class="w-11 h-11 flex items-center justify-center rounded-full bg-white/50 hover:bg-white/70 transition-colors text-slate-900 z-10 cursor-pointer mb-3">
+                                        <span class="material-symbols-outlined text-[20px] pointer-events-none fill-1">bookmark</span>
                                     </button>
                                     <div class="flex items-center gap-2 mb-3">
                                         <span class="text-xl leading-none">${s.emoji}</span>
@@ -2538,7 +2527,10 @@
                             const badgeColor = !primaryBadge ? '' : primaryBadge === 'Luxury' ? 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300' : primaryBadge === 'LGBTQ Friendly' ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300' : 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white dark:from-pink-600 dark:via-purple-600 dark:to-blue-600';
                             return `
                                             <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border-2 border-slate-200 dark:border-slate-700 shadow-md">
-                                                <div class="flex justify-between items-start mb-3">
+                                                <div class="flex items-start gap-3 mb-3">
+                                                    <button onclick="window.psBookmarkPlace('${h.name.replace(/'/g, "\\'")}', 'Hotel', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this hotel" class="w-11 h-11 flex items-center justify-center rounded bg-slate-700 dark:bg-slate-600 hover:bg-slate-800 dark:hover:bg-slate-500 transition-colors text-white flex-shrink-0">
+                                                        <span class="material-symbols-outlined text-[20px]">bookmark</span>
+                                                    </button>
                                                     <div class="flex-1">
                                                         <span class="font-black text-slate-800 dark:text-slate-100 leading-tight text-lg">${h.name}</span>
                                                         <div class="flex flex-wrap gap-2 mt-2">
@@ -2546,9 +2538,6 @@
                                                             ${tagInfo.priceTag ? `<span class="text-[10px] font-bold px-3 py-1 rounded-lg whitespace-nowrap" style="background-color: #0d7d63; color: white;">${tagInfo.priceTag}</span>` : ''}
                                                         </div>
                                                     </div>
-                                                    <button onclick="window.psBookmarkPlace('${h.name.replace(/'/g, "\\'")}', 'Hotel', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this hotel" class="w-11 h-11 flex items-center justify-center rounded bg-slate-700 dark:bg-slate-600 hover:bg-slate-800 dark:hover:bg-slate-500 transition-colors text-white shrink-0">
-                                                        <span class="material-symbols-outlined text-[20px]">bookmark</span>
-                                                    </button>
                                                 </div>
                                                 <div class="text-right text-xs">
                                                     <span class="font-black text-slate-400 dark:text-slate-300 uppercase tracking-widest block">Stay: ${formatDateShort(dateStart)} – ${formatDateShort(dateEnd)}</span>
@@ -2662,7 +2651,8 @@
                             <!-- 6. Shops & Stores -->
                             ${randomStores.length > 0 ? `
                             <section>
-                                <h3 class="text-xl font-bold mb-4 inline-block dark-pill">
+                                <h3 class="text-xl font-bold mb-4 inline-flex items-center gap-2 dark-pill">
+                                    <span class="material-symbols-outlined">shopping_bag</span>
                                     Shops & Stores
                                 </h3>
                                 <div class="grid grid-cols-2 gap-3">
@@ -2670,15 +2660,17 @@
                                 const icon = getNightlifeIcon(n.type);
                                 const firstTag = n.tags && n.tags.length > 0 ? n.tags[0] : '';
                                 return `
-                                        <div class="bg-white p-4 rounded-xl border-2 border-pride-green/20 group hover:bg-pride-green transition-colors duration-300 relative cursor-default">
-                                            <button onclick="window.psBookmarkPlace('${n.name.replace(/'/g, "\\'")}', 'Shopping', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="absolute top-2 right-2 w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 z-10">
+                                        <div class="bg-white p-4 rounded-xl border-2 border-pride-green/20 group hover:bg-pride-green transition-colors duration-300 cursor-default flex items-start gap-3">
+                                            <button onclick="window.psBookmarkPlace('${n.name.replace(/'/g, "\\'")}', 'Shopping', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0">
                                                 <span class="material-symbols-outlined text-[16px]">bookmark</span>
                                             </button>
-                                            <div class="w-10 h-10 bg-pride-green rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-green group-hover:text-pride-green">
-                                                ${icon}
+                                            <div class="flex-1 min-w-0">
+                                                <div class="w-10 h-10 bg-pride-green rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-green group-hover:text-pride-green">
+                                                    ${icon}
+                                                </div>
+                                                <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${n.name}</p>
+                                                <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${n.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
                                             </div>
-                                            <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${n.name}</p>
-                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${n.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
                                         </div>
                                         `;
                             }).join('')}
@@ -2689,7 +2681,8 @@
                             <!-- Saunas & Bathhouses -->
                             ${randomSaunas.length > 0 ? `
                             <section>
-                                <h3 class="text-xl font-bold mb-4 inline-block dark-pill">
+                                <h3 class="text-xl font-bold mb-4 inline-flex items-center gap-2 dark-pill">
+                                    <span class="material-symbols-outlined">waves</span>
                                     Saunas & Bathhouses
                                 </h3>
                                 <div class="grid grid-cols-2 gap-3">
@@ -2697,15 +2690,17 @@
                                 const icon = getNightlifeIcon(n.type);
                                 const firstTag = n.tags && n.tags.length > 0 ? n.tags[0] : '';
                                 return `
-                                        <div class="bg-white p-4 rounded-xl border-2 border-pride-red/20 group hover:bg-pride-red transition-colors duration-300 relative cursor-default">
-                                            <button onclick="window.psBookmarkPlace('${n.name.replace(/'/g, "\\'")}', 'Nightlife', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="absolute top-2 right-2 w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 z-10">
+                                        <div class="bg-white p-4 rounded-xl border-2 border-pride-red/20 group hover:bg-pride-red transition-colors duration-300 cursor-default flex items-start gap-3">
+                                            <button onclick="window.psBookmarkPlace('${n.name.replace(/'/g, "\\'")}', 'Nightlife', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0">
                                                 <span class="material-symbols-outlined text-[16px]">bookmark</span>
                                             </button>
-                                            <div class="w-10 h-10 bg-pride-red rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-red group-hover:text-pride-red">
-                                                ${icon}
+                                            <div class="flex-1 min-w-0">
+                                                <div class="w-10 h-10 bg-pride-red rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-red group-hover:text-pride-red">
+                                                    ${icon}
+                                                </div>
+                                                <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${n.name}</p>
+                                                <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${n.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
                                             </div>
-                                            <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${n.name}</p>
-                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${n.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
                                         </div>
                                         `;
                             }).join('')}
@@ -2716,7 +2711,8 @@
                             <!-- Bars & Nightlife -->
                             ${randomNightlife.length > 0 ? `
                             <section>
-                                <h3 class="text-xl font-bold mb-4 inline-block dark-pill">
+                                <h3 class="text-xl font-bold mb-4 inline-flex items-center gap-2 dark-pill">
+                                    <span class="material-symbols-outlined">nightlife</span>
                                     Bars & Nightlife
                                 </h3>
                                 <div class="grid grid-cols-2 gap-3">
@@ -2729,15 +2725,17 @@
                                 const icon = getNightlifeIcon(n.type);
                                 const firstTag = n.tags && n.tags.length > 0 ? n.tags[0] : '';
                                 return `
-                                        <div class="bg-white p-4 rounded-xl border-2 border-${color}/20 group hover:bg-${color} transition-colors duration-300 relative cursor-default">
-                                            <button onclick="window.psBookmarkPlace('${n.name.replace(/'/g, "\\'")}', 'Nightlife', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="absolute top-2 right-2 w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 z-10">
+                                        <div class="bg-white p-4 rounded-xl border-2 border-${color}/20 group hover:bg-${color} transition-colors duration-300 cursor-default flex items-start gap-3">
+                                            <button onclick="window.psBookmarkPlace('${n.name.replace(/'/g, "\\'")}', 'Nightlife', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0">
                                                 <span class="material-symbols-outlined text-[16px]">bookmark</span>
                                             </button>
-                                            <div class="w-10 h-10 bg-${color} rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-${color} group-hover:text-${color}">
-                                                ${icon}
+                                            <div class="flex-1 min-w-0">
+                                                <div class="w-10 h-10 bg-${color} rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-${color} group-hover:text-${color}">
+                                                    ${icon}
+                                                </div>
+                                                <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${n.name}</p>
+                                                <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${n.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
                                             </div>
-                                            <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${n.name}</p>
-                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${n.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
                                         </div>
                                         `;
                             }).join('')}
@@ -2748,7 +2746,8 @@
                             <!-- Restaurants & Cafes -->
                             ${randomRestaurants.length > 0 ? `
                             <section>
-                                <h3 class="text-xl font-bold mb-4 inline-block dark-pill">
+                                <h3 class="text-xl font-bold mb-4 inline-flex items-center gap-2 dark-pill">
+                                    <span class="material-symbols-outlined">restaurant</span>
                                     Restaurants & Cafes
                                 </h3>
                                 <div class="grid grid-cols-2 gap-3">
@@ -2760,15 +2759,17 @@
                                 const icon = getRestaurantIcon(r.type);
                                 const firstTag = r.tags && r.tags.length > 0 ? r.tags[0] : '';
                                 return `
-                                        <div class="bg-white p-4 rounded-xl border-2 border-${color}/20 group hover:bg-${color} transition-colors duration-300 relative cursor-default">
-                                            <button onclick="window.psBookmarkPlace('${r.name.replace(/'/g, "\\'")}', 'Dining', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="absolute top-2 right-2 w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 z-10">
+                                        <div class="bg-white p-4 rounded-xl border-2 border-${color}/20 group hover:bg-${color} transition-colors duration-300 cursor-default flex items-start gap-3">
+                                            <button onclick="window.psBookmarkPlace('${r.name.replace(/'/g, "\\'")}', 'Dining', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0">
                                                 <span class="material-symbols-outlined text-[16px]">bookmark</span>
                                             </button>
-                                            <div class="w-10 h-10 bg-${color} rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-${color} group-hover:text-${color}">
-                                                ${icon}
+                                            <div class="flex-1 min-w-0">
+                                                <div class="w-10 h-10 bg-${color} rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-${color} group-hover:text-${color}">
+                                                    ${icon}
+                                                </div>
+                                                <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${r.name}</p>
+                                                <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${r.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
                                             </div>
-                                            <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${r.name}</p>
-                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${r.type}${firstTag ? ' &bull; ' + firstTag : ''}</p>
                                         </div>
                                         `;
                             }).join('')}
@@ -2791,15 +2792,17 @@
                                 const cardTag = pubUrl ? 'a' : 'div';
                                 const cardAttrs = pubUrl ? `href="${pubUrl}" target="_blank" rel="noopener noreferrer"` : '';
                                 return `
-                                        <${cardTag} ${cardAttrs} class="bg-white p-4 rounded-xl border-2 border-pride-purple/20 group hover:bg-pride-purple transition-colors duration-300 relative ${pubUrl ? 'cursor-pointer' : 'cursor-default'} block no-underline">
-                                            <button onclick="event.preventDefault();event.stopPropagation();window.psBookmarkPlace('${pubName.replace(/'/g, "\\'")}', 'Publication', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this publication" class="absolute top-2 right-2 w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 z-10">
+                                        <${cardTag} ${cardAttrs} class="bg-white p-4 rounded-xl border-2 border-pride-purple/20 group hover:bg-pride-purple transition-colors duration-300 flex items-start gap-3 ${pubUrl ? 'cursor-pointer' : 'cursor-default'} block no-underline">
+                                            <button onclick="event.preventDefault();event.stopPropagation();window.psBookmarkPlace('${pubName.replace(/'/g, "\\'")}', 'Publication', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this publication" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0">
                                                 <span class="material-symbols-outlined text-[16px]">bookmark</span>
                                             </button>
-                                            <div class="w-10 h-10 bg-pride-purple rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-purple group-hover:text-pride-purple">
-                                                <span class="material-symbols-outlined text-[20px]">${pubUrl ? 'open_in_new' : 'menu_book'}</span>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="w-10 h-10 bg-pride-purple rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-purple group-hover:text-pride-purple">
+                                                    <span class="material-symbols-outlined text-[20px]">${pubUrl ? 'open_in_new' : 'menu_book'}</span>
+                                                </div>
+                                                <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${pubName}</p>
+                                                <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${pubUrl ? p.url : pubType}</p>
                                             </div>
-                                            <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${pubName}</p>
-                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${pubUrl ? p.url : pubType}</p>
                                         </${cardTag}>
                                         `;
                             }).join('')}
@@ -2819,15 +2822,17 @@
                                 const beachName = typeof b === 'object' ? b.name : b;
                                 const beachType = typeof b === 'object' ? (b.type || 'Beach') : 'Beach';
                                 return `
-                                        <div class="bg-white p-4 rounded-xl border-2 border-pride-blue/20 group hover:bg-pride-blue transition-colors duration-300 relative cursor-default">
-                                            <button onclick="window.psBookmarkPlace('${beachName.replace(/'/g, "\\'")}', 'Beach', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this beach" class="absolute top-2 right-2 w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 z-10">
+                                        <div class="bg-white p-4 rounded-xl border-2 border-pride-blue/20 group hover:bg-pride-blue transition-colors duration-300 flex items-start gap-3 cursor-default">
+                                            <button onclick="window.psBookmarkPlace('${beachName.replace(/'/g, "\\'")}', 'Beach', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this beach" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0">
                                                 <span class="material-symbols-outlined text-[16px]">bookmark</span>
                                             </button>
-                                            <div class="w-10 h-10 bg-pride-blue rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-blue group-hover:text-pride-blue">
-                                                <span class="material-symbols-outlined text-[20px]">waves</span>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="w-10 h-10 bg-pride-blue rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-blue group-hover:text-pride-blue">
+                                                    <span class="material-symbols-outlined text-[20px]">waves</span>
+                                                </div>
+                                                <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${beachName}</p>
+                                                <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${beachType}</p>
                                             </div>
-                                            <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${beachName}</p>
-                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${beachType}</p>
                                         </div>
                                         `;
                             }).join('')}
@@ -2847,15 +2852,17 @@
                                 const placeName = typeof c === 'object' ? c.name : c;
                                 const placeType = typeof c === 'object' ? (c.type || 'Community') : 'Community';
                                 return `
-                                        <div class="bg-white p-4 rounded-xl border-2 border-pride-orange/20 group hover:bg-pride-orange transition-colors duration-300 relative cursor-default">
-                                            <button onclick="window.psBookmarkPlace('${placeName.replace(/'/g, "\\'")}', 'Community', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="absolute top-2 right-2 w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 z-10">
+                                        <div class="bg-white p-4 rounded-xl border-2 border-pride-orange/20 group hover:bg-pride-orange transition-colors duration-300 flex items-start gap-3 cursor-default">
+                                            <button onclick="window.psBookmarkPlace('${placeName.replace(/'/g, "\\'")}', 'Community', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0">
                                                 <span class="material-symbols-outlined text-[16px]">bookmark</span>
                                             </button>
-                                            <div class="w-10 h-10 bg-pride-orange rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-orange group-hover:text-pride-orange">
-                                                <span class="material-symbols-outlined text-[20px]">account_balance</span>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="w-10 h-10 bg-pride-orange rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-orange group-hover:text-pride-orange">
+                                                    <span class="material-symbols-outlined text-[20px]">account_balance</span>
+                                                </div>
+                                                <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${placeName}</p>
+                                                <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${placeType}</p>
                                             </div>
-                                            <p class="font-bold group-hover:text-white text-black" style="color: black !important;">${placeName}</p>
-                                            <p class="text-xs text-slate-700 dark:text-slate-300 dark:text-slate-300 group-hover:text-white">${placeType}</p>
                                         </div>
                                         `;
                             }).join('')}
@@ -2926,7 +2933,7 @@
                                 const priceBadge = tourPrice ? `<span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${priceBadgeClass}">${tourPrice}</span>` : '';
                                 const isThisLgbtqTour = isLgbtqTour(t);
                                 return `
-                                    <div class="flex gap-4 items-center bg-white dark:bg-slate-800 p-3 rounded-xl shadow-sm group cursor-pointer border-2 ${isThisLgbtqTour ? 'border-pride-purple/30 bg-gradient-to-r from-white to-purple-50 dark:from-slate-800 dark:to-purple-950/20' : 'border-slate-100 dark:border-slate-700'} hover:border-primary/20">
+                                    <div class="flex gap-4 items-center bg-white dark:bg-slate-800 p-3 rounded-xl shadow-sm group cursor-pointer border-4 ${isThisLgbtqTour ? 'border-pride-purple/30 bg-gradient-to-r from-white to-purple-50 dark:from-slate-800 dark:to-purple-950/20' : 'border-slate-100 dark:border-slate-700'} hover:border-primary/20">
                                         ${isThisLgbtqTour ? '<div class="text-2xl leading-none flex-shrink-0 select-none" title="LGBTQ+ Tour">🏳️‍🌈</div>' : ''}
                                         <div class="flex-1 min-w-0">
                                             <div class="flex items-center gap-2 mb-0.5 flex-wrap">
@@ -2944,7 +2951,7 @@
                             }).join('')}
                                 </div>
                                 <a href="${getViatorLink(data.name, dateStart, dateEnd)}" target="_blank"
-                                   class="mt-4 block w-full py-3 border-2 border-pride-purple text-pride-purple rounded-full font-bold text-sm flex items-center justify-center gap-2 transition-colors hover:bg-pride-purple/5">
+                                   class="mt-4 block w-full py-3 bg-purple-600 text-white dark:bg-purple-700 dark:text-white rounded-full font-bold text-sm flex items-center justify-center gap-2 transition-colors hover:bg-purple-700 dark:hover:bg-purple-600">
                                     Explore all tours on Viator
                                 </a>
                             </section>
@@ -3451,9 +3458,9 @@
                 const featuredDestinations = getRandomSubset(allDestinations, 6);
                 const destTitleBox = `
                     <div class="col-span-full mt-8 mb-4">
-                        <div class="px-4 py-2 bg-pride-green/10 rounded-xl inline-flex items-center gap-2 border-l-4 border-pride-green shadow-sm">
-                            <span class="material-symbols-outlined text-pride-green">location_on</span>
-                            <span class="font-extrabold text-xl pride-gradient-text">More Featured Destination</span>
+                        <div class="px-4 py-2 bg-white dark:bg-slate-800 rounded-full inline-flex items-center gap-2 shadow-sm">
+                            <span class="material-symbols-outlined text-slate-600 dark:text-slate-300">location_on</span>
+                            <span class="font-extrabold text-lg text-slate-900 dark:text-white">More Featured Destination</span>
                         </div>
                     </div>`;
                 const destCards = featuredDestinations.map(h => {
@@ -3519,9 +3526,9 @@
 
                 const filterHeader = `
                     <div class="col-span-full mt-8 mb-2">
-                        <div class="px-4 py-2 bg-pride-purple/10 rounded-xl inline-flex items-center gap-2 border-l-4 border-pride-purple shadow-sm mb-4">
-                            <span class="material-symbols-outlined text-pride-purple">filter_list</span>
-                            <span class="font-extrabold text-xl pride-gradient-text">Browse LGBTQ Events</span>
+                        <div class="px-4 py-2 bg-white dark:bg-slate-800 rounded-full inline-flex items-center gap-2 shadow-sm mb-4">
+                            <span class="material-symbols-outlined text-slate-600 dark:text-slate-300">filter_list</span>
+                            <span class="font-extrabold text-lg text-slate-900 dark:text-white">Browse LGBTQ Events</span>
                         </div>
                         <div class="flex flex-wrap gap-3 pb-2">${filterBtns}</div>
                     </div>`;
@@ -3559,9 +3566,9 @@
             function buildFilterSectionHead(label, s) {
                 return `
                     <div class="col-span-full mt-5 mb-2">
-                        <div class="px-4 py-2 ${s.bg} rounded-xl inline-flex items-center gap-2 border-l-4 ${s.border} shadow-sm">
+                        <div class="px-4 py-2 ${s.bg} dark:bg-white dark:text-slate-900 rounded-full inline-flex items-center gap-2 shadow-sm">
                             <span class="text-xl leading-none">${s.emoji}</span>
-                            <span class="font-extrabold text-lg pride-gradient-text">${label}</span>
+                            <span class="font-extrabold text-lg dark:text-slate-900" style="font-weight: 900;">${label}</span>
                         </div>
                     </div>`;
             }
