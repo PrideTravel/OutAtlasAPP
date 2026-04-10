@@ -2114,6 +2114,24 @@
                     });
                 }
 
+                // Build safe hotspots from destinations if not provided
+                if (!SAFE_HOTSPOTS_DATA.length) {
+                    console.log('[OutAtlas] Building safe hotspots from destinations...');
+                    Object.entries(details).forEach(([key, data]) => {
+                        if (data && data.name && data.safetyScore !== undefined) {
+                            const nameParts = data.name.split(',');
+                            const city = nameParts[0].trim();
+                            const country = nameParts.length > 1 ? nameParts[1].trim() : '';
+                            SAFE_HOTSPOTS_DATA.push({
+                                city: city,
+                                country: country,
+                                safetyScore: data.safetyScore,
+                                image: data.image || '🌍'
+                            });
+                        }
+                    });
+                }
+
                 _destinationsLoaded = true;
 
                 if (typeof populateTrendingEvents === 'function') { try { populateTrendingEvents(); } catch(e) { console.error('populateTrendingEvents error:', e); } }
