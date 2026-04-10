@@ -777,6 +777,18 @@
     <main class="max-w-5xl mx-auto mt-6 px-4">
         <!-- View 1: Explore (Home) -->
         <div id="homeView" class="view-section active space-y-8">
+            <!-- Theme Toggle Button - Below Rainbow Border, Right Side -->
+            <div class="flex justify-end pr-2" style="position: relative; z-index: 9001;">
+                <button
+                    id="theme-toggle"
+                    onclick="cycleTheme()"
+                    class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95"
+                    aria-label="Toggle theme (Clear View, Light, Dark)"
+                    title="Toggle theme">
+                    <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">dark_mode</span>
+                </button>
+            </div>
+
             <!-- 1. Search & Info Section -->
             <section class="rainbow-card-bg rounded-3xl p-6 shadow-2xl relative overflow-hidden">
 
@@ -2022,6 +2034,51 @@
                 }
 
                 window.DATABASE.details = details;
+
+                // Build mappings from destination data if not provided
+                if (!window.DATABASE.mappings || Object.keys(window.DATABASE.mappings.regions || {}).length === 0) {
+                    console.log('[OutAtlas] Building mappings from destination data...');
+                    const mappingsToUse = window.DATABASE.mappings || { regions: {}, countries: {}, cities: {} };
+
+                    Object.entries(details).forEach(([key, data]) => {
+                        if (!data || !data.name) return;
+
+                        // Extract country from destination key (e.g., "amsterdam_netherlands" → "netherlands")
+                        const parts = key.split('_');
+                        if (parts.length >= 2) {
+                            const country = parts[parts.length - 1];
+                            const countryNorm = country.toLowerCase();
+
+                            if (!mappingsToUse.countries[countryNorm]) {
+                                mappingsToUse.countries[countryNorm] = [];
+                            }
+                            if (!mappingsToUse.countries[countryNorm].includes(key)) {
+                                mappingsToUse.countries[countryNorm].push(key);
+                            }
+                        }
+
+                        // Map city name (first part of "Full City, Country")
+                        const cityName = data.name.split(',')[0].toLowerCase().trim();
+                        if (cityName && !mappingsToUse.cities[cityName]) {
+                            mappingsToUse.cities[cityName] = [key];
+                        }
+                    });
+
+                    window.DATABASE.mappings = mappingsToUse;
+                }
+
+                // Collect all events from destinations if not provided
+                if (!SPECIAL_EVENTS_DATA.length) {
+                    console.log('[OutAtlas] Building events from destinations...');
+                    Object.entries(details).forEach(([key, data]) => {
+                        if (data && data.events && Array.isArray(data.events)) {
+                            data.events.forEach(event => {
+                                SPECIAL_EVENTS_DATA.push({ ...event, city: data.name.split(',')[0] });
+                            });
+                        }
+                    });
+                }
+
                 _destinationsLoaded = true;
 
                 if (typeof populateTrendingEvents === 'function') { try { populateTrendingEvents(); } catch(e) { console.error('populateTrendingEvents error:', e); } }
