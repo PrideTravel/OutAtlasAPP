@@ -885,10 +885,20 @@
 
         <!-- View 2: Results -->
         <div id="resultsView" class="view-section space-y-8 pb-32">
-            <!-- Back button for results view -->
-            <button onclick="toggleView('homeView')" class="flex items-center gap-2 text-primary font-bold mb-4">
-                <span class="material-symbols-outlined">arrow_back</span> Back to search
-            </button>
+            <!-- Back button and Theme Toggle for results view -->
+            <div class="flex items-center justify-between gap-4 mb-4">
+                <button onclick="toggleView('homeView')" class="flex items-center gap-2 text-primary font-bold">
+                    <span class="material-symbols-outlined">arrow_back</span> Back to search
+                </button>
+                <!-- Theme Toggle Button -->
+                <button
+                    onclick="cycleTheme()"
+                    class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95"
+                    aria-label="Toggle theme (Clear View, Light, Dark)"
+                    title="Toggle theme">
+                    <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">dark_mode</span>
+                </button>
+            </div>
             <div id="resultsContainer">
                 <!-- Results injected here -->
             </div>
@@ -916,10 +926,20 @@
             </button>
             <div class="flex items-center justify-between gap-4 mb-2">
                 <h2 class="text-3xl font-black inline-block dark-pill"><span class="pride-gradient-text">Explore More Safe Hotspots</span></h2>
-                <button onclick="hotspotFilter(_currentHotspotType, true)" title="Tap to limit results to 25 — resets to full 40 on next load or search" class="flex flex-col items-center gap-1 text-primary bg-primary/10 hover:bg-primary/20 px-3 py-2 rounded-2xl border border-primary/30 transition-colors shrink-0">
-                    <span class="material-symbols-outlined text-2xl">smartphone</span>
-                    <span class="text-[10px] font-black uppercase leading-tight text-center">Limit<br>Results</span>
-                </button>
+                <div class="flex gap-2 shrink-0">
+                    <!-- Theme Toggle Button -->
+                    <button
+                        onclick="cycleTheme()"
+                        class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95"
+                        aria-label="Toggle theme (Clear View, Light, Dark)"
+                        title="Toggle theme">
+                        <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">dark_mode</span>
+                    </button>
+                    <button onclick="hotspotFilter(_currentHotspotType, true)" title="Tap to limit results to 25 — resets to full 40 on next load or search" class="flex flex-col items-center gap-1 text-primary bg-primary/10 hover:bg-primary/20 px-3 py-2 rounded-2xl border border-primary/30 transition-colors">
+                        <span class="material-symbols-outlined text-2xl">smartphone</span>
+                        <span class="text-[10px] font-black uppercase leading-tight text-center">Limit<br>Results</span>
+                    </button>
+                </div>
             </div>
             <p class="text-slate-700 dark:text-slate-300 dark:text-slate-300 text-sm font-medium mb-6">More featured LGBTQ+ destinations, trending events, and cruises from across the globe.</p>
 
@@ -3383,8 +3403,8 @@
                     return titleBox + `<div class="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">${cards}</div>`;
                 }
 
-                // More Featured Destinations section — 6 randomly selected from the 28 featured list, excluding Amsterdam
-                const allDestinations = (SAFE_HOTSPOTS_DATA || []).filter(h => h.city && h.city.toLowerCase() !== 'amsterdam' && isFeaturedCity(h.city));
+                // More Featured Destinations section — 6 randomly selected from featured destinations with Unsplash images, excluding Amsterdam
+                const allDestinations = (SAFE_HOTSPOTS_DATA || []).filter(h => h.city && h.city.toLowerCase() !== 'amsterdam' && CAROUSEL_PHOTO_READY.includes(h.city.toLowerCase()));
                 const featuredDestinations = getRandomSubset(allDestinations, 6);
                 const destTitleBox = `
                     <div class="col-span-full mt-8 mb-4">
