@@ -748,21 +748,6 @@
             <h1 class="text-xl font-extrabold tracking-tight inline-block dark-pill"><span
                     class="outatlas-name-text">OutAtlas</span></h1>
         </div>
-        <!-- Header Controls: Dark Mode Toggle & Settings -->
-        <div class="flex items-center gap-2">
-            <!-- Dark Mode Toggle Button -->
-            <button
-                id="dark-mode-toggle"
-                onclick="toggleDarkMode()"
-                class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95"
-                aria-label="Toggle dark mode"
-                title="Dark Mode">
-                <!-- Sun icon (shown in dark mode) -->
-                <span class="material-symbols-outlined text-xl text-slate-700 dark:hidden">light_mode</span>
-                <!-- Moon icon (shown in light mode) -->
-                <span class="material-symbols-outlined text-xl text-slate-200 hidden dark:block">dark_mode</span>
-            </button>
-        </div>
     </header>
 
     <main class="max-w-5xl mx-auto mt-6 px-4">
@@ -770,7 +755,22 @@
         <div id="homeView" class="view-section active space-y-8">
             <!-- 1. Search & Info Section -->
             <section class="rainbow-card-bg rounded-3xl p-6 shadow-2xl relative overflow-hidden">
-                <!-- Theme Toggle Button - Below Rainbow Border, Right Side, Above Plan Your Journey -->
+                <!-- Dark Mode Toggle - Right Side, Above Plan Your Journey -->
+                <div class="flex items-center justify-end mb-4">
+                    <button
+                        id="dark-mode-toggle"
+                        onclick="toggleDarkMode()"
+                        class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95"
+                        aria-label="Toggle dark mode"
+                        title="Toggle Dark Mode">
+                        <!-- Sun icon (shown in dark mode) -->
+                        <span class="material-symbols-outlined text-xl text-slate-700 dark:hidden">light_mode</span>
+                        <!-- Moon icon (shown in light mode) -->
+                        <span class="material-symbols-outlined text-xl text-slate-200 hidden dark:block">dark_mode</span>
+                    </button>
+                </div>
+
+                <!-- Plan Your Journey -->
                 <div class="flex items-center gap-3 mb-6">
                     <span class="material-symbols-outlined text-white text-3xl">map</span>
                     <h2 class="text-2xl font-black text-black italic">Plan Your Journey</h2>
