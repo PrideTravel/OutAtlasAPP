@@ -756,9 +756,18 @@
             <!-- 1. Search & Info Section -->
             <section class="rainbow-card-bg rounded-3xl p-6 shadow-2xl relative overflow-hidden">
                 <!-- Plan Your Journey -->
-                <div class="flex items-center gap-3 mb-6">
-                    <span class="material-symbols-outlined text-white text-3xl">map</span>
-                    <h2 class="text-2xl font-black text-black italic">Plan Your Journey</h2>
+                <div class="flex items-center justify-between gap-3 mb-6">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-white text-3xl">map</span>
+                        <h2 class="text-2xl font-black text-black italic">Plan Your Journey</h2>
+                    </div>
+                    <button
+                        onclick="cycleTheme()"
+                        class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 shrink-0"
+                        aria-label="Toggle theme (Clear View, Light, Dark)"
+                        title="Toggle theme">
+                        <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">dark_mode</span>
+                    </button>
                 </div>
 
                 <form id="searchForm" class="space-y-4">
@@ -874,9 +883,18 @@
             <button onclick="toggleView('homeView')" class="flex items-center gap-2 text-primary font-bold mb-2">
                 <span class="material-symbols-outlined">arrow_back</span> Back to search
             </button>
-            <div>
-                <h2 class="text-2xl font-black inline-block dark-pill"><span class="pride-gradient-text">All LGBTQ+ Events</span></h2>
-                <p class="text-sm text-slate-700 dark:text-slate-300 mt-2">Showing all known events for this destination. Add travel dates to see flights, hotels &amp; full recommendations.</p>
+            <div class="flex items-center justify-between gap-4 mb-4">
+                <div>
+                    <h2 class="text-2xl font-black inline-block dark-pill"><span class="pride-gradient-text">All LGBTQ+ Events</span></h2>
+                    <p class="text-sm text-slate-700 dark:text-slate-300 mt-2">Showing all known events for this destination. Add travel dates to see flights, hotels &amp; full recommendations.</p>
+                </div>
+                <button
+                    onclick="cycleTheme()"
+                    class="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 shrink-0"
+                    aria-label="Toggle theme (Clear View, Light, Dark)"
+                    title="Toggle theme">
+                    <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">dark_mode</span>
+                </button>
             </div>
             <div id="eventsOnlyContainer">
                 <!-- Events injected here by JS -->
@@ -890,7 +908,7 @@
                 <span class="material-symbols-outlined">arrow_back</span> Back
             </button>
             <div class="flex items-center justify-between gap-4 mb-2">
-                <h2 class="text-xl font-black inline-block dark-pill"><span class="pride-gradient-text">Explore More Safe Hotspots</span></h2>
+                <h2 class="text-xl font-black inline-block dark-pill"><span class="pride-gradient-text">More Safe Hotspots</span></h2>
                 <div class="flex gap-2 shrink-0">
                     <!-- Theme Toggle Button -->
                     <button
