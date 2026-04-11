@@ -50,7 +50,15 @@
       "Bash(apt-get update:*)",
       "Bash(apt-get install:*)",
       "Read(//c/Users/lewi0/OutAtlas/**)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(python -m http.server 8000)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(pkill -f \"npm run dev\")",
+      "Bash(curl -s http://localhost:8000)",
+      "Bash(xargs wc:*)",
+      "Bash(xargs grep:*)",
+      "Bash(curl -s http://localhost:51421)",
+      "Bash(curl -s http://localhost:63820/)"
     ]
   }
 }
