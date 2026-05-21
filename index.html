@@ -2691,6 +2691,7 @@
                         if (otherHotels.length > 0) {
                           randomHotels.push(...otherHotels);
                         }
+                        const allHotelsPool = [...randomHotels];
                         randomHotels = randomHotels.slice(0, 6);
 
                         // Inject Featured Event Hotel (prepend if exists)
@@ -2715,6 +2716,9 @@
                             randomHotels.unshift(specialHotel);
                         }
 
+                        const eventHotels = randomHotels.filter(h => h.type === 'Event Special');
+                        const allHotelsDisplay = [...eventHotels, ...allHotelsPool];
+
                         // Split nightlife into distinct categories (merge dedicated saunas/stores arrays)
                         const availableNightlife = shuffle([
                             ...(Array.isArray(data.nightlife) ? data.nightlife : []),
@@ -2727,22 +2731,28 @@
                         const isSauna = n => { const t = (n.type || '').toLowerCase(); const tags = (n.tags || []).map(g => g.toLowerCase()); return t.includes('sauna') || t.includes('bath') || tags.some(g => g.includes('sauna') || g.includes('bathhouse')); };
                         const isRestaurant = n => { const t = (n.type || '').toLowerCase(); return t.includes('restaurant') || t.includes('diner') || t.includes('cafe') || t.includes('bakery') || t.includes('bistro'); };
 
-                        const randomStores    = availableNightlife.filter(n => isStore(n)).slice(0, 2);
-                        const randomSaunas    = availableNightlife.filter(n => !isStore(n) && isSauna(n)).slice(0, 2);
+                        const allStores       = availableNightlife.filter(n => isStore(n));
+                        const randomStores    = allStores.slice(0, 2);
+                        const allSaunas       = availableNightlife.filter(n => !isStore(n) && isSauna(n));
+                        const randomSaunas    = allSaunas.slice(0, 2);
                         const nightlifeRestaurants = availableNightlife.filter(n => !isStore(n) && !isSauna(n) && isRestaurant(n));
-                        const randomNightlife = availableNightlife.filter(n => !isStore(n) && !isSauna(n) && !isRestaurant(n)).slice(0, 4);
+                        const allNightlife    = availableNightlife.filter(n => !isStore(n) && !isSauna(n) && !isRestaurant(n));
+                        const randomNightlife = allNightlife.slice(0, 4);
 
                         // Restaurants: dedicated array + any restaurant-type items found in nightlife array
-                        const randomRestaurants = [...availableRestaurants, ...nightlifeRestaurants].slice(0, 2);
+                        const allRestaurants    = [...availableRestaurants, ...nightlifeRestaurants];
+                        const randomRestaurants = allRestaurants.slice(0, 2);
 
                         // LGBTQ Publications — prioritise entries with a URL, randomly show up to 2
-                        const randomNewspapers = (() => { const a = data.newspapers || []; const withUrl = a.filter(p => p.url); const withoutUrl = a.filter(p => !p.url); const pool = withUrl.length >= 2 ? withUrl : [...withUrl, ...withoutUrl]; return pool.length <= 2 ? pool : [...pool].sort(() => Math.random() - 0.5).slice(0, 2); })();
+                        const allNewspapers = (() => { const a = data.newspapers || []; const withUrl = a.filter(p => p.url); const withoutUrl = a.filter(p => !p.url); return withUrl.length >= 2 ? withUrl : [...withUrl, ...withoutUrl]; })();
+                        const randomNewspapers = allNewspapers.length <= 2 ? allNewspapers : [...allNewspapers].sort(() => Math.random() - 0.5).slice(0, 2);
 
                         // LGBTQ Beaches — randomly show up to 2
                         const randomBeaches = (() => { const a = data.beaches || []; return a.length <= 2 ? a : [...a].sort(() => Math.random() - 0.5).slice(0, 2); })();
 
                         // LGBTQ Community Engagement — randomly show up to 2
-                        const randomCommunity = (() => { const a = data.community || []; return a.length <= 2 ? a : [...a].sort(() => Math.random() - 0.5).slice(0, 2); })();
+                        const allCommunity    = [...(data.community || [])].sort(() => Math.random() - 0.5);
+                        const randomCommunity = allCommunity.slice(0, 2);
 
                         // Tours: Always show 1 LGBTQ tour (if available) + up to 4 others
                         // LGBTQ detection: explicit tag OR name contains LGBTQ/gay/queer/pride
@@ -2755,10 +2765,13 @@
                         const allTours = data.tours || [];
                         const lgbtqTours = allTours.filter(isLgbtqTour);
                         const otherTours = allTours.filter(t => !isLgbtqTour(t));
+                        const shuffledLgbtqTours = shuffle(lgbtqTours);
+                        const shuffledOtherTours = shuffle(otherTours);
                         const randomTours = [
-                          ...shuffle(lgbtqTours).slice(0, 2),
-                          ...shuffle(otherTours).slice(0, 3)
+                          ...shuffledLgbtqTours.slice(0, 2),
+                          ...shuffledOtherTours.slice(0, 3)
                         ];
+                        const allToursDisplay = [...shuffledLgbtqTours, ...shuffledOtherTours];
 
                         const randomParks = shuffle(data.amusementParks || []).slice(0, 2);
                         const fareEstimate = calculateFareEstimate(data.baseFare);
@@ -2895,13 +2908,14 @@
                                     <h3 class="text-xl font-bold mb-4 inline-block" style="background-color: #dc2626; color: white; padding: 0.25rem 1rem; border-radius: 9999px;">
                                         Hotels
                                     </h3>
-                                    <div class="space-y-3 mb-6">
-                                        ${randomHotels.map(h => {
+                                    <div class="space-y-3 mb-3">
+                                        ${allHotelsDisplay.map((h, hotelIdx) => {
                             const tagInfo = getHotelTagsInfo(h);
                             const primaryBadge = tagInfo.specialty || (tagInfo.certifications.length > 0 ? tagInfo.certifications[0] : null);
                             const badgeColor = !primaryBadge ? '' : primaryBadge === 'Luxury' ? 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300' : primaryBadge === 'LGBTQ Friendly' ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300' : 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white dark:from-pink-600 dark:via-purple-600 dark:to-blue-600';
+                            const isHidden = hotelIdx >= randomHotels.length;
                             return `
-                                            <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border-2 border-slate-200 dark:border-slate-700 shadow-md">
+                                            <div class="${isHidden ? 'view-more-item hidden' : ''} bg-white dark:bg-slate-800 p-5 rounded-xl border-2 border-slate-200 dark:border-slate-700 shadow-md">
                                                 <div class="flex items-start gap-3 mb-3">
                                                     <button onclick="window.psBookmarkPlace('${h.name.replace(/'/g, "\\'")}', 'Hotel', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this hotel" class="w-11 h-11 flex items-center justify-center rounded bg-slate-700 dark:bg-slate-600 hover:bg-slate-800 dark:hover:bg-slate-500 transition-colors text-white flex-shrink-0">
                                                         <span class="material-symbols-outlined text-[20px]">bookmark</span>
@@ -2920,6 +2934,11 @@
                                             </div>
                                         `}).join('')}
                                     </div>
+                                    ${allHotelsDisplay.length > randomHotels.length ? `
+                                    <button onclick="var items=this.closest('section').querySelectorAll('.view-more-item');var showing=items[0]&&!items[0].classList.contains('hidden');items.forEach(function(el){el.classList.toggle('hidden')});this.innerHTML=showing?'<span class=\\'material-symbols-outlined text-[16px]\\'>expand_more</span> View More (${allHotelsDisplay.length - randomHotels.length} more)':'<span class=\\'material-symbols-outlined text-[16px]\\'>expand_less</span> View Less';" class="mb-3 w-full py-2 text-sm font-bold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 transition-colors flex items-center justify-center gap-1">
+                                        <span class="material-symbols-outlined text-[16px]">expand_more</span> View More (${allHotelsDisplay.length - randomHotels.length} more)
+                                    </button>
+                                    ` : ''}
                                     <div class="space-y-3">
                                         <a href="${getExpediaLink(data.name, dateStart, dateEnd)}" target="_blank"
                                            class="w-full py-3 bg-pride-purple text-white rounded-full font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-pride-purple/20 active:scale-95 transition-all">
@@ -3024,18 +3043,18 @@
                             </div>
 
                             <!-- 6. Shops & Stores -->
-                            ${randomStores.length > 0 ? `
+                            ${allStores.length > 0 ? `
                             <section>
                                 <h3 class="text-xl font-bold mb-4 inline-flex items-center gap-2 dark-pill">
                                     <span class="material-symbols-outlined">shopping_bag</span>
                                     Shops & Stores
                                 </h3>
                                 <div class="grid grid-cols-2 gap-3">
-                                    ${randomStores.map((n, i) => {
+                                    ${allStores.map((n, i) => {
                                 const icon = getNightlifeIcon(n.type);
                                 const firstTag = n.tags && n.tags.length > 0 ? n.tags[0] : '';
                                 return `
-                                        <div class="bg-white p-4 rounded-xl border-2 border-pride-green/20 group hover:bg-pride-green transition-colors duration-300 cursor-default flex flex-col">
+                                        <div class="${i >= 2 ? 'view-more-item hidden' : ''} bg-white p-4 rounded-xl border-2 border-pride-green/20 group hover:bg-pride-green transition-colors duration-300 cursor-default flex flex-col">
                                             <!-- Line 1: Icon -->
                                             <div class="w-10 h-10 bg-pride-green rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-green group-hover:text-pride-green flex-shrink-0">
                                                 ${icon}
@@ -3052,22 +3071,27 @@
                                         `;
                             }).join('')}
                                 </div>
+                                ${allStores.length > 2 ? `
+                                <button onclick="var items=this.closest('section').querySelectorAll('.view-more-item');var showing=items[0]&&!items[0].classList.contains('hidden');items.forEach(function(el){el.classList.toggle('hidden')});this.innerHTML=showing?'<span class=\\'material-symbols-outlined text-[16px]\\'>expand_more</span> View More (${allStores.length - 2} more)':'<span class=\\'material-symbols-outlined text-[16px]\\'>expand_less</span> View Less';" class="mt-3 w-full py-2 text-sm font-bold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 transition-colors flex items-center justify-center gap-1">
+                                    <span class="material-symbols-outlined text-[16px]">expand_more</span> View More (${allStores.length - 2} more)
+                                </button>
+                                ` : ''}
                             </section>
                             ` : ''}
 
                             <!-- Saunas & Bathhouses -->
-                            ${randomSaunas.length > 0 ? `
+                            ${allSaunas.length > 0 ? `
                             <section>
                                 <h3 class="text-xl font-bold mb-4 inline-flex items-center gap-2 dark-pill">
                                     <span class="material-symbols-outlined">hot_tub</span>
                                     Saunas & Bathhouses
                                 </h3>
                                 <div class="grid grid-cols-2 gap-3">
-                                    ${randomSaunas.map((n, i) => {
+                                    ${allSaunas.map((n, i) => {
                                 const icon = getNightlifeIcon(n.type);
                                 const firstTag = n.tags && n.tags.length > 0 ? n.tags[0] : '';
                                 return `
-                                        <div class="bg-white p-4 rounded-xl border-2 border-pride-red/20 group hover:bg-pride-red transition-colors duration-300 cursor-default flex flex-col">
+                                        <div class="${i >= 2 ? 'view-more-item hidden' : ''} bg-white p-4 rounded-xl border-2 border-pride-red/20 group hover:bg-pride-red transition-colors duration-300 cursor-default flex flex-col">
                                             <!-- Line 1: Icon -->
                                             <div class="w-10 h-10 bg-pride-red rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-red group-hover:text-pride-red flex-shrink-0">
                                                 ${icon}
@@ -3084,18 +3108,23 @@
                                         `;
                             }).join('')}
                                 </div>
+                                ${allSaunas.length > 2 ? `
+                                <button onclick="var items=this.closest('section').querySelectorAll('.view-more-item');var showing=items[0]&&!items[0].classList.contains('hidden');items.forEach(function(el){el.classList.toggle('hidden')});this.innerHTML=showing?'<span class=\\'material-symbols-outlined text-[16px]\\'>expand_more</span> View More (${allSaunas.length - 2} more)':'<span class=\\'material-symbols-outlined text-[16px]\\'>expand_less</span> View Less';" class="mt-3 w-full py-2 text-sm font-bold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 transition-colors flex items-center justify-center gap-1">
+                                    <span class="material-symbols-outlined text-[16px]">expand_more</span> View More (${allSaunas.length - 2} more)
+                                </button>
+                                ` : ''}
                             </section>
                             ` : ''}
 
                             <!-- Bars & Nightlife -->
-                            ${randomNightlife.length > 0 ? `
+                            ${allNightlife.length > 0 ? `
                             <section>
                                 <h3 class="text-xl font-bold mb-4 inline-flex items-center gap-2 dark-pill">
                                     <span class="material-symbols-outlined">nightlife</span>
                                     Bars & Nightlife
                                 </h3>
                                 <div class="grid grid-cols-2 gap-3">
-                                    ${randomNightlife.map((n, i) => {
+                                    ${allNightlife.map((n, i) => {
                                 let color = 'pride-purple';
                                 const t = (n.type || '').toLowerCase();
                                 if (t.includes('club') || t.includes('disco')) color = 'pride-blue';
@@ -3104,7 +3133,7 @@
                                 const icon = getNightlifeIcon(n.type);
                                 const firstTag = n.tags && n.tags.length > 0 ? n.tags[0] : '';
                                 return `
-                                        <div class="bg-white p-4 rounded-xl border-2 border-${color}/20 group hover:bg-${color} transition-colors duration-300 cursor-default flex flex-col">
+                                        <div class="${i >= 4 ? 'view-more-item hidden' : ''} bg-white p-4 rounded-xl border-2 border-${color}/20 group hover:bg-${color} transition-colors duration-300 cursor-default flex flex-col">
                                             <!-- Line 1: Icon -->
                                             <div class="w-10 h-10 bg-${color} rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-${color} group-hover:text-${color} flex-shrink-0">
                                                 ${icon}
@@ -3126,18 +3155,23 @@
                                         `;
                             }).join('')}
                                 </div>
+                                ${allNightlife.length > 4 ? `
+                                <button onclick="var items=this.closest('section').querySelectorAll('.view-more-item');var showing=items[0]&&!items[0].classList.contains('hidden');items.forEach(function(el){el.classList.toggle('hidden')});this.innerHTML=showing?'<span class=\\'material-symbols-outlined text-[16px]\\'>expand_more</span> View More (${allNightlife.length - 4} more)':'<span class=\\'material-symbols-outlined text-[16px]\\'>expand_less</span> View Less';" class="mt-3 w-full py-2 text-sm font-bold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 transition-colors flex items-center justify-center gap-1">
+                                    <span class="material-symbols-outlined text-[16px]">expand_more</span> View More (${allNightlife.length - 4} more)
+                                </button>
+                                ` : ''}
                             </section>
                             ` : ''}
 
                             <!-- Restaurants & Cafes -->
-                            ${randomRestaurants.length > 0 ? `
+                            ${allRestaurants.length > 0 ? `
                             <section>
                                 <h3 class="text-xl font-bold mb-4 inline-flex items-center gap-2 dark-pill">
                                     <span class="material-symbols-outlined">restaurant</span>
                                     Restaurants & Cafes
                                 </h3>
                                 <div class="grid grid-cols-2 gap-3">
-                                    ${randomRestaurants.map((r, i) => {
+                                    ${allRestaurants.map((r, i) => {
                                 let color = 'pride-orange'; // default restaurant
                                 const t = (r.type || '').toLowerCase();
                                 if (t.includes('cafe') || t.includes('coffee') || t.includes('bakery')) color = 'pride-orange';
@@ -3145,7 +3179,7 @@
                                 const icon = getRestaurantIcon(r.type);
                                 const firstTag = r.tags && r.tags.length > 0 ? r.tags[0] : '';
                                 return `
-                                        <div class="bg-white p-4 rounded-xl border-2 border-${color}/20 group hover:bg-${color} transition-colors duration-300 cursor-default flex flex-col">
+                                        <div class="${i >= 2 ? 'view-more-item hidden' : ''} bg-white p-4 rounded-xl border-2 border-${color}/20 group hover:bg-${color} transition-colors duration-300 cursor-default flex flex-col">
                                             <!-- Line 1: Icon -->
                                             <div class="w-10 h-10 bg-${color} rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-${color} group-hover:text-${color} flex-shrink-0">
                                                 ${icon}
@@ -3167,25 +3201,31 @@
                                         `;
                             }).join('')}
                                 </div>
+                                ${allRestaurants.length > 2 ? `
+                                <button onclick="var items=this.closest('section').querySelectorAll('.view-more-item');var showing=items[0]&&!items[0].classList.contains('hidden');items.forEach(function(el){el.classList.toggle('hidden')});this.innerHTML=showing?'<span class=\\'material-symbols-outlined text-[16px]\\'>expand_more</span> View More (${allRestaurants.length - 2} more)':'<span class=\\'material-symbols-outlined text-[16px]\\'>expand_less</span> View Less';" class="mt-3 w-full py-2 text-sm font-bold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 transition-colors flex items-center justify-center gap-1">
+                                    <span class="material-symbols-outlined text-[16px]">expand_more</span> View More (${allRestaurants.length - 2} more)
+                                </button>
+                                ` : ''}
                             </section>
                             ` : ''}
 
                             <!-- LGBTQ Publications & Magazines -->
-                            ${randomNewspapers.length > 0 ? `
+                            ${allNewspapers.length > 0 ? `
                             <section>
                                 <h3 class="text-xl font-bold mb-4 inline-flex items-center gap-2 dark-pill">
                                     <span class="material-symbols-outlined text-pride-purple text-xl">menu_book</span>
                                     LGBTQ+ Publications
                                 </h3>
                                 <div class="grid grid-cols-2 gap-3">
-                                    ${randomNewspapers.map(p => {
+                                    ${allNewspapers.map((p, pubIdx) => {
                                 const pubName = typeof p === 'object' ? p.name : p;
                                 const pubType = typeof p === 'object' ? (p.type || 'Magazine') : 'Magazine';
                                 const pubUrl = typeof p === 'object' && p.url ? (p.url.startsWith('http') ? p.url : 'https://' + p.url) : '';
                                 const cardTag = pubUrl ? 'a' : 'div';
                                 const cardAttrs = pubUrl ? `href="${pubUrl}" target="_blank" rel="noopener noreferrer"` : '';
+                                const isHiddenPub = pubIdx >= 2;
                                 return `
-                                        <${cardTag} ${cardAttrs} class="bg-white p-4 rounded-xl border-2 border-pride-purple/20 group hover:bg-pride-purple transition-colors duration-300 flex flex-col ${pubUrl ? 'cursor-pointer' : 'cursor-default'} block no-underline">
+                                        <${cardTag} ${cardAttrs} class="${isHiddenPub ? 'view-more-item hidden' : ''} bg-white p-4 rounded-xl border-2 border-pride-purple/20 group hover:bg-pride-purple transition-colors duration-300 flex flex-col ${pubUrl ? 'cursor-pointer' : 'cursor-default'} block no-underline">
                                             <!-- Line 1: Icon -->
                                             <div class="w-10 h-10 bg-pride-purple rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-purple group-hover:text-pride-purple flex-shrink-0">
                                                 <span class="material-symbols-outlined text-[20px]">${pubUrl ? 'open_in_new' : 'menu_book'}</span>
@@ -3202,6 +3242,11 @@
                                         `;
                             }).join('')}
                                 </div>
+                                ${allNewspapers.length > 2 ? `
+                                <button onclick="var items=this.closest('section').querySelectorAll('.view-more-item');var showing=items[0]&&!items[0].classList.contains('hidden');items.forEach(function(el){el.classList.toggle('hidden')});this.innerHTML=showing?'<span class=\\'material-symbols-outlined text-[16px]\\'>expand_more</span> View More (${allNewspapers.length - 2} more)':'<span class=\\'material-symbols-outlined text-[16px]\\'>expand_less</span> View Less';" class="mt-3 w-full py-2 text-sm font-bold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 transition-colors flex items-center justify-center gap-1">
+                                    <span class="material-symbols-outlined text-[16px]">expand_more</span> View More (${allNewspapers.length - 2} more)
+                                </button>
+                                ` : ''}
                             </section>
                             ` : ''}
 
@@ -3238,18 +3283,18 @@
                             ` : ''}
 
                             <!-- LGBTQ Community Engagement -->
-                            ${randomCommunity.length > 0 ? `
+                            ${allCommunity.length > 0 ? `
                             <section>
                                 <h3 class="text-xl font-bold mb-4 inline-flex items-center gap-2 dark-pill">
                                     <span class="material-symbols-outlined text-pride-orange text-xl">account_balance</span>
                                     Community Engagement
                                 </h3>
                                 <div class="grid grid-cols-2 gap-3">
-                                    ${randomCommunity.map(c => {
+                                    ${allCommunity.map((c, commIdx) => {
                                 const placeName = typeof c === 'object' ? c.name : c;
                                 const placeType = typeof c === 'object' ? (c.type || 'Community') : 'Community';
                                 return `
-                                        <div class="bg-white p-4 rounded-xl border-2 border-pride-orange/20 group hover:bg-pride-orange transition-colors duration-300 flex flex-col cursor-default">
+                                        <div class="${commIdx >= 2 ? 'view-more-item hidden' : ''} bg-white p-4 rounded-xl border-2 border-pride-orange/20 group hover:bg-pride-orange transition-colors duration-300 flex flex-col cursor-default">
                                             <!-- Line 1: Icon -->
                                             <div class="w-10 h-10 bg-pride-orange rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white dark:bg-white dark:text-pride-orange group-hover:text-pride-orange flex-shrink-0">
                                                 <span class="material-symbols-outlined text-[20px]">account_balance</span>
@@ -3266,6 +3311,11 @@
                                         `;
                             }).join('')}
                                 </div>
+                                ${allCommunity.length > 2 ? `
+                                <button onclick="var items=this.closest('section').querySelectorAll('.view-more-item');var showing=items[0]&&!items[0].classList.contains('hidden');items.forEach(function(el){el.classList.toggle('hidden')});this.innerHTML=showing?'<span class=\\'material-symbols-outlined text-[16px]\\'>expand_more</span> View More (${allCommunity.length - 2} more)':'<span class=\\'material-symbols-outlined text-[16px]\\'>expand_less</span> View Less';" class="mt-3 w-full py-2 text-sm font-bold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 transition-colors flex items-center justify-center gap-1">
+                                    <span class="material-symbols-outlined text-[16px]">expand_more</span> View More (${allCommunity.length - 2} more)
+                                </button>
+                                ` : ''}
                             </section>
                             ` : ''}
 
@@ -3308,7 +3358,7 @@
                                     Unmissable Tours
                                 </h3>
                                 <div class="space-y-4">
-                                    ${randomTours.map(t => {
+                                    ${allToursDisplay.map((t, tourIdx) => {
                                 const tourName = typeof t === 'object' ? t.name : t;
                                 const activityLevels = ['low', 'moderate', 'high', 'easy', 'adventurous'];
                                 const priceLevels = ['Budget', 'Moderate', 'Luxury'];
@@ -3331,8 +3381,9 @@
                                 const priceBadgeClass = tourPrice === 'Budget' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' : tourPrice === 'Luxury' ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300' : tourPrice === 'Moderate' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' : '';
                                 const priceBadge = tourPrice ? `<span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${priceBadgeClass}">${tourPrice}</span>` : '';
                                 const isThisLgbtqTour = isLgbtqTour(t);
+                                const isTourHidden = tourIdx >= randomTours.length;
                                 return `
-                                    <div class="flex gap-4 items-center bg-white dark:bg-slate-800 p-3 rounded-xl shadow-sm group cursor-pointer border-4 ${isThisLgbtqTour ? 'border-pride-purple/30 bg-gradient-to-r from-white to-purple-50 dark:from-slate-800 dark:to-purple-950/20' : 'border-slate-100 dark:border-slate-700'} hover:border-primary/20">
+                                    <div class="${isTourHidden ? 'view-more-item hidden' : ''} flex gap-4 items-center bg-white dark:bg-slate-800 p-3 rounded-xl shadow-sm group cursor-pointer border-4 ${isThisLgbtqTour ? 'border-pride-purple/30 bg-gradient-to-r from-white to-purple-50 dark:from-slate-800 dark:to-purple-950/20' : 'border-slate-100 dark:border-slate-700'} hover:border-primary/20">
                                         ${isThisLgbtqTour ? '<div class="text-2xl leading-none flex-shrink-0 select-none" title="LGBTQ+ Tour">🏳️‍🌈</div>' : ''}
                                         <div class="flex-1 min-w-0">
                                             <div class="flex items-center gap-2 mb-0.5 flex-wrap">
@@ -3349,8 +3400,13 @@
                                     `;
                             }).join('')}
                                 </div>
+                                ${allToursDisplay.length > randomTours.length ? `
+                                <button onclick="var items=this.closest('section').querySelectorAll('.view-more-item');var showing=items[0]&&!items[0].classList.contains('hidden');items.forEach(function(el){el.classList.toggle('hidden')});this.innerHTML=showing?'<span class=\\'material-symbols-outlined text-[16px]\\'>expand_more</span> View More (${allToursDisplay.length - randomTours.length} more)':'<span class=\\'material-symbols-outlined text-[16px]\\'>expand_less</span> View Less';" class="mt-3 w-full py-2 text-sm font-bold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 transition-colors flex items-center justify-center gap-1">
+                                    <span class="material-symbols-outlined text-[16px]">expand_more</span> View More (${allToursDisplay.length - randomTours.length} more)
+                                </button>
+                                ` : ''}
                                 <a href="${getViatorLink(data.name, dateStart, dateEnd)}" target="_blank"
-                                   class="mt-4 block w-full py-3 bg-purple-600 text-white dark:bg-purple-700 dark:text-white rounded-full font-bold text-sm flex items-center justify-center gap-2 transition-colors hover:bg-purple-700 dark:hover:bg-purple-600">
+                                   class="mt-3 block w-full py-3 bg-purple-600 text-white dark:bg-purple-700 dark:text-white rounded-full font-bold text-sm flex items-center justify-center gap-2 transition-colors hover:bg-purple-700 dark:hover:bg-purple-600">
                                     Explore all tours on Viator
                                 </a>
                             </section>
