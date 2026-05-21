@@ -3118,7 +3118,7 @@
                                                 <button onclick="window.psBookmarkPlace('${n.name.replace(/'/g, "\\'")}', 'Nightlife', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0">
                                                     <span class="material-symbols-outlined text-[16px]">bookmark</span>
                                                 </button>
-                                                <a href="https://www.google.com/search?q=${encodeURIComponent(n.name + ' ' + data.name)}" target="_blank" rel="noopener noreferrer" title="Search on Google" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-blue-100 transition-colors text-slate-400 hover:text-blue-600 flex-shrink-0">
+                                                <a href="https://www.google.com/search?q=${encodeURIComponent(n.name + ' ' + data.name.split(',')[0].trim())}" target="_blank" rel="noopener noreferrer" title="Search on Google" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-blue-100 transition-colors text-slate-400 hover:text-blue-600 flex-shrink-0">
                                                     <span class="material-symbols-outlined text-[16px]">search</span>
                                                 </a>
                                             </div>
@@ -3159,7 +3159,7 @@
                                                 <button onclick="window.psBookmarkPlace('${r.name.replace(/'/g, "\\'")}', 'Dining', '${data.name.replace(/'/g, "\\'")}', '${origin.replace(/'/g, "\\'")}', '${dateStart}', '${dateEnd}', this)" title="Bookmark this place" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-400 flex-shrink-0">
                                                     <span class="material-symbols-outlined text-[16px]">bookmark</span>
                                                 </button>
-                                                <a href="https://www.google.com/search?q=${encodeURIComponent(r.name + ' ' + data.name)}" target="_blank" rel="noopener noreferrer" title="Search on Google" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-blue-100 transition-colors text-slate-400 hover:text-blue-600 flex-shrink-0">
+                                                <a href="https://www.google.com/search?q=${encodeURIComponent(r.name + ' ' + data.name.split(',')[0].trim())}" target="_blank" rel="noopener noreferrer" title="Search on Google" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-blue-100 transition-colors text-slate-400 hover:text-blue-600 flex-shrink-0">
                                                     <span class="material-symbols-outlined text-[16px]">search</span>
                                                 </a>
                                             </div>
