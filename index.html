@@ -1820,14 +1820,25 @@
                     });
                     // Fill any remaining slots (cap total at 10) with leftover bookmarks
                     const remainingSlots = Math.max(0, 10 - hotels.length - guaranteed.length);
-                    const overflow = t.bookmarks.filter(b => !usedNames.has(b.name));
+                    const overflow = t.bookmarks.filter(b => !usedNames.has(b.name) && (b.type || '') !== 'Publication');
                     const stops = [...hotels, ...guaranteed, ...overflow.slice(0, remainingSlots)];
                     if (stops.length === 1) {
                         window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(stops[0].name + ', ' + destination), '_blank');
                         return;
                     }
-                    const parts = stops.map(s => encodeURIComponent(s.name + ', ' + destination));
-                    window.open('https://www.google.com/maps/dir/' + parts.join('/') + '/', '_blank');
+                    if (hotels.length > 0) {
+                        // First hotel is the explicit origin; remaining stops are waypoints + destination
+                        const enc = s => encodeURIComponent(s.name + ', ' + destination);
+                        const origin = enc(stops[0]);
+                        const dest   = enc(stops[stops.length - 1]);
+                        const middle = stops.slice(1, -1);
+                        let url = 'https://www.google.com/maps/dir/?api=1&origin=' + origin + '&destination=' + dest;
+                        if (middle.length > 0) url += '&waypoints=' + middle.map(enc).join('|');
+                        window.open(url, '_blank');
+                    } else {
+                        const parts = stops.map(s => encodeURIComponent(s.name + ', ' + destination));
+                        window.open('https://www.google.com/maps/dir/' + parts.join('/') + '/', '_blank');
+                    }
                 } catch (err) {
                     console.error('psTripMap error', err);
                     alert('Could not open Trip Map. Please try again.');
