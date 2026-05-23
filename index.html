@@ -1820,7 +1820,7 @@
                     });
                     // Fill any remaining slots (cap total at 10) with leftover bookmarks
                     const remainingSlots = Math.max(0, 10 - hotels.length - guaranteed.length);
-                    const overflow = t.bookmarks.filter(b => !usedNames.has(b.name));
+                    const overflow = t.bookmarks.filter(b => !usedNames.has(b.name) && (b.type || '') !== 'Publication');
                     const stops = [...hotels, ...guaranteed, ...overflow.slice(0, remainingSlots)];
                     if (stops.length === 1) {
                         window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(stops[0].name + ', ' + destination), '_blank');
