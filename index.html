@@ -1808,14 +1808,11 @@
                         window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(destination), '_blank');
                         return;
                     }
-                    // Sort by venue type: hotels first, then food, then nightlife, then shops
-                    const typeOrder = ['hotel', 'restaurant', 'cafe', 'bar', 'club', 'store', 'shop', 'sauna'];
-                    const sorted = [...t.bookmarks].sort((a, b) => {
-                        const aRank = typeOrder.findIndex(k => (a.type || '').toLowerCase().includes(k));
-                        const bRank = typeOrder.findIndex(k => (b.type || '').toLowerCase().includes(k));
-                        return (aRank < 0 ? 99 : aRank) - (bRank < 0 ? 99 : bRank);
-                    });
-                    const stops = sorted.slice(0, 10);
+                    // Hotels are always included first; other venues fill remaining slots up to 10
+                    const hotels = t.bookmarks.filter(b => (b.type || '') === 'Hotel');
+                    const others = t.bookmarks.filter(b => (b.type || '') !== 'Hotel');
+                    const maxOthers = Math.max(0, 10 - hotels.length);
+                    const stops = [...hotels, ...others.slice(0, maxOthers)];
                     if (stops.length === 1) {
                         window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(stops[0].name + ', ' + destination), '_blank');
                         return;
