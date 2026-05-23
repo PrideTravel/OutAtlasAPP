@@ -1797,6 +1797,37 @@
                 URL.revokeObjectURL(url);
             };
 
+            window.psTripMap = async function(docId) {
+                if (!currentUser) { psOpenModal('Sign in to use Trip Map!'); return; }
+                try {
+                    const snap = await db.collection('users').doc(currentUser.uid).collection('trips').doc(docId).get();
+                    if (!snap.exists) { alert('Trip not found.'); return; }
+                    const t = snap.data();
+                    const destination = t.destination || '';
+                    if (!t.bookmarks || t.bookmarks.length === 0) {
+                        window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(destination), '_blank');
+                        return;
+                    }
+                    // Sort by venue type: hotels first, then food, then nightlife, then shops
+                    const typeOrder = ['hotel', 'restaurant', 'cafe', 'bar', 'club', 'store', 'shop', 'sauna'];
+                    const sorted = [...t.bookmarks].sort((a, b) => {
+                        const aRank = typeOrder.findIndex(k => (a.type || '').toLowerCase().includes(k));
+                        const bRank = typeOrder.findIndex(k => (b.type || '').toLowerCase().includes(k));
+                        return (aRank < 0 ? 99 : aRank) - (bRank < 0 ? 99 : bRank);
+                    });
+                    const stops = sorted.slice(0, 10);
+                    if (stops.length === 1) {
+                        window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(stops[0].name + ', ' + destination), '_blank');
+                        return;
+                    }
+                    const parts = stops.map(s => encodeURIComponent(s.name + ', ' + destination));
+                    window.open('https://www.google.com/maps/dir/' + parts.join('/') + '/', '_blank');
+                } catch (err) {
+                    console.error('psTripMap error', err);
+                    alert('Could not open Trip Map. Please try again.');
+                }
+            };
+
             window.psSmsTrip = async function (e, origin, dest, start, end, weather, lgbtqSafety) {
                 e.preventDefault();
                 const gFlights = `https://www.google.com/travel/flights?q=${encodeURIComponent(origin + ' to ' + dest + ' ' + start)}`;
@@ -2089,7 +2120,9 @@
                                         '<div style="display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; margin-bottom:.3rem;"><strong style="font-size:.95rem;">' + b.name + '</strong>' + (b.addedBy ? '<span style="font-size:.75rem; color:#fff; background:linear-gradient(90deg,#f20d8f,#86007D); padding:3px 7px; border-radius:99px; font-weight:bold; white-space:nowrap;">' + b.addedBy + '</span>' : '') + '</div>' +
                                         '<div style="display:flex; align-items:center; gap:.4rem; font-weight:600; font-size:.85rem;"><span style="color:#f20d8f; background:#f20d8f20; padding:4px 8px; border-radius:4px; white-space:nowrap;">' + b.type + '</span></div>' +
                                         '</div>' +
-                                        '<button onclick="psDeleteBookmark(\'' + doc.id + '\', \'' + bookmarkObjStr + '\')" title="Delete Bookmark" style="background:none; border:none; color:#e11d48; cursor:pointer; padding:0; margin-left:.5rem; opacity:0.6; transition:opacity 0.2s; flex-shrink:0;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">' +
+                                        '<a href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(b.name + ', ' + (t.destination || '')) + '" target="_blank" rel="noopener" title="View on Google Maps" style="color:#1a73e8; display:flex; align-items:center; text-decoration:none; margin-left:.3rem; opacity:0.65; transition:opacity 0.2s; flex-shrink:0;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.65">' +
+                                        '<span class="material-symbols-outlined" style="font-size:18px;">location_on</span></a>' +
+                                        '<button onclick="psDeleteBookmark(\'' + doc.id + '\', \'' + bookmarkObjStr + '\')" title="Delete Bookmark" style="background:none; border:none; color:#e11d48; cursor:pointer; padding:0; margin-left:.3rem; opacity:0.6; transition:opacity 0.2s; flex-shrink:0;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">' +
                                         '<span class="material-symbols-outlined" style="font-size:20px;">delete</span></button>' +
                                         '</li>';
                                 }).join('') +
@@ -2149,8 +2182,11 @@
                             + ' class="ps-trip-btn-secondary" style="font-size:.75rem;font-weight:700;background:#e5e7eb;color:#374151;border:none;border-radius:999px;padding:.3rem .75rem;cursor:pointer;font-family:inherit;margin-right:.5rem;">'
                             + '&#128101; Collaborate</button>'
                             + '<button onclick="psDownloadTrip(\'' + (t.departure || '') + '\', \'' + t.destination + '\', \'' + (t.dateStart || '') + '\', \'' + (t.dateEnd || '') + '\')"'
-                            + ' class="ps-trip-btn-secondary" style="font-size:.75rem;font-weight:700;background:#e5e7eb;color:#374151;border:none;border-radius:999px;padding:.3rem .75rem;cursor:pointer;font-family:inherit;">'
+                            + ' class="ps-trip-btn-secondary" style="font-size:.75rem;font-weight:700;background:#e5e7eb;color:#374151;border:none;border-radius:999px;padding:.3rem .75rem;cursor:pointer;font-family:inherit;margin-right:.5rem;">'
                             + '&#11015;&#65039; Download</button>'
+                            + '<button onclick="psTripMap(\'' + doc.id + '\')"'
+                            + ' class="ps-trip-btn-secondary" style="font-size:.75rem;font-weight:700;background:#1a73e8;color:#fff;border:none;border-radius:999px;padding:.3rem .75rem;cursor:pointer;font-family:inherit;">'
+                            + '&#x1F5FA;&#xFE0F; Trip Map</button>'
                             + '</div>'
                             + '<button onclick="psDeleteTrip(\'' + doc.id + '\',\'' + t.tripKey + '\')" title="Remove" style="background:none;border:none;cursor:pointer;color:#e11d48;font-size:1.1rem;">&#128465;&#65039;</button>'
                             + '</div>'
