@@ -1808,8 +1808,8 @@
                         window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(destination), '_blank');
                         return;
                     }
-                    // Hotels always included in full
-                    const hotels = t.bookmarks.filter(b => (b.type || '') === 'Hotel');
+                    // Up to 3 hotels always included first
+                    const hotels = t.bookmarks.filter(b => (b.type || '') === 'Hotel').slice(0, 3);
                     // Guarantee one representative from each category when over 10 bookmarks
                     const guaranteedTypes = ['Shopping', 'Dining', 'Nightlife', 'Beach', 'Community'];
                     const usedNames = new Set(hotels.map(b => b.name));
