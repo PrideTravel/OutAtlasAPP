@@ -1808,14 +1808,20 @@
                         window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(destination), '_blank');
                         return;
                     }
-                    // Sort by venue type: hotels first, then food, then nightlife, then shops
-                    const typeOrder = ['hotel', 'restaurant', 'cafe', 'bar', 'club', 'store', 'shop', 'sauna'];
-                    const sorted = [...t.bookmarks].sort((a, b) => {
-                        const aRank = typeOrder.findIndex(k => (a.type || '').toLowerCase().includes(k));
-                        const bRank = typeOrder.findIndex(k => (b.type || '').toLowerCase().includes(k));
-                        return (aRank < 0 ? 99 : aRank) - (bRank < 0 ? 99 : bRank);
+                    // Up to 3 hotels always included first
+                    const hotels = t.bookmarks.filter(b => (b.type || '') === 'Hotel').slice(0, 3);
+                    // Guarantee one representative from each category when over 10 bookmarks
+                    const guaranteedTypes = ['Shopping', 'Dining', 'Nightlife', 'Beach', 'Community'];
+                    const usedNames = new Set(hotels.map(b => b.name));
+                    const guaranteed = [];
+                    guaranteedTypes.forEach(cat => {
+                        const match = t.bookmarks.find(b => b.type === cat && !usedNames.has(b.name));
+                        if (match) { guaranteed.push(match); usedNames.add(match.name); }
                     });
-                    const stops = sorted.slice(0, 10);
+                    // Fill any remaining slots (cap total at 10) with leftover bookmarks
+                    const remainingSlots = Math.max(0, 10 - hotels.length - guaranteed.length);
+                    const overflow = t.bookmarks.filter(b => !usedNames.has(b.name));
+                    const stops = [...hotels, ...guaranteed, ...overflow.slice(0, remainingSlots)];
                     if (stops.length === 1) {
                         window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(stops[0].name + ', ' + destination), '_blank');
                         return;
