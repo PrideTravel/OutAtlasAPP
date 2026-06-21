@@ -1,5 +1,5 @@
-const CACHE_NAME = 'outatlas-v3';
-const DATA_CACHE_NAME = 'outatlas-data-v3';
+const CACHE_NAME = 'outatlas-v4';
+const DATA_CACHE_NAME = 'outatlas-data-v4';
 
 // Static assets to cache on install
 const STATIC_ASSETS = [
