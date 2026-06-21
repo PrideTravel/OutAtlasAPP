@@ -2965,7 +2965,7 @@
                                         ${allHotelsDisplay.map((h, hotelIdx) => {
                             const tagInfo = getHotelTagsInfo(h);
                             const primaryBadge = tagInfo.specialty || (tagInfo.certifications.length > 0 ? tagInfo.certifications[0] : null);
-                            const badgeColor = !primaryBadge ? '' : primaryBadge === 'Luxury' ? 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300' : primaryBadge === 'LGBTQ Friendly' ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300' : 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white dark:from-pink-600 dark:via-purple-600 dark:to-blue-600';
+                            const badgeColor = !primaryBadge ? '' : primaryBadge === 'Luxury' ? 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300' : primaryBadge === 'LGBTQ Friendly' ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300' : primaryBadge === 'Event Hotel' ? 'bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300' : 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white dark:from-pink-600 dark:via-purple-600 dark:to-blue-600';
                             const isHidden = hotelIdx >= randomHotels.length;
                             return `
                                             <div class="${isHidden ? 'view-more-item hidden' : ''} bg-white dark:bg-slate-800 p-5 rounded-xl border-2 border-slate-200 dark:border-slate-700 shadow-md">
@@ -3677,7 +3677,7 @@
             function getHotelBadge(h) {
                 if (!h) return 'Unknown';
                 if (h.type === 'Event Special') return 'Event Special';
-                let specialTags = ['LGBTQ Owned/Operated', 'LGBTQ Friendly', 'LGBTQ Hotels & Resorts', 'LGBTQ Resort', 'LGBTQ Hotel', 'LGBTQ Owned', 'Gay Hotel', 'Men Only', 'Adults Only', 'Adults-Only', 'Mens Only', 'World Rainbow Hotels Member', 'IGLTA Accredited', 'World Rainbow Hotel'];
+                let specialTags = ['LGBTQ Owned/Operated', 'LGBTQ Friendly', 'LGBTQ Hotels & Resorts', 'LGBTQ Resort', 'LGBTQ Hotel', 'LGBTQ Owned', 'Gay Hotel', 'Men Only', 'Adults Only', 'Adults-Only', 'Mens Only', 'World Rainbow Hotels Member', 'IGLTA Accredited', 'World Rainbow Hotel', 'Event Hotel'];
                 if (h.tags) {
                     let found = h.tags.find(t => specialTags.includes(t));
                     if (found) {
@@ -3711,6 +3711,8 @@
                                tag === 'LGBTQ Owned/Operated' || tag === 'LGBTQ Owned & Operated' ||
                                tag === 'LGBTQ Hotel' || tag === 'Gay Hotel') {
                         specialty = 'LGBTQ Owned';
+                    } else if (tag === 'Event Hotel') {
+                        specialty = specialty === 'Luxury' ? 'Luxury' : 'Event Hotel';
                     }
 
                     // Price tag (some destinations store price in tags)
