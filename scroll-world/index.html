@@ -69,9 +69,7 @@
       moment: CDN + 'hf_20260724_032315_2356275e-ef04-4ca8-acf0-345f444a39c9.mp4',
     };
 
-    // Landscape connector clips (aerial fly-overs between scenes).
-    // Job IDs: c25cb40b, dee5b85d, a93392ff, 05362657, c580161d
-    // Filled in once Higgsfield jobs complete (null = direct crossfade until then).
+    // Landscape (16:9) connector clips — aerial fly-overs between scenes.
     const CONNECTORS = [
       CDN + 'hf_20260724_032145_c25cb40b-ddda-4556-93c0-563d05958fac.mp4',  // 0: World → Safety
       CDN + 'hf_20260724_032147_dee5b85d-9947-4e2a-b2c7-87745e994844.mp4',  // 1: Safety → Hotel
@@ -83,10 +81,10 @@
     // Portrait (9:16) connector clips.
     const CONNECTORS_M = [
       CDN + 'hf_20260724_032736_65da4126-3156-46d1-bbe6-03706d985866.mp4',  // 0: World → Safety
-      null,  // 1: Safety → Hotel  (re-rolling on kling3_0 — NSFW on seedance)
+      CDN + 'hf_20260724_033519_eb44a555-fabe-49ea-b1b5-709b04a80a9d.mp4',  // 1: Safety → Hotel
       CDN + 'hf_20260724_032740_018ecaa4-9e38-485d-8e85-ad344d2259d1.mp4',  // 2: Hotel → Street
       CDN + 'hf_20260724_032742_710a9ce1-ff26-4ce7-b93a-60510185a8be.mp4',  // 3: Street → Events
-      null,  // 4: Events → Moment (re-rolling on kling3_0 — NSFW on seedance)
+      CDN + 'hf_20260724_033521_18cd2e78-1fb2-4a40-ba07-8ef9098ed7e4.mp4',  // 4: Events → Moment
     ];
 
     mountScrollWorld(document.getElementById('world'), {
