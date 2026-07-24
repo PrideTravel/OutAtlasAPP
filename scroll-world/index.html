@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>OutAtlas — Travel Safe</title>
+  <meta name="description" content="The LGBTQ travel guide. Scroll to fly through a world where you're celebrated, not just tolerated." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>🗺️</text></svg>" />
+  <style>
+    /* OutAtlas brand tokens for the scroll-world engine.
+       --sw-bg must match the dominant dark tone of the neon night scenes. */
+    :root, .sw-root {
+      --sw-bg: #090f0d;
+      --sw-ink: #f0f8f4;
+      --sw-ink-soft: #7ab8a0;
+      --sw-accent: #38bd99;
+      --sw-font-display: 'SF Pro Display', ui-rounded, 'Segoe UI', system-ui, sans-serif;
+      --sw-font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    }
+    html, body { margin: 0; background: #090f0d; }
+    /* Brand mark: OutAtlas teal gradient */
+    .sw-brand__mark {
+      background: linear-gradient(145deg, #38bd99 0%, #0d7d63 100%) !important;
+      box-shadow: 0 6px 14px rgba(56, 189, 153, 0.35) !important;
+    }
+    /* Top CTA button: teal instead of near-black */
+    .sw-topcta {
+      background: #38bd99 !important;
+      color: #090f0d !important;
+    }
+    /* Primary CTA button */
+    .sw-btn--primary {
+      background: #38bd99 !important;
+      color: #090f0d !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="top"></div>
+  <div id="world"></div>
+
+  <script src="scrub-engine.js"></script>
+  <script>
+    // ─── OutAtlas Scroll World ────────────────────────────────────────────────
+    // Architecture B: dive clips (camera flies INTO each scene) + aerial
+    // connector clips (camera pulls BACK and OVER between scenes).
+    // Art direction: Neon Night — isometric miniature diorama, teal + amber glow.
+    // Generated via Higgsfield AI (seedance_2_0_mini / kling3_0, draft tier).
+    // ─────────────────────────────────────────────────────────────────────────
+
+    // Landscape (16:9) dive clip CDN URLs — resolved after generation.
+    const CDN = 'https://d8j0ntlcm91z4.cloudfront.net/user_3B6JfHyshsDe1GCPDZgL99FQaIG/';
+    const DIVES = {
+      world:  CDN + 'hf_20260724_025502_666251c7-d444-4f77-b097-7ea69ff6dbc4.mp4',
+      safety: CDN + 'hf_20260724_030724_b7627591-0569-4485-ad4d-5f87e0a465fd.mp4',
+      hotel:  CDN + 'hf_20260724_024321_77026c0f-d0b6-42ac-93a6-225426146656.mp4',
+      street: CDN + 'hf_20260724_024302_234afa75-6bfa-45f6-936f-c3fd4e5ed26f.mp4',
+      events: CDN + 'hf_20260724_030724_9b70584e-1ab1-4871-935a-ad36437a1170.mp4',
+      moment: CDN + 'hf_20260724_030735_36b31da7-5c33-4e22-8a66-aeafb1281e52.mp4',
+    };
+
+    // Portrait (9:16) mobile dives — completed.
+    const DIVES_M = {
+      world:  CDN + 'hf_20260724_032245_d42278eb-4e8b-4805-a532-8cac27bf71d4.mp4',
+      safety: CDN + 'hf_20260724_032248_9018aa2d-9d41-43f9-abe0-2479e38c12c0.mp4',
+      hotel:  CDN + 'hf_20260724_032310_a79e43d7-28f8-458e-b685-b221e722b710.mp4',
+      street: CDN + 'hf_20260724_032312_5b0ec200-9770-402c-b666-2066e8d00a9d.mp4',
+      events: CDN + 'hf_20260724_032253_69c5fc7f-2084-44e2-9900-aa521b079fa7.mp4',
+      moment: CDN + 'hf_20260724_032315_2356275e-ef04-4ca8-acf0-345f444a39c9.mp4',
+    };
+
+    // Landscape connector clips (aerial fly-overs between scenes).
+    // Job IDs: c25cb40b, dee5b85d, a93392ff, 05362657, c580161d
+    // Filled in once Higgsfield jobs complete (null = direct crossfade until then).
+    const CONNECTORS = [
+      CDN + 'hf_20260724_032145_c25cb40b-ddda-4556-93c0-563d05958fac.mp4',  // 0: World → Safety
+      CDN + 'hf_20260724_032147_dee5b85d-9947-4e2a-b2c7-87745e994844.mp4',  // 1: Safety → Hotel
+      CDN + 'hf_20260724_032149_a93392ff-2b58-4ccf-9ae9-e54b310c812f.mp4',  // 2: Hotel → Street
+      CDN + 'hf_20260724_032655_4b5a9434-b68d-40e9-96ee-5b5a335fa505.mp4',  // 3: Street → Events (kling3_0)
+      CDN + 'hf_20260724_032152_c580161d-14d7-49d0-afbe-d51c6d949af4.mp4',  // 4: Events → Moment
+    ];
+
+    // Portrait connector clips — generated after portrait dives complete.
+    const CONNECTORS_M = [null, null, null, null, null];
+
+    mountScrollWorld(document.getElementById('world'), {
+      brand: { name: 'OutAtlas', href: '#top' },
+      cta:   { label: 'Explore', href: '/' },
+      hint:  'scroll to explore',
+      diveScroll: 1.4,
+      connScroll:  0.8,
+      atmosphere:  true,
+
+      sections: [
+        // ── 01 · THE WORLD ──────────────────────────────────────────────────
+        {
+          id: 'world', label: 'The World',
+          clip:       DIVES.world,
+          clipMobile: DIVES_M.world,
+          accent: '#38bd99',
+          linger: 0.35,
+          eyebrow: 'LGBTQ Travel',
+          title:   'Travel Safe.',
+          body:    'The world is bigger — and safer — than you think. OutAtlas shows you where you\'re celebrated, not just tolerated.',
+          tags:    ['100+ Destinations', 'Safety Scores', 'Community Picks'],
+        },
+        // ── 02 · SAFETY ─────────────────────────────────────────────────────
+        {
+          id: 'safety', label: 'Safety',
+          clip:       DIVES.safety,
+          clipMobile: DIVES_M.safety,
+          accent: '#0d7d63',
+          eyebrow: 'Know Before You Go',
+          title:   'Every destination, rated.',
+          body:    'Real safety scores, LGBTQ-specific legal context, and community-vetted intel — so you can plan with real confidence.',
+          tags:    ['Safety Ratings', 'Legal Protections', 'Local Intel'],
+        },
+        // ── 03 · HOTEL ──────────────────────────────────────────────────────
+        {
+          id: 'hotel', label: 'Hotels',
+          clip:       DIVES.hotel,
+          clipMobile: DIVES_M.hotel,
+          accent: '#d4932f',
+          eyebrow: 'Stay Confidently',
+          title:   'Hotels that welcome you.',
+          body:    'LGBTQ-welcoming properties curated by our team — from boutique hideaways to iconic landmarks, all budgets.',
+          tags:    ['LGBTQ-Owned', 'Vetted Properties', 'All Budgets'],
+        },
+        // ── 04 · STREET ─────────────────────────────────────────────────────
+        {
+          id: 'street', label: 'Explore',
+          clip:       DIVES.street,
+          clipMobile: DIVES_M.street,
+          accent: '#38bd99',
+          eyebrow: 'Find Your Scene',
+          title:   'Dive into the culture.',
+          body:    'Gay districts, queer bars, restaurants, and community hangouts — we map the scene so you can dive right in.',
+          tags:    ['Nightlife', 'Restaurants', 'Community Spaces'],
+        },
+        // ── 05 · EVENTS ─────────────────────────────────────────────────────
+        {
+          id: 'events', label: 'Events',
+          clip:       DIVES.events,
+          clipMobile: DIVES_M.events,
+          accent: '#f5c06e',
+          eyebrow: 'Never Miss a Moment',
+          title:   'Be there.',
+          body:    'From World Pride to local marches and LGBTQ cruises — discover every event worth traveling for.',
+          tags:    ['Pride Events', 'Festivals', 'Cruises'],
+        },
+        // ── 06 · MOMENT ─────────────────────────────────────────────────────
+        {
+          id: 'moment', label: 'Your Journey',
+          clip:       DIVES.moment,
+          clipMobile: DIVES_M.moment,
+          accent: '#38bd99',
+          linger: 0.4,
+          eyebrow: 'Travel Safe. Travel Bold.',
+          title:   'Your world awaits.',
+          body:    'OutAtlas is the LGBTQ travel guide built for real travelers. Start planning your next adventure today.',
+          cta: {
+            primary:   { label: 'Explore Destinations', href: '/' },
+            secondary: { label: 'Browse Events',        href: '/#events' },
+          },
+        },
+      ],
+
+      connectors:       CONNECTORS,
+      connectorsMobile: CONNECTORS_M,
+    });
+  </script>
+</body>
+</html>
