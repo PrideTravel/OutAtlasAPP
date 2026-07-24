@@ -81,13 +81,12 @@
     ];
 
     // Portrait (9:16) connector clips.
-    // Job IDs: 65da4126, ba717014, 018ecaa4, 710a9ce1, 598d929d
     const CONNECTORS_M = [
-      null,  // 0: World → Safety  (65da4126 — in_progress)
-      null,  // 1: Safety → Hotel  (ba717014 — in_progress)
-      null,  // 2: Hotel → Street  (018ecaa4 — in_progress)
-      CDN + 'hf_20260724_032742_710a9ce1-ff26-4ce7-b93a-60510185a8be.mp4',  // 3: Street → Events (kling3_0 ✓)
-      null,  // 4: Events → Moment (598d929d — in_progress)
+      CDN + 'hf_20260724_032736_65da4126-3156-46d1-bbe6-03706d985866.mp4',  // 0: World → Safety
+      null,  // 1: Safety → Hotel  (re-rolling on kling3_0 — NSFW on seedance)
+      CDN + 'hf_20260724_032740_018ecaa4-9e38-485d-8e85-ad344d2259d1.mp4',  // 2: Hotel → Street
+      CDN + 'hf_20260724_032742_710a9ce1-ff26-4ce7-b93a-60510185a8be.mp4',  // 3: Street → Events
+      null,  // 4: Events → Moment (re-rolling on kling3_0 — NSFW on seedance)
     ];
 
     mountScrollWorld(document.getElementById('world'), {
