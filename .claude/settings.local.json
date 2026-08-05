@@ -65,7 +65,8 @@
       "Bash(python3 -c \"import reportlab; print\\('ReportLab available'\\)\")",
       "Bash(pandoc \"C:\\\\Users\\\\lewi0\\\\OutAtlas\\\\GEO-CLIENT-REPORT.md\" -o \"C:\\\\Users\\\\lewi0\\\\OutAtlas\\\\GEO-CLIENT-REPORT.docx\")",
       "Bash(python3)",
-      "Bash(python3 -m pip install python-docx --quiet)"
+      "Bash(python3 -m pip install python-docx --quiet)",
+      "mcp__Claude_Code_Remote__add_repo"
     ]
   }
 }
