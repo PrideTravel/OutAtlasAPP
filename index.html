@@ -913,13 +913,16 @@
     <header
         class="sticky top-0 z-50 bg-background-light dark:bg-slate-900/80 backdrop-blur-md px-6 py-4 flex items-center justify-between border-b"
         style="border-bottom: 8px solid; border-image: linear-gradient(to right, #FF0018, #FFA52C, #FFFF41, #008018, #0000F9, #86007D) 1;">
-        <div class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
-            onclick="toggleView('homeView')" title="Back to Home">
-            <div class="w-8 h-8 rounded-lg pride-gradient-bg flex items-center justify-center shadow-lg">
-                <span class="material-symbols-outlined text-white text-xl font-black">flight_takeoff</span>
+        <!-- Populated by renderHeader() on each view change -->
+        <div id="header-left" class="flex items-center gap-2">
+            <div class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+                onclick="toggleView('homeView')" title="Back to Home">
+                <div class="w-8 h-8 rounded-lg pride-gradient-bg flex items-center justify-center shadow-lg">
+                    <span class="material-symbols-outlined text-white text-xl font-black">flight_takeoff</span>
+                </div>
+                <h1 class="text-xl font-extrabold tracking-tight inline-block dark-pill"><span
+                        class="outatlas-name-text">OutAtlas</span></h1>
             </div>
-            <h1 class="text-xl font-extrabold tracking-tight inline-block dark-pill"><span
-                    class="outatlas-name-text">OutAtlas</span></h1>
         </div>
     </header>
 
@@ -2514,6 +2517,53 @@
             // Prevents the hashchange listener from re-entering toggleView
             let _suppressHashChange = false;
 
+            // Per-view header configuration
+            const HEADER_CONFIG = {
+                homeView:        { back: null,           title: null },
+                resultsView:     { back: 'homeView',     title: 'Explore' },
+                eventsOnlyView:  { back: 'homeView',     title: 'Events' },
+                allHotspotsView: { back: 'homeView',     title: 'Safe Hotspots' },
+                venueDetailView: { back: 'resultsView',  title: 'Venue Detail' },
+                tripView:        { back: null,           title: 'My Trips' },
+                profileView:     { back: null,           title: 'Profile' },
+            };
+
+            // Logo HTML reused for the home header slot
+            const LOGO_HTML = `
+                <div class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+                    onclick="toggleView('homeView')" title="Back to Home">
+                    <div class="w-8 h-8 rounded-lg pride-gradient-bg flex items-center justify-center shadow-lg">
+                        <span class="material-symbols-outlined text-white text-xl font-black">flight_takeoff</span>
+                    </div>
+                    <h1 class="text-xl font-extrabold tracking-tight inline-block dark-pill">
+                        <span class="outatlas-name-text">OutAtlas</span>
+                    </h1>
+                </div>`;
+
+            window.renderHeader = function (viewId, overrideTitle) {
+                const slot = document.getElementById('header-left');
+                if (!slot) return;
+                const cfg = HEADER_CONFIG[viewId] || { back: null, title: null };
+                const title = overrideTitle || cfg.title;
+
+                if (!cfg.back && !title) {
+                    // Home — show logo
+                    slot.innerHTML = LOGO_HTML;
+                } else if (cfg.back) {
+                    // Secondary view — back arrow + title
+                    slot.innerHTML = `
+                        <button class="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                            onclick="toggleView('${cfg.back}')" aria-label="Go back">
+                            <span class="material-symbols-outlined text-primary text-2xl">arrow_back</span>
+                            <span class="text-lg font-extrabold text-slate-800 dark:text-white">${title || ''}</span>
+                        </button>`;
+                } else {
+                    // Primary tab (Trips, Profile) — title only, no back arrow
+                    slot.innerHTML = `
+                        <h1 class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">${title || ''}</h1>`;
+                }
+            };
+
             window.toggleView = function (viewId, navEl = null) {
                 const views = document.querySelectorAll('.view-section');
                 views.forEach(v => v.classList.remove('active'));
@@ -2535,6 +2585,9 @@
                 document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
                 const activeNavEl = document.querySelector(`.nav-item[data-view="${viewId}"]`);
                 if (activeNavEl) activeNavEl.classList.add('active-nav');
+
+                // Sync header (back button vs logo vs title)
+                renderHeader(viewId);
             };
 
             window.showView = function (viewId) {
