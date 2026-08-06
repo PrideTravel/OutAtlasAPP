@@ -2350,6 +2350,24 @@
             };
 
             // --- VIEW MANAGEMENT ---
+
+            // Hash ↔ viewId mapping (add new views here as they are built)
+            const HASH_TO_VIEW = {
+                'home':     'homeView',
+                'search':   'resultsView',
+                'events':   'eventsOnlyView',
+                'hotspots': 'allHotspotsView',
+                'venue':    'venueDetailView',
+                'trips':    'tripView',
+                'profile':  'profileView',
+            };
+            const VIEW_TO_HASH = Object.fromEntries(
+                Object.entries(HASH_TO_VIEW).map(([h, v]) => [v, h])
+            );
+
+            // Prevents the hashchange listener from re-entering toggleView
+            let _suppressHashChange = false;
+
             window.toggleView = function (viewId, navEl = null) {
                 const views = document.querySelectorAll('.view-section');
                 views.forEach(v => v.classList.remove('active'));
@@ -2357,6 +2375,14 @@
                 if (target) {
                     target.classList.add('active');
                     window.scrollTo(0, 0);
+                }
+
+                // Sync URL hash so back/forward and shareable links work
+                const hash = VIEW_TO_HASH[viewId];
+                if (hash && location.hash !== '#' + hash) {
+                    _suppressHashChange = true;
+                    location.hash = hash;
+                    setTimeout(() => { _suppressHashChange = false; }, 0);
                 }
 
                 // Update Bottom Nav state
@@ -2371,6 +2397,28 @@
             window.showView = function (viewId) {
                 toggleView(viewId);
             };
+
+            // Drive view from URL hash (back/forward button support)
+            window.addEventListener('hashchange', function () {
+                if (_suppressHashChange) return;
+                const hash = location.hash.slice(1);
+                const viewId = HASH_TO_VIEW[hash];
+                if (viewId && document.getElementById(viewId)) {
+                    toggleView(viewId);
+                }
+            });
+
+            // On first load: honour any existing hash or default to #home
+            (function initRoute() {
+                const hash = location.hash.slice(1);
+                const viewId = HASH_TO_VIEW[hash];
+                if (viewId && document.getElementById(viewId)) {
+                    toggleView(viewId);
+                } else {
+                    history.replaceState(null, '', '#home');
+                    toggleView('homeView');
+                }
+            })();
 
             window.quickSearch = function (cityName, start, end) {
                 const destInput = document.getElementById('destination');
