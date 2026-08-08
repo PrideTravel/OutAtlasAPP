@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <title>Search — OutAtlas</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <link rel="stylesheet" href="tailwind.min.css">
+    <link rel="stylesheet" href="src/styles/theme-variables.css">
+    <link rel="stylesheet" href="src/styles/variables.css">
+    <link rel="stylesheet" href="src/styles/global.css">
+    <link rel="stylesheet" href="src/styles/accessibility.css">
+    <link rel="stylesheet" href="src/styles/components.css">
+
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #f8f5f7; color: #1e293b; min-height: 100vh; padding-bottom: 2rem; }
+        html.dark body { background-color: #0f172a; color: #f1f5f9; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' var(--fill, 0), 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .fill-1 { --fill: 1; }
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+        .view-more-item.hidden { display: none; }
+        .pride-gradient-text {
+            background: linear-gradient(to right, #FF0018, #FFA52C, #eab308, #008018, #0000F9, #86007D);
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .outatlas-name-text {
+            background: linear-gradient(to bottom, #FF0018, #FFA52C, #eab308, #008018, #0000F9, #86007D);
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        html.dark .pride-gradient-text, html.dark .outatlas-name-text {
+            box-decoration-break: clone; -webkit-box-decoration-break: clone;
+        }
+        .pride-gradient-bg { background: linear-gradient(45deg, #FF0018, #FFA52C, #eab308, #008018, #0000F9, #86007D); }
+        .rainbow-card-bg { background: linear-gradient(45deg, #FF0018, #FFA52C, #FFFF41, #008018, #0000F9, #86007D); }
+        .pill-input { background: rgba(255,255,255,0.95); border-radius: 9999px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); }
+        .btn-pride-yellow { background: linear-gradient(to right, #facc15, #fb923c); color: #1e293b; }
+        .dark-pill { color: black !important; }
+        html.dark .dark-pill { background-color: white !important; border-radius: 9999px !important; padding: 0.1rem 0.8rem !important; display: inline-block !important; border: 2px solid white !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1) !important; color: black !important; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in-up { animation: fadeInUp 0.5s ease-out forwards; }
+        .rainbow-border { position: relative; z-index: 0; }
+        .rainbow-border::before { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: linear-gradient(45deg,#FF0018,#FFA52C,#FFFF41,#008018,#0000F9,#86007D); z-index: -1; border-radius: 1.1rem; }
+
+        /* Top bar */
+        #top-bar { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid #e2e8f0; }
+        html.dark #top-bar { background: rgba(15,23,42,0.92); border-bottom-color: #1e293b; }
+
+        /* Search warning modal */
+        #searchWarningModal { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.55); backdrop-filter: blur(6px); align-items: center; justify-content: center; }
+        #searchWarningModal.open { display: flex; }
+    </style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div id="top-bar">
+    <div class="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+        <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity" title="Back to OutAtlas">
+            <div class="w-8 h-8 rounded-lg pride-gradient-bg flex items-center justify-center shadow-lg">
+                <span class="material-symbols-outlined text-white text-xl font-black">flight_takeoff</span>
+            </div>
+            <h1 class="text-xl font-extrabold tracking-tight dark-pill">
+                <span class="outatlas-name-text">OutAtlas</span>
+            </h1>
+        </a>
+        <div id="top-bar-right" class="flex items-center gap-2">
+            <span class="text-xs font-bold text-slate-500 dark:text-slate-400 hidden sm:block">LGBTQ+ Travel Search</span>
+            <button onclick="cycleTheme()" class="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" aria-label="Toggle theme" title="Toggle theme">
+                <span class="material-symbols-outlined text-lg text-slate-700 dark:text-slate-200">dark_mode</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<main class="max-w-2xl mx-auto px-4 py-6 space-y-6">
+
+    <!-- ═══ VIEW: SEARCH ═══ -->
+    <div id="searchView" class="view-section active space-y-6">
+        <div class="rainbow-card-bg rounded-3xl p-6 shadow-xl">
+            <h2 class="text-2xl font-black text-white mb-1">Find Your Pride Destination</h2>
+            <p class="text-sm text-white/80 mb-6">Search LGBTQ+ travel destinations, events, hotels &amp; more.</p>
+            <form id="searchForm" class="space-y-4">
+                <div class="space-y-3">
+                    <div class="flex flex-col gap-1">
+                        <label for="departure" class="text-xs font-black text-white/90 ml-2 uppercase tracking-wide">Departure City</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-primary">flight_takeoff</span>
+                            <input id="departure" class="w-full pl-12 pr-4 py-4 pill-input border-none focus:ring-4 focus:ring-white/30 text-sm font-bold placeholder:text-slate-500 text-slate-900"
+                                placeholder="e.g. New York, LHR" type="text" required autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label for="destination" class="text-xs font-black text-white/90 ml-2 uppercase tracking-wide">Destination (City, Country or Region)</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-primary">location_on</span>
+                            <input id="destination" class="w-full pl-12 pr-4 py-4 pill-input border-none focus:ring-4 focus:ring-white/30 text-sm font-bold placeholder:text-slate-500 text-slate-900"
+                                placeholder="e.g. Paris, USA, Asia" type="text" required autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <div class="flex flex-col gap-1">
+                        <label for="dateStart" class="text-xs font-black text-white/90 ml-2 uppercase tracking-wide">Departure Date <span class="font-normal normal-case text-white/60">(optional)</span></label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-primary">calendar_today</span>
+                            <input id="dateStart" class="w-full pl-12 pr-4 py-4 pill-input border-none focus:ring-4 focus:ring-white/30 text-xs font-bold text-slate-900" type="date" min="2026-01-01">
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label for="dateEnd" class="text-xs font-black text-white/90 ml-2 uppercase tracking-wide">Return Date</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-primary">event_repeat</span>
+                            <input id="dateEnd" class="w-full pl-12 pr-4 py-4 pill-input border-none focus:ring-4 focus:ring-white/30 text-xs font-bold text-slate-900" type="date" min="2026-01-01">
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="w-full btn-pride-yellow font-black py-4 rounded-full shadow-xl flex items-center justify-center gap-3 text-lg active:scale-95 transition-all mt-4 border-b-4 border-orange-600">
+                    <span class="material-symbols-outlined font-black">search</span> Find your Pride
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ═══ VIEW: RESULTS ═══ -->
+    <div id="resultsView" class="view-section space-y-8 pb-8">
+        <div class="flex items-center justify-between gap-4">
+            <button onclick="showView('searchView')" class="flex items-center gap-2 text-primary font-bold hover:opacity-80 transition-opacity">
+                <span class="material-symbols-outlined">arrow_back</span> Back to Search
+            </button>
+            <button onclick="cycleTheme()" class="w-10 h-10 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                <span class="material-symbols-outlined text-xl text-slate-700 dark:text-slate-200">dark_mode</span>
+            </button>
+        </div>
+        <div id="resultsContainer"></div>
+    </div>
+
+    <!-- ═══ VIEW: EVENTS ONLY (dateless search) ═══ -->
+    <div id="eventsOnlyView" class="view-section space-y-6 pb-8">
+        <button onclick="showView('searchView')" class="flex items-center gap-2 text-primary font-bold hover:opacity-80 transition-opacity">
+            <span class="material-symbols-outlined">arrow_back</span> Back to Search
+        </button>
+        <div>
+            <h2 class="text-2xl font-black inline-block dark-pill"><span class="pride-gradient-text">All LGBTQ+ Events</span></h2>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">Add travel dates for flights, hotels &amp; full recommendations.</p>
+        </div>
+        <div id="eventsOnlyContainer"></div>
+    </div>
+
+    <!-- ═══ VIEW: VENUE DETAIL ═══ -->
+    <div id="venueDetailView" class="view-section space-y-5 pb-8">
+        <button id="vd-back-btn" onclick="showView('resultsView')" class="flex items-center gap-2 text-primary font-bold hover:opacity-80 transition-opacity">
+            <span class="material-symbols-outlined">arrow_back</span> Back to Results
+        </button>
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-slate-700 shadow-md p-6">
+            <div class="flex items-start gap-4">
+                <div id="vd-icon-wrap" class="w-14 h-14 rounded-xl flex items-center justify-center text-white flex-shrink-0 shadow-lg" style="background:#f20d8f;">
+                    <span id="vd-icon" class="material-symbols-outlined text-3xl">location_on</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h2 id="vd-name" class="text-xl font-black text-slate-900 dark:text-white break-words leading-snug mb-2">—</h2>
+                    <div id="vd-badges" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+            <div id="vd-tags" class="flex flex-wrap gap-2 mt-4"></div>
+        </div>
+        <div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 px-5 py-4 flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-2xl flex-shrink-0">location_city</span>
+            <div class="min-w-0">
+                <p id="vd-city" class="font-bold text-slate-800 dark:text-white text-sm truncate">—</p>
+                <p id="vd-subtext" class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">—</p>
+            </div>
+        </div>
+        <div id="vd-actions" class="grid grid-cols-2 gap-3"></div>
+        <div class="rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden bg-slate-100 dark:bg-slate-800">
+            <div id="vd-map-link" class="h-36 flex flex-col items-center justify-center gap-2 text-slate-400 dark:text-slate-500 hover:text-primary dark:hover:text-primary transition-colors cursor-pointer">
+                <span class="material-symbols-outlined text-4xl">map</span>
+                <span class="text-sm font-semibold">Search on Google Maps</span>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- Past-date warning modal -->
+<div id="searchWarningModal">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 w-[min(400px,92vw)] shadow-2xl text-center">
+        <span class="material-symbols-outlined text-4xl text-amber-500 mb-2">warning</span>
+        <h3 class="text-lg font-black text-slate-900 dark:text-white mb-2">Past Date Detected</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300 mb-5">One or more of your dates appear to be in the past. Results may not show current availability.</p>
+        <div class="flex gap-3">
+            <button onclick="document.getElementById('searchWarningModal').classList.remove('open')" class="flex-1 py-3 rounded-full bg-slate-100 dark:bg-slate-700 font-bold text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-200 transition-colors">Go Back</button>
+            <button onclick="document.getElementById('searchWarningModal').classList.remove('open'); doSearch();" class="flex-1 py-3 rounded-full bg-amber-500 text-white font-bold text-sm hover:bg-amber-600 transition-colors">Search Anyway</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════
+(function() {
+    const saved = localStorage.getItem('outatlas-theme') || 'light';
+    if (saved === 'dark') document.documentElement.classList.add('dark');
+})();
+
+function cycleTheme() {
+    const isDark = document.documentElement.classList.contains('dark');
+    document.documentElement.classList.toggle('dark', !isDark);
+    localStorage.setItem('outatlas-theme', !isDark ? 'dark' : 'light');
+}
+
+// ═══════════════════════════════════════════
+// VIEW MANAGEMENT
+// ═══════════════════════════════════════════
+let _currentView = 'searchView';
+let _vdSourceView = 'resultsView';
+
+function showView(viewId) {
+    document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+    const target = document.getElementById(viewId);
+    if (target) { target.classList.add('active'); window.scrollTo(0, 0); }
+    _currentView = viewId;
+    if (viewId !== 'venueDetailView') _vdSourceView = viewId;
+}
+window.showView = showView;
+window.toggleView = showView;
+
+// ═══════════════════════════════════════════
+// FIREBASE STUBS (not used on this page)
+// ═══════════════════════════════════════════
+window.psBookmarkPlace = function() {};
+window.psMakeSaveBtn = function() { return ''; };
+window.psEmailTrip = function() {};
+window.psOpenModal = function() {};
+
+// ═══════════════════════════════════════════
+// DATE HELPERS
+// ═══════════════════════════════════════════
+window.isPastDate = function(ds) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    return new Date(ds + 'T00:00:00') < today;
+};
+window.isPastEvent = function(e) {
+    if (!e || !e.start) return false;
+    const today = new Date(); today.setHours(0,0,0,0);
+    return new Date(e.start + 'T00:00:00') < today;
+};
+
+function getMonthName(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleString('default', { month: 'long', timeZone: 'UTC' });
+}
+function formatDateShort(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString + 'T00:00:00');
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+// ═══════════════════════════════════════════
+// DATA LOADING
+// ═══════════════════════════════════════════
+window.DATABASE = { mappings: { regions: {}, countries: {}, cities: {} }, details: {} };
+let SPECIAL_EVENTS_DATA = [];
+let DESTINATION_LINKS = {};
+let _destinationsLoaded = false;
+
+async function loadDestinationsData() {
+    if (_destinationsLoaded) return;
+    let data;
+    try {
+        const response = await fetch('destinations.json');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        data = await response.json();
+    } catch (err) {
+        document.getElementById('resultsContainer').innerHTML =
+            '<div class="p-6 bg-red-50 dark:bg-red-900/20 rounded-2xl text-center"><p class="text-red-700 dark:text-red-300 font-bold">Failed to load destination data.</p></div>';
+        throw err;
+    }
+    const { destinationLinks, mappings, specialEvents, eventHotels, safeHotspots, default: _default, ...details } = data;
+    if (destinationLinks) Object.assign(DESTINATION_LINKS, destinationLinks);
+    if (mappings) window.DATABASE.mappings = mappings;
+    if (specialEvents) { SPECIAL_EVENTS_DATA.length = 0; SPECIAL_EVENTS_DATA.push(...specialEvents); }
+    if (eventHotels) window._EVENT_HOTELS = eventHotels;
+    window.DATABASE.details = details;
+
+    if (!window.DATABASE.mappings || Object.keys(window.DATABASE.mappings.regions || {}).length === 0) {
+        const m = window.DATABASE.mappings || { regions: {}, countries: {}, cities: {} };
+        Object.entries(details).forEach(([key, d]) => {
+            if (!d || !d.name) return;
+            const parts = key.split('_');
+            if (parts.length >= 2) {
+                const country = parts[parts.length - 1];
+                if (!m.countries[country]) m.countries[country] = [];
+                if (!m.countries[country].includes(key)) m.countries[country].push(key);
+            }
+            const cityName = d.name.split(',')[0].toLowerCase().trim();
+            if (cityName && !m.cities[cityName]) m.cities[cityName] = [key];
+        });
+        window.DATABASE.mappings = m;
+    }
+
+    if (!SPECIAL_EVENTS_DATA.length) {
+        Object.entries(details).forEach(([key, d]) => {
+            if (d && d.events && Array.isArray(d.events)) {
+                d.events.forEach(ev => { SPECIAL_EVENTS_DATA.push({ ...ev, city: d.name.split(',')[0] }); });
+            }
+        });
+    }
+    _destinationsLoaded = true;
+}
+
+// ═══════════════════════════════════════════
+// VENUE DETAIL
+// ═══════════════════════════════════════════
+const VENUE_CATEGORY_ICON  = { hotel:'hotel', bar:'local_bar', restaurant:'restaurant', store:'shopping_bag', sauna:'hot_tub', tour:'explore', venue:'location_on' };
+const VENUE_CATEGORY_COLOR = { hotel:'#0d7d63', bar:'#7c3aed', restaurant:'#ea580c', store:'#16a34a', sauna:'#dc2626', tour:'#2563eb', venue:'#f20d8f' };
+const VENUE_CATEGORY_LABEL = { hotel:'Hotel', bar:'Bar / Nightlife', restaurant:'Restaurant', store:'Shop / Store', sauna:'Sauna / Bathhouse', tour:'Tour / Experience', venue:'Venue' };
+
+function classifyVenue(v) {
+    const t = (v.type || '').toLowerCase();
+    if (v.style !== undefined && !t.includes('bar') && !t.includes('club')) return 'tour';
+    if (t.includes('sauna') || t.includes('bath'))  return 'sauna';
+    if (t.includes('store') || t.includes('shop'))  return 'store';
+    if (t.includes('restaurant') || t.includes('cafe') || t.includes('bistro') || t.includes('diner') || t.includes('bakery') || t.includes('dining')) return 'restaurant';
+    if (t.includes('hotel') || t.includes('hostel') || t.includes('resort') || t.includes('inn') || t.includes('b&b') || t.includes('motel') || t.includes('villa') || t.includes('lodge')) return 'hotel';
+    if (t.includes('bar') || t.includes('club') || t.includes('lounge') || t.includes('disco') || t.includes('nightlife') || t.includes('pub')) return 'bar';
+    return 'venue';
+}
+
+window.showVenueDetail = function(venueObj, destName, sourceView) {
+    if (!venueObj || !venueObj.name) return;
+    const cat   = classifyVenue(venueObj);
+    const color = VENUE_CATEGORY_COLOR[cat];
+
+    const iconWrap = document.getElementById('vd-icon-wrap');
+    if (iconWrap) iconWrap.style.background = color;
+    const iconEl = document.getElementById('vd-icon');
+    if (iconEl) iconEl.textContent = VENUE_CATEGORY_ICON[cat];
+    const nameEl = document.getElementById('vd-name');
+    if (nameEl) nameEl.textContent = venueObj.name;
+
+    const priceLevels = ['Budget', 'Mid-priced', 'Mid-Priced', 'Moderate', 'Luxury'];
+    const priceRaw = venueObj.price || venueObj.pricing || (priceLevels.includes(venueObj.type) ? venueObj.type : null);
+    const showPrice = priceRaw && priceLevels.includes(priceRaw);
+    const isLgbtq = (venueObj.tags || []).some(tg => /lgbtq|gay|queer|rainbow/i.test(tg));
+    const badgesEl = document.getElementById('vd-badges');
+    if (badgesEl) badgesEl.innerHTML = [
+        `<span class="text-xs font-bold px-3 py-1 rounded-full text-white" style="background:${color}">${VENUE_CATEGORY_LABEL[cat]}</span>`,
+        isLgbtq  ? `<span class="text-xs font-bold px-3 py-1 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white">🏳️‍🌈 LGBTQ+</span>` : '',
+        showPrice ? `<span class="text-xs font-bold px-3 py-1 rounded-full text-white" style="background:#0d7d63;">${priceRaw}</span>` : '',
+    ].join('');
+
+    const skipPattern = /lgbtq|gay|queer|rainbow|world rainbow|iglta|budget|moderate|luxury|mid-pric/i;
+    const displayTags = (venueObj.tags || []).filter(tg => !skipPattern.test(tg));
+    const tagsEl = document.getElementById('vd-tags');
+    if (tagsEl) tagsEl.innerHTML = displayTags.map(tg =>
+        `<span class="text-xs font-medium px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">${tg}</span>`
+    ).join('');
+
+    const cityEl = document.getElementById('vd-city');
+    if (cityEl) cityEl.textContent = destName || '—';
+    const subEl = document.getElementById('vd-subtext');
+    if (subEl) subEl.textContent = venueObj.style ? `Style: ${venueObj.style}` : venueObj.type || VENUE_CATEGORY_LABEL[cat];
+
+    const city1  = destName ? destName.split(',')[0].trim() : '';
+    const qSearch = encodeURIComponent(`${venueObj.name} ${city1}`);
+    const qMaps   = encodeURIComponent(`${venueObj.name} ${destName || city1}`);
+    const actionsEl = document.getElementById('vd-actions');
+    if (actionsEl) actionsEl.innerHTML = `
+        <a href="https://www.google.com/maps/search/${qMaps}" target="_blank" rel="noopener noreferrer"
+           class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-sm text-white shadow-md active:scale-95 transition-transform" style="background:#4285f4;">
+            <span class="material-symbols-outlined text-[18px]">map</span> Google Maps
+        </a>
+        <a href="https://www.google.com/search?q=${qSearch}" target="_blank" rel="noopener noreferrer"
+           class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-sm bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-white shadow-md hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors active:scale-95">
+            <span class="material-symbols-outlined text-[18px]">search</span> Google
+        </a>`;
+
+    const mapLink = document.getElementById('vd-map-link');
+    if (mapLink) mapLink.onclick = () => window.open(`https://www.google.com/maps/search/${qMaps}`, '_blank');
+
+    const backBtn = document.getElementById('vd-back-btn');
+    if (backBtn) backBtn.onclick = () => showView(sourceView || 'resultsView');
+
+    showView('venueDetailView');
+};
+
+// ═══════════════════════════════════════════
+// HELPER FUNCTIONS
+// ═══════════════════════════════════════════
+function formatDisplayName(data) {
+    const displayIata = data.iata ? String(data.iata).replace(/,\s*/g, '/') : '';
+    if (data.name.includes(',')) {
+        const parts = data.name.split(',');
+        return `${parts[0].trim()}, ${displayIata}, ${parts.slice(1).join(',').trim()}`;
+    }
+    return `${data.name}, ${displayIata}`;
+}
+
+function calculateFareEstimate(baseRange) {
+    if (!baseRange) return '$500 - $1600';
+    return `$${baseRange[0]} - $${baseRange[1] * 2}`;
+}
+
+function getGoogleFlightsLink(origin, destination, start, end, dataObj) {
+    let destString = destination;
+    if (dataObj && dataObj.nearbyAirports && dataObj.nearbyAirports.length > 0)
+        destString = dataObj.nearbyAirports.join(' or ');
+    return `https://www.google.com/travel/flights?q=${encodeURIComponent(`Flights from ${origin} to ${destString} on ${start} returning ${end}`)}`;
+}
+
+function getExpediaLink(destination, start, end) {
+    return `https://www.expedia.com/Hotel-Search?destination=${encodeURIComponent(destination)}&startDate=${start}&endDate=${end}&amenities=LGBTQ_WELCOMING`;
+}
+function getBookingComLink(destination, start, end) {
+    return `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(destination + ' LGBTQ Friendly')}&checkin=${start}&checkout=${end}&nflt=property_type%3D204`;
+}
+function getViatorLink(destination, start, end) {
+    return `https://www.viator.com/searchResults/all?text=${encodeURIComponent(destination)}&startDate=${start}&endDate=${end}`;
+}
+function getEventsLink(destination, dateString) {
+    return `https://www.google.com/search?q=${encodeURIComponent(`LGBTQ Events in ${destination} in ${getMonthName(dateString)}`)}`;
+}
+
+function getWeatherIcon(w) {
+    const s = (w || '').toLowerCase();
+    if (s.includes('snow') || s.includes('freez')) return '<span class="material-symbols-outlined text-slate-200">snowing</span>';
+    if (s.includes('rain') || s.includes('shower') || s.includes('drizzle') || s.includes('wet') || s.includes('humid')) return '<span class="material-symbols-outlined text-blue-500">rainy</span>';
+    if (s.includes('cloud') || s.includes('overcast') || s.includes('grey') || s.includes('gray') || s.includes('fog') || s.includes('mist')) return '<span class="material-symbols-outlined text-slate-400">cloudy</span>';
+    if (s.includes('wind') || s.includes('storm') || s.includes('thunder')) return '<span class="material-symbols-outlined text-slate-400">air</span>';
+    if (s.includes('warm') || s.includes('hot') || s.includes('sunny') || s.includes('dry') || s.includes('clear')) return '<span class="material-symbols-outlined text-orange-400">sunny</span>';
+    return '<span class="material-symbols-outlined text-orange-400">sunny</span>';
+}
+
+function getNightlifeIcon(type) {
+    const t = (type || '').toLowerCase();
+    if (t.includes('sauna') || t.includes('bath')) return '<span class="material-symbols-outlined">hot_tub</span>';
+    if (t.includes('club') || t.includes('disco')) return '<span class="material-symbols-outlined">celebration</span>';
+    if (t.includes('bar')) return '<span class="material-symbols-outlined">local_bar</span>';
+    if (t.includes('cafe') || t.includes('bakery')) return '<span class="material-symbols-outlined">local_cafe</span>';
+    if (t.includes('shop') || t.includes('store')) return '<span class="material-symbols-outlined">shopping_bag</span>';
+    if (t.includes('restaurant') || t.includes('dining')) return '<span class="material-symbols-outlined">restaurant</span>';
+    return '<span class="material-symbols-outlined">music_note</span>';
+}
+
+function getRestaurantIcon(type) {
+    const t = (type || '').toLowerCase();
+    if (t.includes('cafe') || t.includes('coffee')) return '<span class="material-symbols-outlined">coffee</span>';
+    return '<span class="material-symbols-outlined">restaurant</span>';
+}
+
+function getHotelTagsInfo(h) {
+    if (!h) return { specialty: null, priceTag: null, certifications: [] };
+    const tags = h.tags || [];
+    let specialty = null, priceTag = null, certifications = [];
+    const priceLevels = ['Budget', 'Mid-priced', 'Mid-Priced', 'Moderate', 'Luxury'];
+    for (const tag of tags) {
+        if (tag === 'Luxury') specialty = 'Luxury';
+        else if (tag === 'LGBTQ Friendly') specialty = specialty === 'Luxury' ? 'Luxury' : 'LGBTQ Friendly';
+        else if (['LGBTQ Owned & Operated','LGBTQ Owned','LGBTQ Owned/Operated','LGBTQ Hotel','Gay Hotel'].includes(tag)) specialty = 'LGBTQ Owned';
+        else if (tag === 'Event Hotel') specialty = specialty === 'Luxury' ? 'Luxury' : 'Event Hotel';
+        if (priceLevels.includes(tag)) priceTag = tag;
+        if (['World Rainbow Hotels Member','IGLTA Accredited','World Rainbow Hotel','IGLTA Member','Rainbow Registered (CGLCC)','World Rainbow Hotels'].includes(tag))
+            certifications.push(tag);
+    }
+    if (!priceTag) {
+        if (h.pricing && priceLevels.includes(h.pricing)) priceTag = h.pricing;
+        else if (h.price && priceLevels.includes(h.price)) priceTag = h.price;
+        else if (h.type && priceLevels.includes(h.type)) priceTag = h.type;
+    }
+    if (priceTag === specialty) priceTag = null;
+    return { specialty, priceTag, certifications };
+}
+
+function getEventTypeStyle(type) {
+    const t = (type || '').toLowerCase().trim();
+    if (t.includes('carnival') || t.includes('mardi gras')) return {emoji:'🎭',gradient:'from-purple-600 to-fuchsia-500',bannerTextColor:'text-white',eventNameColor:'text-white'};
+    if (t.includes('cruise') && t.includes('bear')) return {emoji:'🚢🐻',gradient:'from-blue-600 to-amber-700',bannerTextColor:'text-white',eventNameColor:'text-black'};
+    if (t.includes('cruise') && t.includes('lesbian')) return {emoji:'🚢🌺',gradient:'from-blue-500 to-rose-400',bannerTextColor:'text-white',eventNameColor:'text-black'};
+    if (t.includes('lesbian')) return {emoji:'🌺',gradient:'from-rose-500 to-pink-400',bannerTextColor:'text-white',eventNameColor:'text-black'};
+    switch(t) {
+        case 'cruise':    return {emoji:'🚢',gradient:'from-blue-600 to-cyan-500',bannerTextColor:'text-white',eventNameColor:'text-black'};
+        case 'bear':      return {emoji:'🐻',gradient:'from-amber-800 to-amber-600',bannerTextColor:'text-white',eventNameColor:'text-black'};
+        case 'circuit':   return {emoji:'🎵',gradient:'from-pink-600 to-rose-500',bannerTextColor:'text-white',eventNameColor:'text-white'};
+        case 'halloween': return {emoji:'🎃',gradient:'from-orange-600 to-amber-500',bannerTextColor:'text-white',eventNameColor:'text-orange-600'};
+        case 'christmas': return {emoji:'🎄',gradient:'from-green-700 to-emerald-500',bannerTextColor:'text-white',eventNameColor:'text-black'};
+        case 'nye':       return {emoji:'🥂',gradient:'from-yellow-500 to-amber-400',bannerTextColor:'text-yellow-200',eventNameColor:'text-black'};
+        case 'drag':      return {emoji:'👑',gradient:'from-fuchsia-600 to-pink-500',bannerTextColor:'text-white',eventNameColor:'text-fuchsia-600'};
+        case 'festival':  return {emoji:'🎉',gradient:'from-rose-600 to-pink-500',bannerTextColor:'text-white',eventNameColor:'text-black'};
+        default:          return {emoji:'🌈',gradient:'from-purple-600 to-blue-500',bannerTextColor:'text-white',eventNameColor:'text-white'};
+    }
+}
+
+function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+    return a;
+}
+
+// ═══════════════════════════════════════════
+// EVENTS-ONLY VIEW (dateless search)
+// ═══════════════════════════════════════════
+function showEventsOnlyView(targets) {
+    const container = document.getElementById('eventsOnlyContainer');
+    if (!container) return;
+    container.innerHTML = '';
+    showView('eventsOnlyView');
+
+    targets.forEach(targetKey => {
+        const data = DATABASE.details[targetKey];
+        if (!data) return;
+        const normalize = s => s ? s.toLowerCase().trim() : '';
+        const targetCityName = normalize(data.name.split(',')[0]);
+        const specialEvents = SPECIAL_EVENTS_DATA.filter(e => {
+            const ec = normalize(e.city);
+            return ec === normalize(targetKey) || ec === targetCityName;
+        });
+        const internalEvents = Array.isArray(data.events) ? data.events : [];
+        const seen = new Set();
+        const allEvents = [];
+        [...specialEvents, ...internalEvents].forEach(ev => {
+            if (ev && ev.name && !seen.has(ev.name)) { seen.add(ev.name); allEvents.push(ev); }
+        });
+        const byDate = (a, b) => new Date(a.start || 0) - new Date(b.start || 0);
+        const prideEvents = allEvents.filter(e => e.type !== 'Cruise').sort(byDate);
+        const cruises     = allEvents.filter(e => e.type === 'Cruise').sort(byDate);
+
+        const renderCard = ev => {
+            const s = getEventTypeStyle(ev.type);
+            const isPast = window.isPastEvent(ev);
+            const cityLabel = ev.city || data.name.split(',')[0];
+            const searchQ = encodeURIComponent(`${ev.name} ${new Date((ev.start || '')).getFullYear() || 2026}`);
+            return `
+            <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-md border-l-4 border-purple-500 flex gap-4 ${isPast ? 'opacity-60' : ''}">
+                <div class="text-3xl flex-shrink-0">${s.emoji}</div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-black text-slate-900 dark:text-white break-words leading-snug">${ev.name}</p>
+                    <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mt-1">${cityLabel} · ${formatDateShort(ev.start)}${ev.end && ev.end !== ev.start ? ' – ' + formatDateShort(ev.end) : ''}</p>
+                    ${isPast ? '<span class="text-[10px] font-bold bg-slate-200 dark:bg-slate-700 text-slate-500 px-2 py-0.5 rounded-full">Past Event</span>' : ''}
+                    <div class="flex gap-2 mt-3">
+                        ${ev.link ? `<a href="${ev.link}" target="_blank" class="px-3 py-1.5 bg-purple-600 text-white rounded-full text-xs font-bold hover:bg-purple-700 transition-colors">Official</a>` : ''}
+                        <a href="https://www.google.com/search?q=${searchQ}" target="_blank" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs font-bold hover:bg-slate-200 transition-colors">Google</a>
+                    </div>
+                </div>
+            </div>`;
+        };
+
+        const section = document.createElement('div');
+        section.className = 'space-y-4 mb-8';
+        section.innerHTML = `<h3 class="text-xl font-black inline-block dark-pill"><span class="pride-gradient-text">${data.name}</span></h3>`;
+        if (prideEvents.length) {
+            section.innerHTML += prideEvents.map(renderCard).join('');
+        }
+        if (cruises.length) {
+            section.innerHTML += `<h4 class="text-sm font-black text-slate-500 uppercase tracking-widest mt-6 mb-2">🚢 Cruises</h4>` + cruises.map(renderCard).join('');
+        }
+        if (!prideEvents.length && !cruises.length) {
+            section.innerHTML += `<p class="text-sm text-slate-500 dark:text-slate-400">No events found for this destination.</p>`;
+        }
+        container.appendChild(section);
+    });
+}
+
+// ═══════════════════════════════════════════
+// SEARCH RESULT RENDERING
+// ═══════════════════════════════════════════
+let _pendingSearch = null;
+
+async function doSearch() {
+    const origin          = document.querySelector('#departure').value.trim();
+    const destinationInput = document.querySelector('#destination').value.trim().toLowerCase();
+    const dateStart       = document.querySelector('#dateStart').value;
+    const dateEnd         = document.querySelector('#dateEnd').value;
+    if (!origin || !destinationInput) { alert('Please enter a departure city and destination.'); return; }
+
+    await loadDestinationsData();
+
+    let targets = [];
+    if (DATABASE.mappings.regions[destinationInput])       targets = DATABASE.mappings.regions[destinationInput];
+    else if (DATABASE.mappings.countries[destinationInput]) targets = DATABASE.mappings.countries[destinationInput];
+    else if (DATABASE.mappings.cities && DATABASE.mappings.cities[destinationInput]) targets = DATABASE.mappings.cities[destinationInput];
+    else {
+        const iataMatch = Object.keys(DATABASE.details).find(key => {
+            if (!DATABASE.details[key].iata) return false;
+            return String(DATABASE.details[key].iata).toLowerCase().split(',').map(i=>i.trim()).includes(destinationInput);
+        });
+        if (DATABASE.details[destinationInput])  targets = [destinationInput];
+        else if (iataMatch)                       targets = [iataMatch];
+        else { alert('This destination has not been added to our database yet.'); return; }
+    }
+
+    targets = [...new Set(targets)];
+
+    if (!dateStart || !dateEnd) { showEventsOnlyView(targets); return; }
+
+    const container = document.getElementById('resultsContainer');
+    container.innerHTML = '<div class="flex justify-center py-12"><div class="w-10 h-10 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div></div>';
+    showView('resultsView');
+
+    // Small timeout so spinner renders before heavy JS
+    await new Promise(r => setTimeout(r, 10));
+    container.innerHTML = '';
+
+    targets.forEach((targetKey, index) => {
+        const data = DATABASE.details[targetKey];
+        if (!data) return;
+
+        const EVENT_HOTELS = window._EVENT_HOTELS || {};
+        const searchStart  = new Date(dateStart);
+        const searchEnd    = new Date(dateEnd);
+        const bufferTime   = 14 * 24 * 60 * 60 * 1000;
+
+        let matchingEvents = SPECIAL_EVENTS_DATA.filter(e => {
+            const normalize = s => s ? s.toLowerCase().trim() : '';
+            const targetCityName = normalize(data.name.split(',')[0]);
+            const eventCity = normalize(e.city);
+            if (eventCity !== normalize(targetKey) && eventCity !== targetCityName) return false;
+            const eStart = new Date(e.start), eEnd = new Date(e.end);
+            return (searchStart <= new Date(eEnd.getTime()+bufferTime)) && (searchEnd >= new Date(eStart.getTime()-bufferTime));
+        });
+        if (matchingEvents.length === 0 && data.events) {
+            const internal = data.events.filter(e => {
+                const eStart = new Date(e.start), eEnd = new Date(e.end);
+                return (searchStart <= new Date(eEnd.getTime()+bufferTime)) && (searchEnd >= new Date(eStart.getTime()-bufferTime));
+            });
+            matchingEvents.push(...internal);
+        }
+
+        // Hotels
+        const rainbowHotels = shuffle((data.hotels||[]).filter(h=>h.tags&&h.tags.some(t=>t.includes('World Rainbow'))));
+        const iglataHotels  = shuffle((data.hotels||[]).filter(h=>h.tags&&h.tags.some(t=>t.includes('IGLTA'))));
+        const otherHotels   = shuffle((data.hotels||[]).filter(h=>!h.tags||(!h.tags.some(t=>t.includes('World Rainbow'))&&!h.tags.some(t=>t.includes('IGLTA')))));
+        let randomHotels = [...rainbowHotels, ...iglataHotels, ...otherHotels];
+        const allHotelsPool = [...randomHotels];
+        randomHotels = randomHotels.slice(0, 6);
+
+        // Event hotel injection
+        const firstEvent = matchingEvents.length > 0 ? matchingEvents[0] : null;
+        if (firstEvent && firstEvent.hotels && firstEvent.hotels.length > 0) {
+            const evHotelName = firstEvent.hotels[Math.floor(Math.random()*firstEvent.hotels.length)];
+            randomHotels.unshift({ name: evHotelName, type: 'Event Special', tags: ['Featured','Pride Partner'] });
+        } else if (firstEvent && EVENT_HOTELS[firstEvent.name]) {
+            const evHotelNames = EVENT_HOTELS[firstEvent.name];
+            randomHotels.unshift({ name: evHotelNames[Math.floor(Math.random()*evHotelNames.length)], type: 'Event Special', tags: ['Featured'] });
+        }
+        const eventHotelsList = randomHotels.filter(h=>h.type==='Event Special');
+        const allHotelsDisplay = [...eventHotelsList, ...allHotelsPool];
+
+        // Nightlife / stores / saunas / restaurants
+        const availableNightlife   = shuffle([...(data.nightlife||[]), ...(data.saunas||[]), ...(data.stores||[])]);
+        const availableRestaurants = data.restaurants ? shuffle([...data.restaurants]) : [];
+        const isStore      = n => { const t=(n.type||'').toLowerCase(), tags=(n.tags||[]).map(g=>g.toLowerCase()); return t.includes('store')||t.includes('shop')||tags.some(g=>g.includes('store')||g.includes('shop')); };
+        const isSauna      = n => { const t=(n.type||'').toLowerCase(), tags=(n.tags||[]).map(g=>g.toLowerCase()); return t.includes('sauna')||t.includes('bath')||tags.some(g=>g.includes('sauna')||g.includes('bathhouse')); };
+        const isRestaurant = n => { const t=(n.type||'').toLowerCase(); return t.includes('restaurant')||t.includes('diner')||t.includes('cafe')||t.includes('bakery')||t.includes('bistro'); };
+        const allStores       = availableNightlife.filter(n=>isStore(n));
+        const allSaunas       = availableNightlife.filter(n=>!isStore(n)&&isSauna(n));
+        const nightlifeRestaurants = availableNightlife.filter(n=>!isStore(n)&&!isSauna(n)&&isRestaurant(n));
+        const allNightlife    = availableNightlife.filter(n=>!isStore(n)&&!isSauna(n)&&!isRestaurant(n));
+        const allRestaurants  = [...availableRestaurants, ...nightlifeRestaurants];
+
+        // Publications
+        const allNewspapers = (() => { const a=data.newspapers||[]; const withUrl=a.filter(p=>p.url); const withoutUrl=a.filter(p=>!p.url); return withUrl.length>=2?withUrl:[...withUrl,...withoutUrl]; })();
+        const randomBeaches    = (() => { const a=data.beaches||[]; return a.length<=2?a:[...a].sort(()=>Math.random()-0.5).slice(0,2); })();
+        const allCommunity     = [...(data.community||[])].sort(()=>Math.random()-0.5);
+
+        // Tours — LGBTQ first
+        const isLgbtqTour = t => {
+            const name=(t.name||'').toLowerCase(), tags=Array.isArray(t.tags)?t.tags.map(x=>x.toLowerCase()):[];
+            return tags.some(tag=>tag.includes('lgbtq')||tag.includes('gay')||tag.includes('queer')||tag.includes('pride'))
+                || name.includes('lgbtq')||name.includes('gay')||name.includes('queer')||name.includes('pride tour')||name.includes('pride walk');
+        };
+        const allTours  = data.tours || [];
+        const lgbtqTours = shuffle(allTours.filter(isLgbtqTour));
+        const otherTours = shuffle(allTours.filter(t=>!isLgbtqTour(t)));
+        const randomTours = [...lgbtqTours.slice(0,2), ...otherTours.slice(0,3)];
+        const allToursDisplay = [...lgbtqTours, ...otherTours];
+
+        const randomParks = shuffle(data.amusementParks||[]).slice(0,2);
+        const fareEstimate = calculateFareEstimate(data.baseFare);
+        const delay = index * 200;
+
+        // Safety
+        const safetyScore = data.safetyScore || 85;
+        const safetyColor = safetyScore < 50 ? 'text-red-500' : safetyScore < 65 ? 'text-yellow-500' : 'text-green-500';
+        const safetyLabel = safetyScore < 50 ? 'Caution Advised' : safetyScore < 65 ? 'Moderate Inclusivity' : 'Excellent Inclusivity';
+        const safetyOffset = 251.2 * (1 - safetyScore / 100);
+        const allDistricts = Array.isArray(data.lgbtqDistrict) ? data.lgbtqDistrict : (data.lgbtqDistrict ? [data.lgbtqDistrict] : []);
+        const displayDistricts = allDistricts.length <= 2 ? allDistricts : [...allDistricts].sort(()=>Math.random()-0.5).slice(0,2);
+
+        // Event carousel
+        let eventContent = '';
+        if (matchingEvents.length > 0) {
+            const carouselItems = matchingEvents.map(event => {
+                const s = getEventTypeStyle(event.type);
+                const isCruise = event.type === 'Cruise';
+                const officialLink = event.link || getEventsLink(data.name, dateStart);
+                const showOfficial = event.link && !event.link.includes('google.com/search');
+                const link2 = `https://www.google.com/search?q=${encodeURIComponent(event.name + ' 2026')}`;
+                return `
+                <div class="snap-center shrink-0 w-[85%] sm:w-80 bg-gradient-to-r ${s.gradient} rounded-xl shadow-lg p-5 relative overflow-hidden flex flex-col">
+                    <div class="absolute top-0 right-0 p-4 opacity-40 text-7xl leading-none select-none">${s.emoji}</div>
+                    <div class="text-2xl mb-2">${s.emoji}</div>
+                    <h4 class="font-bold text-lg ${s.bannerTextColor||'text-white'} mb-2">${isCruise?'Cruise Alert':'Event Detected'}${matchingEvents.length>1?' <span class="text-[10px] font-black uppercase bg-white/25 px-2 py-0.5 rounded text-slate-900">MULTIPLE</span>':''}</h4>
+                    <a href="${officialLink}" target="_blank" class="font-bold ${s.eventNameColor||'text-white'} text-xl hover:underline cursor-pointer break-words mb-2">${event.name}</a>
+                    <p class="text-xs text-yellow-100 mb-4 flex items-center gap-1 font-medium">
+                        <span class="material-symbols-outlined text-sm">calendar_today</span> ${event.start} – ${event.end}
+                    </p>
+                    <div class="flex gap-2">
+                        ${showOfficial?`<a href="${officialLink}" target="_blank" class="flex-1 py-2 bg-white text-slate-900 hover:bg-white/90 rounded-lg text-center text-xs font-bold flex items-center justify-center gap-1"><span class="material-symbols-outlined text-sm">language</span>Official</a>`:''}
+                        <a href="${link2}" target="_blank" class="flex-1 py-2 bg-white/20 text-slate-900 font-bold border border-white/40 hover:bg-white/30 rounded-lg text-center text-xs flex items-center justify-center gap-1"><span class="material-symbols-outlined text-sm">search</span>Google</a>
+                    </div>
+                </div>`;
+            }).join('');
+            eventContent = `<div class="mt-4 -mx-4 px-4"><div class="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 hide-scrollbar">${carouselItems}</div></div>`;
+        }
+
+        // Weather
+        const safeDate    = (dateStart && dateStart !== 'undefined') ? dateStart : new Date().toISOString();
+        const monthIndex  = new Date(safeDate).getUTCMonth();
+        const monthName   = getMonthName(safeDate);
+        const mWeather    = data.monthlyWeather ? data.monthlyWeather[monthIndex] : null;
+        const highTemp    = mWeather?.high || '72°F';
+        const lowTemp     = mWeather?.low  || '55°F';
+        const description = mWeather?.description || data.weather || '';
+        const gear        = mWeather?.gear || 'Light layers and comfortable walking shoes.';
+        const weatherSection = `
+        <section class="bg-gradient-to-r from-red-50 via-yellow-50 to-purple-50 dark:from-purple-900/20 dark:via-yellow-900/10 dark:to-red-900/20 rounded-xl p-5 border-2 border-purple-200 dark:border-purple-700/30">
+            <div class="mb-4">
+                <h3 class="text-xl font-bold dark-pill mb-1"><a href="https://www.google.com/search?q=Weather+in+${encodeURIComponent(data.name)}+in+${encodeURIComponent(monthName)}" target="_blank" class="pride-gradient-text hover:underline">${monthName} Weather</a></h3>
+                <p class="text-sm font-semibold text-slate-700 dark:text-slate-300 leading-snug">${description}</p>
+            </div>
+            <div class="w-full flex items-start gap-4 p-4 bg-white dark:bg-slate-800/60 rounded-xl">
+                <div class="flex-shrink-0 pr-4 border-r border-slate-200 dark:border-slate-700">${getWeatherIcon(description)}</div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest mb-2">${monthName} Average</p>
+                    <div class="flex flex-wrap gap-x-4 gap-y-1 mb-3">
+                        <span class="text-base font-black text-slate-900 dark:text-white">${highTemp} <span class="font-bold text-slate-400">High</span></span>
+                        <span class="text-base font-bold text-slate-700 dark:text-slate-300">${lowTemp} <span class="font-bold text-slate-400">Low</span></span>
+                    </div>
+                    <p class="text-sm font-bold text-primary leading-snug">Gear &amp; Packing: <span class="font-normal text-slate-600 dark:text-slate-400">${gear}</span></p>
+                </div>
+            </div>
+        </section>`;
+
+        // Venue card helper
+        const venueCard = (v, i, threshold, colorClass, showGoogle) => {
+            const icon     = getNightlifeIcon(v.type);
+            const firstTag = v.tags && v.tags.length > 0 ? v.tags[0] : '';
+            const safeN    = JSON.stringify(v).replace(/"/g,'&quot;');
+            const safeCity = data.name.replace(/'/g,"\\'");
+            const gSearch  = encodeURIComponent(`${v.name} ${data.name.split(',')[0].trim()}`);
+            return `
+            <div class="${i>=threshold?'view-more-item hidden':''} bg-white p-4 rounded-xl border-2 border-${colorClass}/20 group hover:bg-${colorClass} transition-colors duration-300 cursor-default flex flex-col">
+                <div class="w-10 h-10 bg-${colorClass} rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white group-hover:text-${colorClass} flex-shrink-0">${icon}</div>
+                <p class="font-bold group-hover:text-white text-black break-words mb-1 cursor-pointer hover:underline" style="color:black!important;" onclick="showVenueDetail(${safeN},'${safeCity}','resultsView')">${v.name}</p>
+                <p class="text-xs text-slate-700 dark:text-slate-300 group-hover:text-white break-words mb-3">${v.type}${firstTag?' &bull; '+firstTag:''}</p>
+                ${showGoogle?`<a href="https://www.google.com/search?q=${gSearch}" target="_blank" rel="noopener noreferrer" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-blue-100 transition-colors text-slate-400 hover:text-blue-600"><span class="material-symbols-outlined text-[16px]">search</span></a>`:''}
+            </div>`;
+        };
+
+        const viewMoreBtn = (total, shown, label) => total > shown ? `
+        <button onclick="var items=this.closest('section').querySelectorAll('.view-more-item');var showing=items[0]&&!items[0].classList.contains('hidden');items.forEach(function(el){el.classList.toggle('hidden')});this.innerHTML=showing?'<span class=\\'material-symbols-outlined text-[16px]\\'>expand_more</span> View More (${total-shown} more)':'<span class=\\'material-symbols-outlined text-[16px]\\'>expand_less</span> View Less';" class="mt-3 w-full py-2 text-sm font-bold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 transition-colors flex items-center justify-center gap-1">
+            <span class="material-symbols-outlined text-[16px]">expand_more</span> View More (${total-shown} more)
+        </button>` : '';
+
+        const card = document.createElement('div');
+        card.className = 'bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-purple-100 overflow-hidden fade-in-up';
+        card.style.animationDelay = `${delay}ms`;
+        card.innerHTML = `
+        <!-- Header -->
+        <div class="pride-gradient-bg p-6 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="text-4xl select-none filter drop-shadow-md">${data.image}</div>
+                <div>
+                    <h2 class="text-sm font-black italic text-white">${formatDisplayName(data)}</h2>
+                    <span class="text-[10px] font-black text-white uppercase tracking-widest flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[12px] text-yellow-300">verified</span> Travel Scout Report
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 space-y-6 bg-slate-50 dark:bg-gray-800">
+            <!-- Flights & Hotels -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Flight Card -->
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border-l-4 border-blue-500 shadow-md">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="px-3 py-1 bg-blue-500/10 rounded-lg"><span class="font-extrabold text-lg dark-pill">Flights</span></div>
+                        <div class="text-right">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Booking Dates</span>
+                            <span class="text-[11px] font-bold text-blue-600">${formatDateShort(dateStart)} – ${formatDateShort(dateEnd)}</span>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-bold mb-1 text-slate-900 dark:text-white">${fareEstimate} <span class="text-xs font-normal text-slate-500">/ round-trip</span></p>
+                    <p class="text-xs text-slate-500 mb-4">Cheapest options via regional budget carriers</p>
+                    <a href="${getGoogleFlightsLink(origin, data.name, dateStart, dateEnd, data)}" target="_blank"
+                       class="w-full py-2 bg-blue-500 text-white rounded-full font-bold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+                        Google Flights
+                    </a>
+                </div>
+
+                <!-- Hotels -->
+                <section>
+                    <h3 class="text-xl font-bold mb-4 inline-block" style="background-color:#dc2626;color:white;padding:0.25rem 1rem;border-radius:9999px;">Hotels</h3>
+                    <div class="space-y-3 mb-3">
+                        ${allHotelsDisplay.map((h, hotelIdx) => {
+                            const tagInfo = getHotelTagsInfo(h);
+                            const primaryBadge = tagInfo.specialty || (tagInfo.certifications.length > 0 ? tagInfo.certifications[0] : null);
+                            const badgeColor = !primaryBadge ? '' : primaryBadge === 'Luxury' ? 'bg-yellow-100 text-yellow-700' : primaryBadge === 'LGBTQ Friendly' ? 'bg-blue-100 text-blue-700' : primaryBadge === 'Event Hotel' ? 'bg-orange-100 text-orange-700' : 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white';
+                            const isHidden = hotelIdx >= randomHotels.length;
+                            const safeHotel = JSON.stringify(h).replace(/"/g,'&quot;');
+                            const safeCity  = data.name.replace(/'/g,"\\'");
+                            return `
+                            <div class="${isHidden?'view-more-item hidden':''} bg-white dark:bg-slate-800 p-5 rounded-xl border-2 border-slate-200 dark:border-slate-700 shadow-md">
+                                <div class="flex items-start gap-3 mb-3">
+                                    <div class="w-11 h-11 flex items-center justify-center rounded bg-slate-700 text-white flex-shrink-0">
+                                        <span class="material-symbols-outlined text-[20px]">hotel</span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <span class="font-black text-slate-800 dark:text-slate-100 leading-tight text-lg block break-words cursor-pointer hover:text-primary transition-colors" onclick="showVenueDetail(${safeHotel},'${safeCity}','resultsView')">${h.name}</span>
+                                        <div class="flex flex-wrap gap-2 mt-2">
+                                            ${primaryBadge?`<span class="text-[10px] font-bold px-3 py-1 rounded-full ${badgeColor}">${primaryBadge}</span>`:''}
+                                            ${tagInfo.priceTag?`<span class="text-[10px] font-bold px-3 py-1 rounded-lg text-white" style="background:#0d7d63;">${tagInfo.priceTag}</span>`:''}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-right text-xs">
+                                    <span class="font-black text-slate-400 uppercase tracking-widest block">Stay: ${formatDateShort(dateStart)} – ${formatDateShort(dateEnd)}</span>
+                                </div>
+                            </div>`;
+                        }).join('')}
+                    </div>
+                    ${viewMoreBtn(allHotelsDisplay.length, randomHotels.length, 'hotel')}
+                    <div class="space-y-3 mt-3">
+                        <a href="${getExpediaLink(data.name, dateStart, dateEnd)}" target="_blank"
+                           class="w-full py-3 bg-purple-600 text-white rounded-full font-black text-sm flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all">
+                            <span class="material-symbols-outlined text-sm">open_in_new</span> Book All on Expedia
+                        </a>
+                        <a href="${getBookingComLink(data.name, dateStart, dateEnd)}" target="_blank"
+                           class="w-full py-3 bg-blue-600 text-white rounded-full font-black text-sm flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all">
+                            <span class="material-symbols-outlined text-sm">open_in_new</span> Book on Booking.com
+                        </a>
+                    </div>
+                </section>
+            </div>
+
+            <!-- LGBTQ Rentals -->
+            <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border-2 border-slate-200 dark:border-slate-700 shadow-md">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="px-3 py-1 bg-red-500/10 rounded-lg"><span class="font-extrabold text-lg dark-pill">LGBTQ Rentals</span></div>
+                    <span class="text-[11px] font-bold text-red-500">${formatDateShort(dateStart)} – ${formatDateShort(dateEnd)}</span>
+                </div>
+                <p class="text-sm font-bold text-slate-900 dark:text-white mb-2">Apartments, Condos, Villas and Homes</p>
+                <a href="https://www.misterbandb.com" target="_blank"
+                   class="w-full py-3 bg-red-500 text-black rounded-full font-black text-sm flex items-center justify-center gap-2 active:scale-95 transition-all mb-4">
+                    <span class="material-symbols-outlined text-sm">search</span> Search on Misterb&amp;b
+                </a>
+            </div>
+
+            <!-- Safety & Neighborhoods -->
+            <section class="bg-white dark:bg-slate-800 p-6 rounded-xl border-2 border-slate-200 dark:border-slate-700 shadow-md">
+                <h3 class="text-xl font-bold mb-4 inline-block" style="background-color:#16a34a;color:white;padding:0.25rem 1rem;border-radius:9999px;">Destination Information</h3>
+                <div class="flex flex-col items-center gap-6 my-6">
+                    <a href="https://www.equaldex.com/equality-index" target="_blank" class="flex flex-col items-center hover:scale-105 transition-transform">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 underline tracking-wider uppercase">Equaldex</span>
+                        <div class="relative w-32 h-32 flex items-center justify-center">
+                            <svg viewBox="0 0 96 96" class="w-full h-full transform -rotate-90">
+                                <circle class="text-slate-100 dark:text-slate-700" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-width="8"></circle>
+                                <circle class="${safetyColor}" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="${safetyOffset}" stroke-width="10" stroke-linecap="round"></circle>
+                            </svg>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center px-4">
+                                <span class="text-4xl font-black ${safetyColor} leading-none mb-1">${safetyScore}</span>
+                                <span class="text-[10px] uppercase font-bold text-slate-500 leading-tight text-center">Equality Index<br>Score</span>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="w-full text-center">
+                        <p class="font-black text-slate-800 dark:text-slate-100">${safetyLabel}</p>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">${data.lgbtqSafety}</p>
+                    </div>
+                </div>
+                ${eventContent}
+                ${displayDistricts.length > 0 ? `
+                <div class="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 mt-4">
+                    <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-600 flex-shrink-0">
+                        <span class="material-symbols-outlined font-black">hub</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest mb-1">LGBTQ+ Neighborhood${displayDistricts.length!==1?'s':''}</p>
+                        <div class="flex flex-wrap gap-1">
+                            ${displayDistricts.map(d=>`<span class="text-xs font-bold px-2 py-0.5 bg-green-500/10 text-green-700 dark:text-green-400 rounded-full border border-green-500/30">${d}</span>`).join('')}
+                            ${allDistricts.length>2?`<span class="text-xs text-slate-400 self-center pl-1">+${allDistricts.length-2} more</span>`:''}
+                        </div>
+                    </div>
+                </div>` : ''}
+                ${DESTINATION_LINKS[targetKey] ? `
+                <div class="mt-6 pt-6 border-t border-slate-100 dark:border-slate-700">
+                    <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-3">LGBTQ+ Guides &amp; Resources</h4>
+                    <div class="flex flex-wrap gap-2">
+                        ${DESTINATION_LINKS[targetKey].gaycities?`<a href="${DESTINATION_LINKS[targetKey].gaycities}" target="_blank" class="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg text-xs font-bold hover:bg-blue-200 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">public</span>GayCities</a>`:''}
+                        ${DESTINATION_LINKS[targetKey].youtube?`<a href="${DESTINATION_LINKS[targetKey].youtube}" target="_blank" class="px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-xs font-bold hover:bg-red-200 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">play_circle</span>YouTube Guide</a>`:''}
+                    </div>
+                </div>` : ''}
+            </section>
+
+            <!-- Community Resources Header -->
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border-l-4 border-purple-500 shadow-md">
+                <span class="font-extrabold text-lg dark-pill"><span class="pride-gradient-text">LGBTQ Community Resources</span></span>
+            </div>
+
+            <!-- Stores -->
+            ${allStores.length > 0 ? `
+            <section>
+                <h3 class="text-xl font-bold mb-4 inline-flex items-center gap-2 dark-pill"><span class="material-symbols-outlined">shopping_bag</span>Shops &amp; Stores</h3>
+                <div class="grid grid-cols-2 gap-3">${allStores.map((n,i)=>venueCard(n,i,2,'pride-green',true)).join('')}</div>
+                ${viewMoreBtn(allStores.length,2,'store')}
+            </section>` : ''}
+
+            <!-- Saunas -->
+            ${allSaunas.length > 0 ? `
+            <section>
+                <h3 class="text-xl font-bold mb-4 inline-flex items-center gap-2 dark-pill"><span class="material-symbols-outlined">hot_tub</span>Saunas &amp; Bathhouses</h3>
+                <div class="grid grid-cols-2 gap-3">${allSaunas.map((n,i)=>venueCard(n,i,2,'pride-red',false)).join('')}</div>
+                ${viewMoreBtn(allSaunas.length,2,'sauna')}
+            </section>` : ''}
+
+            <!-- Bars & Nightlife -->
+            ${allNightlife.length > 0 ? `
+            <section>
+                <h3 class="text-xl font-bold mb-4 inline-flex items-center gap-2 dark-pill"><span class="material-symbols-outlined">nightlife</span>Bars &amp; Nightlife</h3>
+                <div class="grid grid-cols-2 gap-3">${allNightlife.map((n,i)=>{
+                    const t=(n.type||'').toLowerCase();
+                    const color = t.includes('club')||t.includes('disco') ? 'pride-blue' : t.includes('bar') ? 'pride-purple' : 'pride-orange';
+                    return venueCard(n,i,4,color,true);
+                }).join('')}</div>
+                ${viewMoreBtn(allNightlife.length,4,'bar')}
+            </section>` : ''}
+
+            <!-- Restaurants -->
+            ${allRestaurants.length > 0 ? `
+            <section>
+                <h3 class="text-xl font-bold mb-4 inline-flex items-center gap-2 dark-pill"><span class="material-symbols-outlined">restaurant</span>Restaurants &amp; Cafes</h3>
+                <div class="grid grid-cols-2 gap-3">${allRestaurants.map((r,i)=>{
+                    const t=(r.type||'').toLowerCase();
+                    const color = t.includes('cafe')||t.includes('coffee')||t.includes('bakery') ? 'pride-orange' : t.includes('shop')||t.includes('store') ? 'pride-green' : 'pride-orange';
+                    return venueCard(r,i,2,color,true);
+                }).join('')}</div>
+                ${viewMoreBtn(allRestaurants.length,2,'restaurant')}
+            </section>` : ''}
+
+            <!-- Publications -->
+            ${allNewspapers.length > 0 ? `
+            <section>
+                <h3 class="text-xl font-bold mb-4 inline-flex items-center gap-2 dark-pill"><span class="material-symbols-outlined text-purple-600">menu_book</span>LGBTQ+ Publications</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    ${allNewspapers.map((p, i) => {
+                        const pubName = typeof p==='object'?p.name:p;
+                        const pubType = typeof p==='object'?(p.type||'Magazine'):'Magazine';
+                        const pubUrl  = typeof p==='object'&&p.url?(p.url.startsWith('http')?p.url:'https://'+p.url):'';
+                        const tag  = pubUrl?'a':'div';
+                        const attrs= pubUrl?`href="${pubUrl}" target="_blank" rel="noopener noreferrer"`:'';
+                        const isHidden = i >= 2;
+                        return `<${tag} ${attrs} class="${isHidden?'view-more-item hidden':''} bg-white p-4 rounded-xl border-2 border-purple-500/20 group hover:bg-purple-600 transition-colors duration-300 flex flex-col ${pubUrl?'cursor-pointer':'cursor-default'} block no-underline">
+                            <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white group-hover:text-purple-600 flex-shrink-0">
+                                <span class="material-symbols-outlined text-[20px]">${pubUrl?'open_in_new':'menu_book'}</span>
+                            </div>
+                            <p class="font-bold group-hover:text-white text-black break-words mb-1" style="color:black!important;">${pubName}</p>
+                            <p class="text-xs text-slate-500 group-hover:text-white break-words">${pubUrl?p.url:pubType}</p>
+                        </${tag}>`;
+                    }).join('')}
+                </div>
+                ${viewMoreBtn(allNewspapers.length,2,'publication')}
+            </section>` : ''}
+
+            <!-- Beaches -->
+            ${randomBeaches.length > 0 ? `
+            <section>
+                <h3 class="text-xl font-bold mb-4 inline-flex items-center gap-2 dark-pill"><span class="material-symbols-outlined text-blue-500">waves</span>LGBTQ+ Beaches</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    ${randomBeaches.map(b => {
+                        const beachName = typeof b==='object'?b.name:b;
+                        const beachType = typeof b==='object'?(b.type||'Beach'):'Beach';
+                        return `<div class="bg-white p-4 rounded-xl border-2 border-blue-500/20 group hover:bg-blue-500 transition-colors flex flex-col cursor-default">
+                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white group-hover:text-blue-500"><span class="material-symbols-outlined">waves</span></div>
+                            <p class="font-bold group-hover:text-white text-black break-words mb-1" style="color:black!important;">${beachName}</p>
+                            <p class="text-xs text-slate-500 group-hover:text-white">${beachType}</p>
+                        </div>`;
+                    }).join('')}
+                </div>
+            </section>` : ''}
+
+            <!-- Community -->
+            ${allCommunity.length > 0 ? `
+            <section>
+                <h3 class="text-xl font-bold mb-4 inline-flex items-center gap-2 dark-pill"><span class="material-symbols-outlined text-orange-500">account_balance</span>Community Engagement</h3>
+                <div class="grid grid-cols-2 gap-3">${allCommunity.map((c,i)=>{
+                    const placeName = typeof c==='object'?c.name:c;
+                    const placeType = typeof c==='object'?(c.type||'Community'):'Community';
+                    const safeP = encodeURIComponent(`${placeName} ${data.name.split(',')[0].trim()}`);
+                    return `<div class="${i>=2?'view-more-item hidden':''} bg-white p-4 rounded-xl border-2 border-orange-500/20 group hover:bg-orange-500 transition-colors flex flex-col cursor-default">
+                        <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white mb-3 group-hover:bg-white group-hover:text-orange-500"><span class="material-symbols-outlined">account_balance</span></div>
+                        <p class="font-bold group-hover:text-white text-black break-words mb-1" style="color:black!important;">${placeName}</p>
+                        <p class="text-xs text-slate-500 group-hover:text-white break-words mb-3">${placeType}</p>
+                        <a href="https://www.google.com/search?q=${safeP}" target="_blank" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-blue-100 text-slate-400 hover:text-blue-600"><span class="material-symbols-outlined text-[16px]">search</span></a>
+                    </div>`;
+                }).join('')}</div>
+                ${viewMoreBtn(allCommunity.length,2,'community')}
+            </section>` : ''}
+
+            <!-- Weather -->
+            ${weatherSection}
+
+            <!-- Tours -->
+            <section class="pb-4">
+                <h3 class="text-xl font-bold mb-4 inline-block" style="background-color:#a855f7;color:white;padding:0.25rem 1rem;border-radius:9999px;">Unmissable Tours</h3>
+                <div class="space-y-4">
+                    ${allToursDisplay.map((t, tourIdx) => {
+                        const tourName = typeof t==='object'?t.name:t;
+                        const activityLevels = ['low','moderate','high','easy','adventurous'];
+                        const priceLevels2 = ['Budget','Moderate','Luxury'];
+                        let tourActivity = typeof t==='object'?(t.activity||''):'';
+                        let tourStyleRaw  = typeof t==='object'?(t.style||''):'';
+                        let tourPrice     = typeof t==='object'?(t.price||t.pricing||''):'';
+                        if (typeof t==='object'&&t.tags&&Array.isArray(t.tags)) {
+                            if (!tourActivity&&!tourStyleRaw) tourActivity=t.tags.find(tag=>activityLevels.includes(tag.toLowerCase()))||'';
+                            if (!tourPrice) tourPrice=t.tags.find(tag=>priceLevels2.includes(tag))||'';
+                        }
+                        const styleIsActivity = activityLevels.includes(tourStyleRaw.toLowerCase());
+                        const activityDisplay = tourActivity||(styleIsActivity?tourStyleRaw:'');
+                        const typeDisplay = styleIsActivity?'':tourStyleRaw;
+                        const activityLabel = activityDisplay?`Activity Level: ${activityDisplay}`:(typeDisplay||'Featured Tour');
+                        const tourDesc = typeDisplay&&activityDisplay?`${typeDisplay} &bull; Activity Level: ${activityDisplay}`:`Approx. 3 hrs &bull; ${activityLabel}`;
+                        const priceBadgeClass = tourPrice==='Budget'?'bg-green-100 text-green-700':tourPrice==='Luxury'?'bg-purple-100 text-purple-700':tourPrice==='Moderate'?'bg-blue-100 text-blue-700':'';
+                        const priceBadge = tourPrice?`<span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${priceBadgeClass}">${tourPrice}</span>`:'';
+                        const isThisLgbtqTour = isLgbtqTour(t);
+                        const isTourHidden = tourIdx >= randomTours.length;
+                        const safeT = JSON.stringify(t).replace(/"/g,'&quot;');
+                        const safeCity = data.name.replace(/'/g,"\\'");
+                        const gViator = encodeURIComponent(`${tourName} viator`);
+                        return `
+                        <div class="${isTourHidden?'view-more-item hidden':''} flex gap-4 items-center bg-white dark:bg-slate-800 p-3 rounded-xl shadow-sm cursor-pointer border-4 ${isThisLgbtqTour?'border-purple-300/30 bg-gradient-to-r from-white to-purple-50 dark:from-slate-800 dark:to-purple-950/20':'border-slate-100 dark:border-slate-700'} hover:border-purple-300"
+                             onclick="showVenueDetail(${safeT},'${safeCity}','resultsView')">
+                            ${isThisLgbtqTour?'<div class="text-2xl flex-shrink-0 select-none">🏳️‍🌈</div>':''}
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2 mb-0.5 flex-wrap">
+                                    <p class="font-bold text-sm text-slate-900 dark:text-white">${tourName}</p>
+                                    ${isThisLgbtqTour?'<span class="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-purple-100 text-purple-700">LGBTQ+</span>':''}
+                                    ${priceBadge}
+                                </div>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">${tourDesc}</p>
+                            </div>
+                            <a href="https://www.google.com/search?q=${gViator}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 hover:bg-blue-100 text-slate-400 hover:text-blue-600 flex-shrink-0">
+                                <span class="material-symbols-outlined text-[18px]">search</span>
+                            </a>
+                        </div>`;
+                    }).join('')}
+                </div>
+                ${viewMoreBtn(allToursDisplay.length, randomTours.length, 'tour')}
+                <a href="${getViatorLink(data.name, dateStart, dateEnd)}" target="_blank"
+                   class="mt-3 block w-full py-3 bg-purple-600 text-white rounded-full font-bold text-sm text-center flex items-center justify-center gap-2 hover:bg-purple-700 transition-colors">
+                    Explore all tours on Viator
+                </a>
+            </section>
+
+            <!-- Amusement Parks -->
+            ${randomParks.length > 0 ? `
+            <section class="pb-4">
+                <h3 class="text-xl font-bold mb-4 inline-flex items-center gap-2 dark-pill"><span class="material-symbols-outlined text-purple-600">attractions</span>Nearby Theme Parks</h3>
+                <div class="space-y-3">
+                    ${randomParks.map(p => {
+                        const badgeClass = p.type==='Disney'?'bg-blue-100 text-blue-700':p.type==='Universal'?'bg-orange-100 text-orange-700':'bg-slate-100 text-slate-700';
+                        return `<div class="flex gap-4 items-center bg-white dark:bg-slate-800 p-3 rounded-xl shadow-sm border-2 border-slate-100 dark:border-slate-700">
+                            <span class="material-symbols-outlined text-2xl text-purple-600 flex-shrink-0">attractions</span>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2 mb-0.5">
+                                    <p class="font-bold text-sm text-slate-900 dark:text-white truncate">${p.name||''}</p>
+                                    <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full flex-shrink-0 ${badgeClass}">${p.type||'Park'}</span>
+                                </div>
+                                <p class="text-xs text-slate-500 truncate">${p.location||''}</p>
+                            </div>
+                        </div>`;
+                    }).join('')}
+                </div>
+            </section>` : ''}
+
+        </div>`;
+
+        container.appendChild(card);
+    });
+}
+
+// ═══════════════════════════════════════════
+// FORM SUBMIT
+// ═══════════════════════════════════════════
+function showSearchWarningModal() {
+    document.getElementById('searchWarningModal').classList.add('open');
+}
+
+const form = document.querySelector('#searchForm');
+if (form) {
+    const dateStartInput = document.querySelector('#dateStart');
+    const dateEndInput   = document.querySelector('#dateEnd');
+    if (dateStartInput && dateEndInput) {
+        function autoSetReturnDate() {
+            const val = dateStartInput.value;
+            if (!val) return;
+            try {
+                const parts = val.split('-');
+                if (parts.length !== 3) return;
+                const year = parseInt(parts[0], 10);
+                if (isNaN(year) || year < 2000) return;
+                const startDate = new Date(parseInt(parts[0],10), parseInt(parts[1],10)-1, parseInt(parts[2],10));
+                const returnAlreadyAfter = dateEndInput.value && dateEndInput.value > val;
+                if (returnAlreadyAfter) return;
+                const nextDay = new Date(startDate);
+                nextDay.setDate(startDate.getDate() + 1);
+                dateEndInput.value = `${String(nextDay.getFullYear()).padStart(4,'0')}-${String(nextDay.getMonth()+1).padStart(2,'0')}-${String(nextDay.getDate()).padStart(2,'0')}`;
+            } catch(e) {}
+        }
+        dateStartInput.addEventListener('change', autoSetReturnDate);
+        dateStartInput.addEventListener('input',  autoSetReturnDate);
+    }
+
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const dateStart = document.querySelector('#dateStart').value;
+        const dateEnd   = document.querySelector('#dateEnd').value;
+        if ((dateStart && window.isPastDate(dateStart)) || (dateEnd && window.isPastDate(dateEnd))) {
+            showSearchWarningModal();
+            return;
+        }
+        await doSearch();
+    });
+}
+
+// ═══════════════════════════════════════════
+// URL PARAM PREFILL  (?from=NYC&to=Paris&start=2026-07-01&end=2026-07-10)
+// ═══════════════════════════════════════════
+(async function initFromParams() {
+    const p = new URLSearchParams(location.search);
+    const from  = p.get('from');
+    const to    = p.get('to');
+    const start = p.get('start');
+    const end   = p.get('end');
+    if (from) document.querySelector('#departure').value = from;
+    if (to)   document.querySelector('#destination').value = to;
+    if (start) document.querySelector('#dateStart').value = start;
+    if (end)   document.querySelector('#dateEnd').value = end;
+    if (to) {
+        await loadDestinationsData();
+        await doSearch();
+    }
+})();
+
+loadDestinationsData().catch(() => {});
+</script>
+</body>
+</html>
