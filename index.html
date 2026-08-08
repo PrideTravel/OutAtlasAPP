@@ -1117,19 +1117,21 @@
 <body class="bg-background-light dark:bg-slate-900 font-display text-slate-900 dark:text-white min-h-screen pb-24">
     <!-- Top Navigation / Brand -->
     <header
-        class="sticky top-0 z-50 bg-background-light dark:bg-slate-900/80 backdrop-blur-md px-4 py-3 flex items-center justify-between border-b"
+        class="sticky top-0 z-50 bg-background-light dark:bg-slate-900/80 backdrop-blur-md px-4 py-3 flex items-center border-b"
         style="border-bottom: 8px solid; border-image: linear-gradient(to right, #FF0018, #FFA52C, #FFFF41, #008018, #0000F9, #86007D) 1;">
-        <!-- Logo / Brand -->
-        <div class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
-            onclick="toggleView('homeView')" title="Back to Home">
-            <div class="w-8 h-8 rounded-lg pride-gradient-bg flex items-center justify-center shadow-lg">
-                <span class="material-symbols-outlined text-white text-xl font-black">flight_takeoff</span>
+        <!-- Logo / Brand (left) -->
+        <div class="flex-1 flex items-center">
+            <div class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+                onclick="toggleView('homeView')" title="Back to Home">
+                <div class="w-8 h-8 rounded-lg pride-gradient-bg flex items-center justify-center shadow-lg">
+                    <span class="material-symbols-outlined text-white text-xl font-black">flight_takeoff</span>
+                </div>
+                <h1 class="text-xl font-extrabold tracking-tight inline-block dark-pill"><span
+                        class="outatlas-name-text">OutAtlas</span></h1>
             </div>
-            <h1 class="text-xl font-extrabold tracking-tight inline-block dark-pill"><span
-                    class="outatlas-name-text">OutAtlas</span></h1>
         </div>
 
-        <!-- Accessibility Color Mode Toggle -->
+        <!-- Accessibility Color Mode Toggle (center) -->
         <div id="access-mode-toggle"
              class="access-toggle-bar"
              role="group"
@@ -1162,6 +1164,9 @@
                 <span class="access-label">High Contrast</span>
             </button>
         </div>
+
+        <!-- Right spacer (balances logo on left) -->
+        <div class="flex-1"></div>
     </header>
 
     <main class="max-w-5xl mx-auto mt-6 px-4">
