@@ -229,6 +229,27 @@
     border: none;
 }
 
+/* High Contrast Mode preview - pure black with white and yellow
+   Text: White (#ffffff) on black background
+   Contrast ratio: 21:1 (maximum possible contrast) */
+.theme-option.high-contrast-mode .theme-preview {
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    position: relative;
+    overflow: hidden;
+}
+
+.theme-option.high-contrast-mode .theme-preview::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(to right, #00e5cc, #ffff00, #ff0077);
+}
+
 /* ============================================================================
    THEME NAME & DESCRIPTION
    Text content of theme card

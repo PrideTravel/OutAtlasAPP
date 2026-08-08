@@ -562,18 +562,271 @@
             background: #fdf0f7;
             color: #f20d8f;
         }
+
+        /* ===== ACCESSIBILITY MODE TOGGLE BAR ===== */
+        .access-toggle-bar {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            background: rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            padding: 3px;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+        }
+
+        html.dark .access-toggle-bar {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        html.high-contrast .access-toggle-bar {
+            background: #000000;
+            border: 2px solid #ffffff;
+        }
+
+        .access-mode-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            padding: 5px 9px;
+            border-radius: 9px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: rgba(30, 41, 59, 0.65);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+            min-width: 50px;
+            line-height: 1;
+        }
+
+        html.dark .access-mode-btn {
+            color: rgba(241, 245, 249, 0.65);
+        }
+
+        html.high-contrast .access-mode-btn {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .access-mode-btn .material-symbols-outlined {
+            font-size: 17px;
+        }
+
+        .access-label {
+            font-size: 8.5px;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        /* Active state */
+        .access-mode-btn.active {
+            background: #ffffff;
+            color: #1e293b;
+            border-color: rgba(0,0,0,0.08);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+        }
+
+        html.dark .access-mode-btn.active {
+            background: rgba(255, 255, 255, 0.18);
+            color: #f1f5f9;
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        html.high-contrast .access-mode-btn.active {
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+            box-shadow: 0 0 0 2px #ffff00;
+        }
+
+        /* Hover state */
+        .access-mode-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.5);
+            color: #1e293b;
+        }
+
+        html.dark .access-mode-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.12);
+            color: #f1f5f9;
+        }
+
+        html.high-contrast .access-mode-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        /* Focus outline */
+        .access-mode-btn:focus-visible {
+            outline: 2px solid #0d7d63;
+            outline-offset: 1px;
+        }
+
+        html.high-contrast .access-mode-btn:focus-visible {
+            outline: 3px solid #ffff00;
+            outline-offset: 2px;
+        }
+
+        /* Mobile: hide text labels, icons only */
+        @media (max-width: 430px) {
+            .access-label { display: none; }
+            .access-mode-btn { min-width: 34px; padding: 6px 7px; }
+        }
+
+        /* ===== HIGH CONTRAST MODE — ELEMENT OVERRIDES ===== */
+
+        /* Body & layout */
+        html.high-contrast body {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+        }
+
+        html.high-contrast header {
+            background-color: #000000 !important;
+            border-bottom-color: #ffffff !important;
+        }
+
+        /* Input fields */
+        html.high-contrast .pill-input,
+        html.high-contrast input[type="text"],
+        html.high-contrast input[type="email"],
+        html.high-contrast input[type="password"],
+        html.high-contrast input[type="date"],
+        html.high-contrast select {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+            border: 2px solid #ffffff !important;
+        }
+
+        html.high-contrast input::placeholder {
+            color: #aaaaaa !important;
+            opacity: 1 !important;
+        }
+
+        /* Common white/light backgrounds → near-black */
+        html.high-contrast .bg-white,
+        html.high-contrast .bg-slate-50,
+        html.high-contrast .bg-slate-100,
+        html.high-contrast .bg-gray-50,
+        html.high-contrast .bg-gray-100 {
+            background-color: #111111 !important;
+        }
+
+        /* Text color overrides */
+        html.high-contrast .text-slate-900,
+        html.high-contrast .text-slate-800,
+        html.high-contrast .text-slate-700,
+        html.high-contrast .text-black {
+            color: #ffffff !important;
+        }
+
+        html.high-contrast .text-slate-600,
+        html.high-contrast .text-slate-500,
+        html.high-contrast .text-slate-400,
+        html.high-contrast .text-gray-600,
+        html.high-contrast .text-gray-500 {
+            color: #dddddd !important;
+        }
+
+        /* Dark-pill header text */
+        html.high-contrast .dark-pill {
+            background-color: #000000 !important;
+            border-color: #ffffff !important;
+            color: #ffffff !important;
+            box-shadow: none !important;
+        }
+
+        html.high-contrast section h3.dark-pill,
+        html.high-contrast h3.dark-pill {
+            color: #ffffff !important;
+        }
+
+        /* Auth modal */
+        html.high-contrast #ps-auth-modal {
+            background: #000000 !important;
+            border: 2px solid #ffffff !important;
+            color: #ffffff !important;
+        }
+
+        html.high-contrast .ps-input {
+            background: #000000 !important;
+            color: #ffffff !important;
+            border-color: #ffffff !important;
+        }
+
+        /* Saved trips */
+        html.high-contrast #ps-trips-inner {
+            background: #000000 !important;
+            color: #ffffff !important;
+        }
+
+        html.high-contrast .ps-trip-card {
+            background: #111111 !important;
+            border: 2px solid #ffffff !important;
+        }
+
+        html.high-contrast .ps-trip-title {
+            color: #ffffff !important;
+        }
+
+        html.high-contrast .ps-trip-date {
+            color: #ffff00 !important;
+        }
+
+        html.high-contrast .ps-trip-section {
+            background: rgba(255,255,255,0.08) !important;
+        }
+
+        html.high-contrast .ps-trip-item {
+            background: #000000 !important;
+            border-color: #555555 !important;
+            color: #ffffff !important;
+        }
+
+        html.high-contrast .ps-trip-item-text {
+            color: #ffffff !important;
+        }
+
+        html.high-contrast .ps-trip-btn-secondary {
+            background: #222222 !important;
+            color: #ffffff !important;
+            border: 2px solid #ffffff !important;
+        }
+
+        html.high-contrast .ps-trip-input {
+            background: #000000 !important;
+            border-color: #ffffff !important;
+            color: #ffffff !important;
+        }
+
+        /* Search result cards */
+        html.high-contrast .rounded-2xl,
+        html.high-contrast .rounded-3xl {
+            border: 1px solid rgba(255,255,255,0.15) !important;
+        }
     </style>
     <meta name="theme-color" content="#f20d8f">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="https://pridetravel.github.io/OutAtlasAPP/icon-512.png">
     <script>
-        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark')
-        } else {
-            document.documentElement.classList.remove('dark')
-        }
+        // FOUC prevention — apply saved theme class to <html> before first paint
+        (function() {
+            var saved = localStorage.getItem('outatlas-theme');
+            if (saved === 'dark' || saved === 'high-contrast') {
+                document.documentElement.classList.add('dark');
+            }
+            if (saved === 'high-contrast') {
+                document.documentElement.classList.add('high-contrast');
+            }
+            if (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
     </script>
     <!-- window._DESTINATIONS_DATA removed so destinations.json is fetched directly -->
 
@@ -591,6 +844,7 @@
             CLEAR: 'clear-mode',
             LIGHT: 'light-mode',
             DARK: 'dark-mode',
+            HIGH_CONTRAST: 'high-contrast-mode',
             STORAGE_KEY: 'outatlas-theme',
             REDUCE_MOTION_KEY: 'reduce-motion',
             HIGH_CONTRAST_KEY: 'high-contrast'
@@ -625,8 +879,8 @@
                 return 'light';
             }
 
-            // Absolute default: Clear View (WCAG AAA accessible)
-            return 'clear';
+            // Absolute default: Light Mode
+            return 'light';
         }
 
         /* ============================================================================
@@ -645,57 +899,94 @@
            Parameters: theme - 'clear', 'light', or 'dark'
            ============================================================================ */
         function setTheme(theme) {
-            // Validate theme parameter
-            if (!['clear', 'light', 'dark'].includes(theme)) {
-                console.warn(`Invalid theme: ${theme}. Using 'clear' instead.`);
-                theme = 'clear';
+            // Validate theme — accept 'clear' for backward compatibility
+            if (!['clear', 'light', 'dark', 'high-contrast'].includes(theme)) {
+                console.warn(`Invalid theme: ${theme}. Using 'light' instead.`);
+                theme = 'light';
             }
 
             // Map theme names to CSS class names
             const themeClass = {
                 'clear': THEME_CONFIG.CLEAR,
                 'light': THEME_CONFIG.LIGHT,
-                'dark': THEME_CONFIG.DARK
+                'dark': THEME_CONFIG.DARK,
+                'high-contrast': THEME_CONFIG.HIGH_CONTRAST
             }[theme];
 
             // Remove all existing theme classes from document.body
             document.body.classList.remove(
                 THEME_CONFIG.CLEAR,
                 THEME_CONFIG.LIGHT,
-                THEME_CONFIG.DARK
+                THEME_CONFIG.DARK,
+                THEME_CONFIG.HIGH_CONTRAST
             );
 
             // Add the new theme class to document.body
             document.body.classList.add(themeClass);
 
-            // Manage Tailwind's 'dark' class separately (Tailwind looks for 'dark', not 'dark-mode')
+            // Manage Tailwind 'dark' class and html.high-contrast class
+            document.documentElement.classList.remove('dark', 'high-contrast');
+
             if (theme === 'dark') {
                 document.documentElement.classList.add('dark');
                 document.documentElement.style.colorScheme = 'dark';
+            } else if (theme === 'high-contrast') {
+                // High contrast: dark base + high-contrast overrides
+                document.documentElement.classList.add('dark', 'high-contrast');
+                document.documentElement.style.colorScheme = 'dark';
             } else {
-                document.documentElement.classList.remove('dark');
                 document.documentElement.style.colorScheme = 'light';
             }
 
-            // Save theme preference to localStorage for persistence across sessions
+            // Save theme preference to localStorage
             localStorage.setItem(THEME_CONFIG.STORAGE_KEY, theme);
 
-            // Log the theme change to console for debugging
             console.log(`Theme changed to: ${theme} (${themeClass})`);
 
-            // Dispatch custom event for other components to listen to
+            // Dispatch custom event for other components
             window.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
+
+            // Sync the header toggle bar active state
+            syncAccessToggle();
+        }
+
+        /* ============================================================================
+           syncAccessToggle()
+           Keeps the header toggle bar buttons in sync with the current theme.
+           ============================================================================ */
+        function syncAccessToggle() {
+            const currentTheme = getSavedTheme();
+            const btnMap = {
+                'light': 'btn-light',
+                'clear': 'btn-light',   // 'clear' maps to the light button
+                'dark': 'btn-dark',
+                'high-contrast': 'btn-hc'
+            };
+
+            document.querySelectorAll('.access-mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-pressed', 'false');
+            });
+
+            const activeBtnId = btnMap[currentTheme];
+            if (activeBtnId) {
+                const activeBtn = document.getElementById(activeBtnId);
+                if (activeBtn) {
+                    activeBtn.classList.add('active');
+                    activeBtn.setAttribute('aria-pressed', 'true');
+                }
+            }
         }
 
         /* ============================================================================
            Cycle Theme - Toggle between Clear View, Light, and Dark modes
            ============================================================================ */
         function cycleTheme() {
-            const currentTheme = localStorage.getItem(THEME_CONFIG.STORAGE_KEY) || 'clear';
-            const themes = ['clear', 'light', 'dark'];
+            const currentTheme = localStorage.getItem(THEME_CONFIG.STORAGE_KEY) || 'light';
+            const themes = ['light', 'dark', 'high-contrast'];
             const currentIndex = themes.indexOf(currentTheme);
-            const nextTheme = themes[(currentIndex + 1) % themes.length];
-            setTheme(nextTheme);
+            const nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % themes.length;
+            setTheme(themes[nextIndex]);
             updateThemeSelection();
         }
 
@@ -803,13 +1094,22 @@
         window.setTheme = setTheme;
         window.cycleTheme = cycleTheme;
         window.updateThemeSelection = updateThemeSelection;
+        window.syncAccessToggle = syncAccessToggle;
 
         // Initialize theme system when DOM is ready
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeThemeSystem);
+            document.addEventListener('DOMContentLoaded', function() {
+                initializeThemeSystem();
+                syncAccessToggle();
+            });
         } else {
-            // If script runs after DOMContentLoaded
             initializeThemeSystem();
+            // Sync toggle after DOM is ready for button references
+            if (document.getElementById('btn-light')) {
+                syncAccessToggle();
+            } else {
+                document.addEventListener('DOMContentLoaded', syncAccessToggle);
+            }
         }
     </script>
 </head>
@@ -817,8 +1117,9 @@
 <body class="bg-background-light dark:bg-slate-900 font-display text-slate-900 dark:text-white min-h-screen pb-24">
     <!-- Top Navigation / Brand -->
     <header
-        class="sticky top-0 z-50 bg-background-light dark:bg-slate-900/80 backdrop-blur-md px-6 py-4 flex items-center justify-between border-b"
+        class="sticky top-0 z-50 bg-background-light dark:bg-slate-900/80 backdrop-blur-md px-4 py-3 flex items-center justify-between border-b"
         style="border-bottom: 8px solid; border-image: linear-gradient(to right, #FF0018, #FFA52C, #FFFF41, #008018, #0000F9, #86007D) 1;">
+        <!-- Logo / Brand -->
         <div class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
             onclick="toggleView('homeView')" title="Back to Home">
             <div class="w-8 h-8 rounded-lg pride-gradient-bg flex items-center justify-center shadow-lg">
@@ -826,6 +1127,40 @@
             </div>
             <h1 class="text-xl font-extrabold tracking-tight inline-block dark-pill"><span
                     class="outatlas-name-text">OutAtlas</span></h1>
+        </div>
+
+        <!-- Accessibility Color Mode Toggle -->
+        <div id="access-mode-toggle"
+             class="access-toggle-bar"
+             role="group"
+             aria-label="Display color mode">
+            <button id="btn-light"
+                    class="access-mode-btn"
+                    onclick="setTheme('light')"
+                    aria-label="Light mode"
+                    aria-pressed="false"
+                    title="Light Mode">
+                <span class="material-symbols-outlined" aria-hidden="true">light_mode</span>
+                <span class="access-label">Light</span>
+            </button>
+            <button id="btn-dark"
+                    class="access-mode-btn"
+                    onclick="setTheme('dark')"
+                    aria-label="Dark mode"
+                    aria-pressed="false"
+                    title="Dark Mode">
+                <span class="material-symbols-outlined" aria-hidden="true">dark_mode</span>
+                <span class="access-label">Dark</span>
+            </button>
+            <button id="btn-hc"
+                    class="access-mode-btn"
+                    onclick="setTheme('high-contrast')"
+                    aria-label="High contrast mode for visual accessibility"
+                    aria-pressed="false"
+                    title="High Contrast (Accessibility)">
+                <span class="material-symbols-outlined" aria-hidden="true">contrast</span>
+                <span class="access-label">High Contrast</span>
+            </button>
         </div>
     </header>
 
@@ -842,10 +1177,10 @@
                     </div>
                     <button
                         onclick="cycleTheme()"
-                        class="flex items-center justify-center w-12 h-12 rounded-lg transition-all bg-white/70 hover:bg-white active:scale-95 shrink-0 shadow-md"
-                        aria-label="Toggle theme (Clear View, Light, Dark)"
-                        title="Toggle theme">
-                        <span class="material-symbols-outlined text-2xl text-slate-900">dark_mode</span>
+                        class="flex items-center justify-center w-10 h-10 rounded-lg transition-all bg-white/70 hover:bg-white active:scale-95 shrink-0 shadow-md"
+                        aria-label="Cycle display mode: Light, Dark, High Contrast"
+                        title="Cycle display mode">
+                        <span class="material-symbols-outlined text-xl text-slate-900">brightness_medium</span>
                     </button>
                 </div>
 
@@ -4400,18 +4735,6 @@
 
                     <!-- Theme Options Grid -->
                     <div class="theme-options-grid">
-                        <!-- Clear View Option -->
-                        <button
-                            class="theme-option clear-view"
-                            data-theme="clear"
-                            onclick="setTheme('clear'); updateThemeSelection();"
-                            aria-label="Select Clear View theme - WCAG AAA accessible mode with solid colors">
-                            <div class="theme-preview"><span class="material-symbols-outlined" style="font-size: 28px;">contrast</span></div>
-                            <div class="theme-name">Clear View</div>
-                            <div class="theme-description">High contrast, solid colors</div>
-                            <div class="theme-checkmark">✓</div>
-                        </button>
-
                         <!-- Light Mode Option -->
                         <button
                             class="theme-option light-mode"
@@ -4435,17 +4758,29 @@
                             <div class="theme-description">Easy on the eyes</div>
                             <div class="theme-checkmark">✓</div>
                         </button>
+
+                        <!-- High Contrast Mode Option -->
+                        <button
+                            class="theme-option high-contrast-mode"
+                            data-theme="high-contrast"
+                            onclick="setTheme('high-contrast'); updateThemeSelection();"
+                            aria-label="Select High Contrast mode - maximum contrast for visual accessibility">
+                            <div class="theme-preview"><span class="material-symbols-outlined" style="font-size: 28px;">contrast</span></div>
+                            <div class="theme-name">High Contrast</div>
+                            <div class="theme-description">For visual accessibility</div>
+                            <div class="theme-checkmark">✓</div>
+                        </button>
                     </div>
                 </section>
 
-                <!-- Clear View Information Box -->
+                <!-- High Contrast Information Box -->
                 <div class="modal-info-box">
                     <div class="modal-info-icon">♿</div>
                     <div class="modal-info-text">
-                        <div class="modal-info-title">Clear View Mode</div>
+                        <div class="modal-info-title">High Contrast Mode</div>
                         <div class="modal-info-description">
-                            WCAG AAA compliant with maximum contrast for accessibility.
-                            Colorful gradients are converted to solid colors for optimal readability.
+                            Designed for visual accessibility with pure black backgrounds,
+                            white text, and vivid accents — exceeding WCAG AAA contrast ratios.
                         </div>
                     </div>
                 </div>
@@ -4505,28 +4840,30 @@
            Toggle between dark and light modes with localStorage persistence
            ============================================================================ */
         function toggleDarkMode() {
-            // Get current theme
             const currentTheme = getSavedTheme();
-
-            // Determine new theme
-            let newTheme;
-            if (currentTheme === 'dark') {
-                newTheme = 'light';
-            } else if (currentTheme === 'light') {
-                newTheme = 'dark';
-            } else {
-                // If in clear mode, switch to dark
-                newTheme = 'dark';
-            }
-
-            // Apply new theme
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             setTheme(newTheme);
-
-            // Update theme selection in modal if it's open
             const modal = document.getElementById('settingsModal');
             if (modal && modal.classList.contains('open')) {
                 updateThemeSelection();
             }
+        }
+
+        /* Fallback definition — main definition lives in the theme manager script above */
+        if (typeof syncAccessToggle === 'undefined') {
+            window.syncAccessToggle = function() {
+                const currentTheme = (typeof getSavedTheme === 'function') ? getSavedTheme() : 'light';
+                const btnMap = { 'light': 'btn-light', 'clear': 'btn-light', 'dark': 'btn-dark', 'high-contrast': 'btn-hc' };
+                document.querySelectorAll('.access-mode-btn').forEach(function(btn) {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-pressed', 'false');
+                });
+                var id = btnMap[currentTheme];
+                if (id) {
+                    var el = document.getElementById(id);
+                    if (el) { el.classList.add('active'); el.setAttribute('aria-pressed', 'true'); }
+                }
+            };
         }
 
         /* ============================================================================
@@ -4625,22 +4962,26 @@
         function updateThemeSelection() {
             const currentTheme = getSavedTheme();
 
-            // Remove active class from all theme options
+            // Remove active class from all theme options in settings modal
             document.querySelectorAll('.theme-option').forEach(option => {
                 option.classList.remove('active');
             });
 
-            // Add active class to current theme
+            // Add active class to current theme in settings modal
             const themeMap = {
                 'clear': '.clear-view',
                 'light': '.light-mode',
-                'dark': '.dark-mode'
+                'dark': '.dark-mode',
+                'high-contrast': '.high-contrast-mode'
             };
 
             const activeButton = document.querySelector(themeMap[currentTheme]);
             if (activeButton) {
                 activeButton.classList.add('active');
             }
+
+            // Keep header toggle bar in sync
+            syncAccessToggle();
         }
 
         /**
@@ -4786,6 +5127,7 @@
         window.setTheme = setTheme;
         window.toggleReduceMotion = toggleReduceMotion;
         window.toggleHighContrast = toggleHighContrast;
+        window.syncAccessToggle = syncAccessToggle;
     </script>
 
 </body>
